@@ -1,0 +1,31 @@
+name: 'Terraform fmt and validate'
+
+# Terraform linting & formatting checks;
+# Required files & documentation checks;
+# Required metadata checks (e.g. terraform.required_version);
+# Security checks, including aspects like secrets scanning & approved providers used.
+
+on:
+  - pull_request
+
+env:
+  tf_version: 'latest'
+  tf_working_dir: '.'
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@master
+
+      - name: 'Terraform format'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: ${{ env.tf_working_dir }}
+          tf_actions_comment: false
+          args: '-recursive'

@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.0.1
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: Pipfile.lock
+  - repo: git://github.com/detailyang/pre-commit-shell
+    rev: v1.0.6
+    hooks:
+      - id: shell-lint
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.57.0
+    hooks:
+      - id: terraform_fmt
+        exclude: \.terraform\/.*$
+      - id: terraform_docs
