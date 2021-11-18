@@ -4,7 +4,7 @@ These are Terraform modules used across Mozilla SRE teams and related infrastruc
 
 These modules are intended for Mozilla usage internally. They are not built or supported with external users' usage in mind.
 
-## CI
+## Automation
 
 This repository uses [pre-commit](https://pre-commit.com/) for running some pre-git-commit checks. Install pre-commit locally (see link for instructions) for your own workspace to also run these checks on every git commit. Pipenv files are included optionally if you use such tooling for managing your pre-commit (or other Python packages) installation.
 
@@ -33,6 +33,12 @@ Each module should follow the given structure within the top level of this direc
 ### Naming
 
 The name should follow the format `provider_module-name` like `google_gke-cluster` or `newrelic_synthetic-checks`. The providers should follow the names listed here (this is to support future work on publishing our Terraform modules): https://registry.terraform.io/browse/providers
+
+### Ownership
+
+By default, anyone who is an owner or contributor on this repository can review, approve & merge PRs on any module.
+
+If you want to ensure specific people or teams have to review changes to certain modules, put a `CODEOWNERS` file in your module's subdirectory.
 
 ### Documentation
 
