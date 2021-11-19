@@ -1,31 +1,37 @@
-name: 'Terraform fmt and validate'
-
-# Terraform linting & formatting checks;
-# Required files & documentation checks;
-# Required metadata checks (e.g. terraform.required_version);
-# Security checks, including aspects like secrets scanning & approved providers used.
+name: Terraform CI
 
 on:
-  - pull_request
-
-env:
-  tf_version: 'latest'
-  tf_working_dir: '.'
+- push
+- pull_request
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  matrixify:
+    name: Matrixify
+    outputs:
+      matrix: ${{ steps.search.outputs.matrix }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@master
+    - name: Get Changed Terraform directories
+      id: search
+      uses: mozilla/tf-actions/matrixify@OPST-126
+    - name: Outputs
+      run: echo "${{ steps.search.outputs.matrix }}"
 
-      - name: 'Terraform format'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-          tf_actions_comment: false
-          args: '-recursive'
+  terraform-ci:
+    name: Terraform CI on "${{ matrix.directory }}"
+
+    if: ${{ fromJSON(needs.matrixify.outputs.matrix).include[0] }}
+    needs: matrixify
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.matrixify.outputs.matrix)}}
+
+    steps:
+    - id: terraform-checks
+      name: Terraform Checks
+      uses: mozilla/tf-actions/ci@OPST-126
+      with:
+        readme_check: "true"
+        tfpath: ${{ matrix.directory }}
