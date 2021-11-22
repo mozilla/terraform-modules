@@ -53,8 +53,8 @@ variable "realm" {
   type        = string
 
   validation {
-    condition     = contains(["prod", "stage", "sandbox", "dev"], var.realm)
-    error_message = "Valid values for realm: prod, stage, sandbox, dev."
+    condition     = contains(["dev", "global", "prod", "sandbox", "stage"], var.realm)
+    error_message = "Valid values for realm: dev, global, prod, sandbox, stage."
   }
 }
 
@@ -74,12 +74,12 @@ variable "program_code" {
 }
 
 variable "program_name" {
-  description = "Name of the Firefox program being one of: ci, services, data."
+  description = "Name of the Firefox program being one of: ci, data, infrastructure, services, web."
   default     = "services"
   type        = string
 
   validation {
-    condition     = contains(["ci", "services", "data", "web"], var.program_name)
-    error_message = "Valid values for program_name: ci, data, services, web."
+    condition     = contains(["ci", "data", "infrastructure", "services", "web"], var.program_name)
+    error_message = "Valid values for program_name: ci, data, infrastructure, services, web."
   }
 }
