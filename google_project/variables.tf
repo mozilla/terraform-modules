@@ -79,7 +79,7 @@ variable "program_name" {
   type        = string
 
   validation {
-    condition     = contains(["ci", "data", "infrastructure", "services", "web"], var.program_name)
+    condition     = contains(["ci", "data", "infrastructure", "security", "services", "web"], var.program_name)
     error_message = "Valid values for program_name: ci, data, infrastructure, services, web."
   }
 }
