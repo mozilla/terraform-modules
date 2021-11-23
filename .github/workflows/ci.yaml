@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Get Changed Terraform directories
       id: search
-      uses: mozilla/tf-actions/matrixify@OPST-126
+      uses: mozilla/tf-actions/matrixify@v0.0.1
     - name: Outputs
       run: echo "${{ steps.search.outputs.matrix }}"
 
@@ -31,7 +31,7 @@ jobs:
     steps:
     - id: terraform-checks
       name: Terraform Checks
-      uses: mozilla/tf-actions/ci@OPST-126
+      uses: mozilla/tf-actions/ci@v0.0.1
       with:
         readme_check: "true"
         tfpath: ${{ matrix.directory }}
