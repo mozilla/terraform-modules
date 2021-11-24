@@ -33,11 +33,8 @@ resource "google_project" "project" {
     app_code       = local.app_code
     component_code = local.component_code
     cost_center    = var.cost_center
-    environment    = var.realm
-    env_code       = local.env_code
     program_code   = var.program_code
     program_name   = var.program_name
-    realm          = var.realm
   }
 
   lifecycle {

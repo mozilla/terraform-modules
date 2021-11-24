@@ -1,6 +1,6 @@
 variable "app_code" {
   default     = ""
-  description = "Defaults to project_name. Used for labels and metadata on application-related resources."
+  description = "Defaults to project_name. Used for labels and metadata on application-related resources. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv."
   type        = string
 }
 
@@ -11,7 +11,7 @@ variable "billing_account_id" {
 
 variable "component_code" {
   default     = ""
-  description = "Defaults to app_code-uncat"
+  description = "Defaults to app_code-uncat. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv"
 }
 
 variable "cost_center" {
@@ -22,13 +22,7 @@ variable "cost_center" {
 
 variable "display_name" {
   default     = ""
-  description = "Display name for the project. Defaults to project_name-realm"
-  type        = string
-}
-
-variable "env_code" {
-  default     = ""
-  description = "Defaults to realm (e.g. environment). Used for labels and metadata on environment-related resources."
+  description = "Display name for the project. Defaults to project_name"
   type        = string
 }
 
@@ -46,16 +40,6 @@ variable "project_id" {
   default     = ""
   description = "Override default project id. Only use if the project id is already taken."
   type        = string
-}
-
-variable "realm" {
-  description = "Project environment e.g., prod"
-  type        = string
-
-  validation {
-    condition     = contains(["dev", "global", "prod", "sandbox", "stage"], var.realm)
-    error_message = "Valid values for realm: dev, global, prod, sandbox, stage."
-  }
 }
 
 #
