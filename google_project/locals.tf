@@ -1,12 +1,11 @@
 locals {
-  project_name         = "${var.project_name}-${var.realm}"
+  project_name         = var.project_name
   display_name         = coalesce(var.display_name, local.project_name)
   project_generated_id = "${format("%.25s", "moz-fx-${local.project_name}")}-${random_id.project.hex}"
   project_id           = coalesce(var.project_id, local.project_generated_id)
 
   app_code       = coalesce(var.app_code, var.project_name)
   component_code = coalesce(var.component_code, "${local.app_code}-uncat")
-  env_code       = coalesce(var.env_code, var.realm)
 
   default_project_labels = {
     app            = var.project_name

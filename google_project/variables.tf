@@ -42,7 +42,7 @@ variable "project_id" {
   type        = string
 }
 
-variable "project_labels" {
+variable "extra_project_labels" {
   description = "Extra project labels (a map of key/value pairs) to be applied to the Project."
   type        = map(string)
   default     = {}
