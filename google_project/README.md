@@ -31,18 +31,17 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_app_code"></a> [app\_code](#input\_app\_code) | Defaults to project\_name. Used for labels and metadata on application-related resources. | `string` | `""` | no |
+| <a name="input_app_code"></a> [app\_code](#input\_app\_code) | Defaults to project\_name. Used for labels and metadata on application-related resources. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv. | `string` | `""` | no |
 | <a name="input_billing_account_id"></a> [billing\_account\_id](#input\_billing\_account\_id) | Associated billing account | `string` | n/a | yes |
-| <a name="input_component_code"></a> [component\_code](#input\_component\_code) | Defaults to app\_code-uncat | `string` | `""` | no |
+| <a name="input_component_code"></a> [component\_code](#input\_component\_code) | Defaults to app\_code-uncat. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv | `string` | `""` | no |
 | <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | Cost center of the project or resource. Default is 5650 (Services Engineering) | `string` | `"5650"` | no |
-| <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the project. Defaults to project\_name-realm | `string` | `""` | no |
-| <a name="input_env_code"></a> [env\_code](#input\_env\_code) | Defaults to realm (e.g. environment). Used for labels and metadata on environment-related resources. | `string` | `""` | no |
+| <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the project. Defaults to project\_name | `string` | `""` | no |
 | <a name="input_parent_id"></a> [parent\_id](#input\_parent\_id) | Parent folder (with GCP). | `string` | n/a | yes |
 | <a name="input_program_code"></a> [program\_code](#input\_program\_code) | Program Code of the project or resource: https://mana.mozilla.org/wiki/display/FINArchive/Program+Codes. Drop the `PC - `, lowercase the string and substitute spaces for dashes. | `string` | `"firefox-services"` | no |
 | <a name="input_program_name"></a> [program\_name](#input\_program\_name) | Name of the Firefox program being one of: ci, data, infrastructure, services, web. | `string` | `"services"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Override default project id. Only use if the project id is already taken. | `string` | `""` | no |
+| <a name="input_project_labels"></a> [project\_labels](#input\_project\_labels) | Extra project labels (a map of key/value pairs) to be applied to the Project. | `map(string)` | `{}` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of project e.g., autopush | `string` | n/a | yes |
-| <a name="input_realm"></a> [realm](#input\_realm) | Project environment e.g., prod | `string` | n/a | yes |
 
 ## Outputs
 
