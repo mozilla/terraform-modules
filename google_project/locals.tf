@@ -16,4 +16,7 @@ locals {
     program_name   = var.program_name
   }
   all_project_labels = merge(local.default_project_labels, var.extra_project_labels)
+
+  default_project_services = ["compute.googleapis.com", "container.googleapis.com", "dns.googleapis.com", "logging.googleapis.com", "monitoring.googleapis.com", "servicenetworking.googleapis.com", "stackdriver.googleapis.com", "iamcredentials.googleapis.com"]
+  all_project_services     = setunion(local.default_project_services, var.project_services)
 }

@@ -23,3 +23,10 @@ resource "google_project" "project" {
     prevent_destroy = true
   }
 }
+
+resource "google_project_service" "project" {
+  for_each           = local.all_project_services
+  project            = local.project_id
+  service            = each.key
+  disable_on_destroy = false
+}

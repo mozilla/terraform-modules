@@ -73,3 +73,9 @@ variable "program_name" {
     error_message = "Valid values for program_name: ci, data, infrastructure, services, web."
   }
 }
+
+variable "project_services" {
+  description = "List of google_project_service APIs to enable."
+  default     = []
+  type        = list(string)
+}
