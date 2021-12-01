@@ -25,7 +25,7 @@ resource "google_project" "project" {
 }
 
 resource "google_project_service" "project" {
-  for_each           = toset(var.project_services)
+  for_each           = local.all_project_services
   project            = local.project_id
   service            = each.key
   disable_on_destroy = false

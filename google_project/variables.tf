@@ -76,6 +76,6 @@ variable "program_name" {
 
 variable "project_services" {
   description = "List of google_project_service APIs to enable."
-  default     = ["compute.googleapis.com", "container.googleapis.com", "dns.googleapis.com", "logging.googleapis.com", "monitoring.googleapis.com", "servicenetworking.googleapis.com", "stackdriver.googleapis.com", "iamcredentials.googleapis.com"]
+  default     = []
   type        = list(string)
 }
