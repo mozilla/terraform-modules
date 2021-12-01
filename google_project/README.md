@@ -42,7 +42,7 @@ No modules.
 | <a name="input_program_name"></a> [program\_name](#input\_program\_name) | Name of the Firefox program being one of: ci, data, infrastructure, services, web. | `string` | `"services"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Override default project id. Only use if the project id is already taken. | `string` | `""` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of project e.g., autopush | `string` | n/a | yes |
-| <a name="input_project_services"></a> [project\_services](#input\_project\_services) | List of google\_project\_service APIs to enable. | `list(string)` | <pre>[<br>  "compute.googleapis.com",<br>  "container.googleapis.com",<br>  "dns.googleapis.com",<br>  "logging.googleapis.com",<br>  "monitoring.googleapis.com",<br>  "servicenetworking.googleapis.com",<br>  "stackdriver.googleapis.com",<br>  "iamcredentials.googleapis.com"<br>]</pre> | no |
+| <a name="input_project_services"></a> [project\_services](#input\_project\_services) | List of google\_project\_service APIs to enable. | `list(string)` | `[]` | no |
 
 ## Outputs
 
