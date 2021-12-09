@@ -43,6 +43,7 @@ No modules.
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Override default project id. Only use if the project id is already taken. | `string` | `""` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of project e.g., autopush | `string` | n/a | yes |
 | <a name="input_project_services"></a> [project\_services](#input\_project\_services) | List of google\_project\_service APIs to enable. | `list(string)` | `[]` | no |
+| <a name="input_realm"></a> [realm](#input\_realm) | Realm is a grouping of environments being one of: global, nonprod, prod | `string` | `""` | no |
 
 ## Outputs
 
