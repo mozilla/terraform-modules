@@ -79,3 +79,14 @@ variable "project_services" {
   default     = []
   type        = list(string)
 }
+
+variable "realm" {
+  description = "Realm is a grouping of environments being one of: global, nonprod, prod"
+  default     = ""
+  type        = string
+
+  validation {
+    condition     = contains(["global", "nonprod", "prod"], var.realm)
+    error_message = "Valid values for realm: global, nonprod, prod."
+  }
+}
