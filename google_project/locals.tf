@@ -1,5 +1,5 @@
 locals {
-  project_name         = var.project_name
+  project_name         = "${var.project_name}-${var.realm}"
   display_name         = coalesce(var.display_name, local.project_name)
   project_generated_id = "${format("%.25s", "moz-fx-${local.project_name}")}-${random_id.project.hex}"
   project_id           = coalesce(var.project_id, local.project_generated_id)
