@@ -51,3 +51,4 @@ No modules.
 |------|-------------|
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | n/a |
+| <a name="output_project_number"></a> [project\_number](#output\_project\_number) | n/a |
