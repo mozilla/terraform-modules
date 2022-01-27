@@ -6,7 +6,7 @@
 locals {
   default_database_name = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
   database_name         = coalesce(var.custom_database_name, local.default_database_name)
-  tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb*1024}")
+  tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
 
   default_replica_name = "${local.database_name}-failover"
   replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
