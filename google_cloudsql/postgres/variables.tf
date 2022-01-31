@@ -71,7 +71,7 @@ variable "enable_public_ip" {
 }
 
 variable "ip_configuration_require_ssl" {
-  default = false
+  default = true
 }
 
 variable "maintenance_window_day" {
