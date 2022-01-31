@@ -8,7 +8,7 @@ locals {
   database_name         = coalesce(var.custom_database_name, local.default_database_name)
   tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
 
-  default_replica_name = "${local.database_name}-failover"
+  default_replica_name = "${local.database_name}-replica"
   replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
 
   ip_addresses = google_sql_database_instance.master.ip_address
@@ -82,14 +82,16 @@ resource "google_sql_database_instance" "master" {
 }
 
 resource "google_sql_database_instance" "replica" {
-  count                = (local.enable_ha || var.force_ha) && var.availability_type != "REGIONAL" ? 1 : 0
-  name                 = local.replica_name
+  #count                = (local.enable_ha || var.force_ha) && var.availability_type != "REGIONAL" ? var.replica_count : 0
+  count                = var.replica_count
+  name                 = "${local.replica_name}-${count.index}"
   region               = var.region
   database_version     = var.database_version
   master_instance_name = google_sql_database_instance.master.name
 
   replica_configuration {
-    failover_target = "true"
+    failover_target = "false"
+    #failover_target = count.index == 0 ? "true" : "false"
   }
 
   settings {

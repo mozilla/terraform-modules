@@ -14,6 +14,11 @@ variable "custom_replica_name" {
   description = "Custom database replica name."
 }
 
+variable "replica_count" {
+  default     = 0
+  description = "Number of replicas to create"
+}
+
 variable "application" {
   description = "Application e.g., bouncer."
 }
