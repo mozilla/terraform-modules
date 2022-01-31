@@ -36,8 +36,9 @@ No modules.
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `any` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `any` | n/a | yes |
 | <a name="input_tier_override"></a> [tier\_override](#input\_tier\_override) | database instance tier. overrides `db_cpu` and `db_mem_gb` | `any` | n/a | no |
-| <a name="input_db_cpu"></a> [db_cpu](#input\_db\_cpu) | Number of CPUs for the DB instance. Must be even number. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
-| <a name="input_db_mem_gb"></a> [db_mem_gb](#input\_mem\_gb) | Amount of memory for the DB instance in GB. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
+| <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas to create. Not for HA; use [availability\_type](#input\_availability\_type) for that. | `string` | `0` | no |
+| <a name="input_db_cpu"></a> [db\_cpu](#input\_db\_cpu) | Number of CPUs for the DB instance. Must be even number. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
+| <a name="input_db_mem_gb"></a> [db\_mem\_gb](#input\_mem\_gb) | Amount of memory for the DB instance in GB. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | high availability (REGIONAL) or single zone (ZONAL) | `string` | `"REGIONAL"` | no |
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | A list of database flag maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list` | `[]` | no |
@@ -45,7 +46,7 @@ No modules.
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | database instance disk size in GB, minimum 10 | `string` | `"10"` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
-| <a name="input_ip_configuration_authorized_networks"></a> [ip\_configuration\_authorized\_networks](#input\_ip\_configuration\_authorized\_networks) | n/a | `list` | `[]` | no |
+| <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | n/a | `list` | `[]` | no |
 | <a name="input_ip_configuration_require_ssl"></a> [ip\_configuration\_require\_ssl](#input\_ip\_configuration\_require\_ssl) | n/a | `bool` | `true` | no |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | n/a | `number` | `1` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | n/a | `number` | `17` | no |

@@ -36,6 +36,10 @@ variable "database_version" {
   default = "POSTGRES_13"
 }
 
+variable "replica_count" {
+  default = 0
+}
+
 variable "db_cpu" {
   description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
   default     = "2"
@@ -61,7 +65,7 @@ variable "disk_size" {
   description = "database instance disk size in GB, minimum 10"
 }
 
-variable "ip_configuration_authorized_networks" {
+variable "authorized_networks" {
   default = []
 }
 

@@ -53,7 +53,7 @@ resource "google_sql_database_instance" "master" {
       ipv4_enabled = var.enable_public_ip
       require_ssl  = var.ip_configuration_require_ssl
       dynamic "authorized_networks" {
-        for_each = var.ip_configuration_authorized_networks
+        for_each = var.authorized_networks
         content {
           # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
           # which keys might be set in maps assigned here, so it has
@@ -92,5 +92,47 @@ resource "google_sql_database_instance" "master" {
   lifecycle {
     prevent_destroy = true
     ignore_changes  = [settings.0.disk_size, settings.0.backup_configuration.0.point_in_time_recovery_enabled]
+  }
+}
+
+resource "google_sql_database_instance" "replica" {
+  count                = var.replica_count
+  name                 = "${local.database_name}-replica-${count.index}"
+  region               = var.region
+  database_version     = var.database_version
+  master_instance_name = google_sql_database_instance.master.name
+
+  settings {
+    tier = local.tier
+    dynamic "database_flags" {
+      for_each = var.database_flags
+      content {
+        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
+        # which keys might be set in maps assigned here, so it has
+        # produced a comprehensive set here. Consider simplifying
+        # this after confirming which keys can be set in practice.
+
+        name  = lookup(database_flags.value, "name", null)
+        value = lookup(database_flags.value, "value", null)
+      }
+    }
+
+    ip_configuration {
+      ipv4_enabled    = var.enable_public_ip
+      private_network = var.network
+      require_ssl     = var.ip_configuration_require_ssl
+      dynamic "authorized_networks" {
+        for_each = var.authorized_networks
+        content {
+          expiration_time = lookup(authorized_networks.value, "expiration_time", null)
+          name            = lookup(authorized_networks.value, "name", null)
+          value           = lookup(authorized_networks.value, "value", null)
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
