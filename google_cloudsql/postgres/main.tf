@@ -18,7 +18,7 @@ locals {
   tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
 }
 
-resource "google_sql_database_instance" "master" {
+resource "google_sql_database_instance" "primary" {
   provider = google-beta
   name     = local.database_name
   project  = var.project_id
@@ -100,7 +100,7 @@ resource "google_sql_database_instance" "replica" {
   name                 = "${local.database_name}-replica-${count.index}"
   region               = var.region
   database_version     = var.database_version
-  master_instance_name = google_sql_database_instance.master.name
+  master_instance_name = google_sql_database_instance.primary.name
 
   settings {
     tier = local.tier

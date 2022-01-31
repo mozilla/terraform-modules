@@ -11,12 +11,12 @@ locals {
   default_replica_name = "${local.database_name}-replica"
   replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
 
-  ip_addresses = google_sql_database_instance.master.ip_address
+  ip_addresses = google_sql_database_instance.primary.ip_address
 
   enable_ha = var.realm == "prod" ? true : false
 }
 
-resource "google_sql_database_instance" "master" {
+resource "google_sql_database_instance" "primary" {
   name             = local.database_name
   region           = var.region
   database_version = var.database_version
@@ -87,7 +87,7 @@ resource "google_sql_database_instance" "replica" {
   name                 = "${local.replica_name}-${count.index}"
   region               = var.region
   database_version     = var.database_version
-  master_instance_name = google_sql_database_instance.master.name
+  master_instance_name = google_sql_database_instance.primary.name
 
   replica_configuration {
     failover_target = "false"
