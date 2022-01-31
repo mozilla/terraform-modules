@@ -66,11 +66,6 @@ variable "region" {
   default = "us-west1"
 }
 
-variable "disk_size" {
-  default     = "10"
-  description = "Disk size in gigabytes."
-}
-
 variable "database_flags" {
   description = "The database flags for the primary instance. See [more details](https://cloud.google.com/sql/docs/mysql/flags)"
   default     = []

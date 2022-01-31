@@ -26,7 +26,6 @@ resource "google_sql_database_instance" "primary" {
 
     availability_type = var.availability_type
 
-    disk_size = var.disk_size
     disk_type = "PD_SSD"
     dynamic "database_flags" {
       for_each = var.database_flags
@@ -77,7 +76,6 @@ resource "google_sql_database_instance" "primary" {
 
   lifecycle {
     prevent_destroy = true
-    ignore_changes  = [settings.0.disk_size]
   }
 }
 

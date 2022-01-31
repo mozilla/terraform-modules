@@ -29,7 +29,6 @@ resource "google_sql_database_instance" "primary" {
   settings {
     tier              = local.tier
     availability_type = var.availability_type
-    disk_size         = var.disk_size
 
     backup_configuration {
       enabled                        = true
@@ -91,7 +90,7 @@ resource "google_sql_database_instance" "primary" {
 
   lifecycle {
     prevent_destroy = true
-    ignore_changes  = [settings.0.disk_size, settings.0.backup_configuration.0.point_in_time_recovery_enabled]
+    ignore_changes  = [settings.0.backup_configuration.0.point_in_time_recovery_enabled]
   }
 }
 

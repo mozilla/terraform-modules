@@ -42,7 +42,6 @@ No modules.
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version of MySQL to run | `string` | `"MYSQL_5_7"` | no |
 | <a name="input_db_cpu"></a> [db_cpu](#input\_db\_cpu) | Number of CPUs for the DB instance. Must be even number. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
 | <a name="input_db_mem_gb"></a> [db_mem_gb](#input\_mem\_gb) | Amount of memory for the DB instance in GB. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
-| <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | Disk size in gigabytes. | `string` | `"10"` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
 | <a name="input_force_ha"></a> [force\_ha](#input\_force\_ha) | If set to true, create a mysql replica for HA. Currently the availability\_type works only for postgres | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
@@ -97,8 +96,6 @@ module "mysql_database" {
   availability_type = "REGIONAL"
 
   database_version = "MYSQL_8_0"
-
-  disk_size = "10"
 
   database_flags = [
     {

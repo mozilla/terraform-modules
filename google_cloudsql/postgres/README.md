@@ -43,7 +43,6 @@ No modules.
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | A list of database flag maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list` | `[]` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | n/a | `string` | `"POSTGRES_11"` | no |
-| <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | database instance disk size in GB, minimum 10 | `string` | `"10"` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | n/a | `list` | `[]` | no |
@@ -96,10 +95,7 @@ module "postgres_database" {
 
   db_cpu    = 4
   db_mem_gb = 20
-  disk_size = "10"
-
 }
-
 
 output "postgres_database" {
   sensitive = true

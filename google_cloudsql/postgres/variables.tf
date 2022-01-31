@@ -60,11 +60,6 @@ variable "availability_type" {
   default     = "REGIONAL"
 }
 
-variable "disk_size" {
-  default     = "10"
-  description = "database instance disk size in GB, minimum 10"
-}
-
 variable "authorized_networks" {
   default = []
 }
