@@ -51,6 +51,7 @@ resource "google_sql_database_instance" "master" {
     ip_configuration {
       ipv4_enabled    = var.enable_public_ip
       private_network = var.network
+      require_ssl     = var.ip_configuration_require_ssl
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         content {
@@ -109,6 +110,7 @@ resource "google_sql_database_instance" "replica" {
     ip_configuration {
       ipv4_enabled    = var.enable_public_ip
       private_network = var.network
+      require_ssl     = var.ip_configuration_require_ssl
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         content {

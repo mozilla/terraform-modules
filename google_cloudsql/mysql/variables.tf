@@ -87,3 +87,6 @@ variable "authorized_networks" {
   default     = []
 }
 
+variable "ip_configuration_require_ssl" {
+  default = true
+}

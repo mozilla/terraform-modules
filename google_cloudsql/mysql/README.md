@@ -48,6 +48,7 @@ No modules.
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `"us-west1"` | no |
 | <a name="input_tier"></a> [tier_override](#input\_tier) | Overrides any settings for `db_cpu` and `db_mem_gb`. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `""` | no |
+| <a name="input_ip_configuration_require_ssl"></a> [ip\_configuration\_require\_ssl](#input\_ip\_configuration\_require\_ssl) | n/a | `bool` | `true` | no |
 
 ## Outputs
 
