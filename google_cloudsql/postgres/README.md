@@ -24,7 +24,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google-beta_google_sql_database_instance.master](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_sql_database_instance) | resource |
+| [google-beta_google_sql_database_instance.primary](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_sql_database_instance) | resource |
 | [google_compute_network.network](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_network) | data source |
 
 ## Inputs

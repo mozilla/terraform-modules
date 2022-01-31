@@ -82,7 +82,6 @@ resource "google_sql_database_instance" "primary" {
 }
 
 resource "google_sql_database_instance" "replica" {
-  #count                = (local.enable_ha || var.force_ha) && var.availability_type != "REGIONAL" ? var.replica_count : 0
   count                = var.replica_count
   name                 = "${local.replica_name}-${count.index}"
   region               = var.region
@@ -91,7 +90,6 @@ resource "google_sql_database_instance" "replica" {
 
   replica_configuration {
     failover_target = "false"
-    #failover_target = count.index == 0 ? "true" : "false"
   }
 
   settings {
