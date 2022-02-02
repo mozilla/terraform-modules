@@ -13,7 +13,7 @@ locals {
 
   ip_addresses = google_sql_database_instance.primary.ip_address
 
-  enable_ha    = var.realm == "prod" ? true : false
+  enable_ha = var.realm == "prod" ? true : false
 }
 
 resource "google_sql_database_instance" "primary" {
