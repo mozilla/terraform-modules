@@ -89,9 +89,11 @@ resource "google_sql_database_instance" "primary" {
   }
 
   lifecycle {
-    prevent_destroy = true
-    ignore_changes  = [settings.0.backup_configuration.0.point_in_time_recovery_enabled]
+    ignore_changes = [settings.0.backup_configuration.0.point_in_time_recovery_enabled]
   }
+
+  deletion_protection = var.deletion_protection
+
 }
 
 resource "google_sql_database_instance" "replica" {
@@ -132,6 +134,9 @@ resource "google_sql_database_instance" "replica" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    ignore_changes = [settings.0.backup_configuration.0.point_in_time_recovery_enabled]
   }
+
+  deletion_protection = var.deletion_protection
+
 }

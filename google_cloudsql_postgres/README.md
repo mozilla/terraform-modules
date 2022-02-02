@@ -52,6 +52,7 @@ No modules.
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | n/a | `string` | `"stable"` | no |
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |
+| <a name="input_deletion_protection"></a> [maintenance\_deletion\_protection](#input\_deletion\_protection) | Whether or not the instance(s) is/are protected from deletion. Must be set to false BEFORE attempting to delete an instance. You can set it back to `true` in the apply that actually deletes the instance, though. | `bool` | `true` | no |
 
 ## Outputs
 

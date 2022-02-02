@@ -22,6 +22,12 @@ variable "realm" {
   description = "Realm e.g., nonprod."
 }
 
+variable "deletion_protection" {
+  default     = true
+  type        = bool
+  description = "Whether the instance is protected from deletion"
+}
+
 variable "instance_version" {
   default     = "v1"
   description = "Version of database. Use this field if you need to spin up a new database instance."

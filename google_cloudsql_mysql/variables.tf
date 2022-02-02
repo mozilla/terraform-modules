@@ -14,6 +14,12 @@ variable "custom_replica_name" {
   description = "Custom database replica name."
 }
 
+variable "deletion_protection" {
+  default     = true
+  type        = bool
+  description = "Whether the instance is protected from deletion"
+}
+
 variable "replica_count" {
   default     = 0
   description = "Number of replicas to create"
@@ -89,4 +95,18 @@ variable "authorized_networks" {
 
 variable "ip_configuration_require_ssl" {
   default = true
+}
+
+variable "maintenance_window_day" {
+  # Tuesday
+  default = 2
+}
+
+variable "maintenance_window_hour" {
+  # UTC hour
+  default = 16
+}
+
+variable "maintenance_window_update_track" {
+  default = "stable"
 }

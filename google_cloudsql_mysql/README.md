@@ -49,6 +49,10 @@ No modules.
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `"us-west1"` | no |
 | <a name="input_tier"></a> [tier_override](#input\_tier) | Overrides any settings for `db_cpu` and `db_mem_gb`. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `""` | no |
 | <a name="input_ip_configuration_require_ssl"></a> [ip\_configuration\_require\_ssl](#input\_ip\_configuration\_require\_ssl) | n/a | `bool` | `true` | no |
+| <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | n/a | `number` | `2` | no |
+| <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | n/a | `number` | `16` | no |
+| <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | n/a | `string` | `"stable"` | no |
+| <a name="input_deletion_protection"></a> [maintenance\_deletion\_protection](#input\_deletion\_protection) | Whether or not the instance(s) is/are protected from deletion. Must be set to false BEFORE attempting to delete an instance. You can set it back to `true` in the apply that actually deletes the instance, though. | `bool` | `true` | no |
 
 ## Outputs
 
@@ -96,6 +100,8 @@ module "mysql_database" {
   availability_type = "REGIONAL"
 
   database_version = "MYSQL_8_0"
+
+  maintenance_window_update_track = local.realm == "prod" ? "stable" : "canary"
 
   database_flags = [
     {

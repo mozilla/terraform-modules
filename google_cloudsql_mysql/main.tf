@@ -14,7 +14,6 @@ locals {
   ip_addresses = google_sql_database_instance.primary.ip_address
 
   enable_ha    = var.realm == "prod" ? true : false
-  update_track = var.realm == "prod" ? "stable" : "canary"
 }
 
 resource "google_sql_database_instance" "primary" {
@@ -63,9 +62,9 @@ resource "google_sql_database_instance" "primary" {
     }
 
     maintenance_window {
-      day          = "2"
-      hour         = "16"
-      update_track = local.update_track
+      day          = var.maintenance_window_day
+      hour         = var.maintenance_window_hour
+      update_track = var.maintenance_window_update_track
     }
 
     user_labels = {
@@ -75,9 +74,8 @@ resource "google_sql_database_instance" "primary" {
     }
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  deletion_protection = var.deletion_protection
+
 }
 
 resource "google_sql_database_instance" "replica" {
@@ -121,7 +119,6 @@ resource "google_sql_database_instance" "replica" {
     }
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  deletion_protection = var.deletion_protection
+
 }
