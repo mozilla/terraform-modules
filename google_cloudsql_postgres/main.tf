@@ -19,7 +19,7 @@ locals {
 }
 
 resource "google_sql_database_instance" "primary" {
-  provider = google-beta
+  provider = google
   name     = local.database_name
   project  = var.project_id
   region   = var.region
