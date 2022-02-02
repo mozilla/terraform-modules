@@ -81,7 +81,7 @@ data "terraform_remote_state" "vpc_host" {
 }
 
 module "postgres_database" {
-  source      = "git@github.com:mozilla/terraform-modules.git/google_cloudsql/postgres?ref=main"
+  source      = "git@github.com:mozilla/terraform-modules.git/google_cloudsql_postgres?ref=main"
   application = "testing-postgres"
   environment = local.environment
   realm       = local.realm

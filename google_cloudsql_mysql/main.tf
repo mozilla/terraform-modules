@@ -13,7 +13,8 @@ locals {
 
   ip_addresses = google_sql_database_instance.primary.ip_address
 
-  enable_ha = var.realm == "prod" ? true : false
+  enable_ha    = var.realm == "prod" ? true : false
+  update_track = var.realm == "prod" ? "stable" : "canary"
 }
 
 resource "google_sql_database_instance" "primary" {
@@ -64,7 +65,7 @@ resource "google_sql_database_instance" "primary" {
     maintenance_window {
       day          = "2"
       hour         = "16"
-      update_track = var.realm == "prod" ? "stable" : "canary"
+      update_track = local.update_track
     }
 
     user_labels = {
