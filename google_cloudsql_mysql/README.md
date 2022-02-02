@@ -38,7 +38,7 @@ No modules.
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |
 | <a name="input_custom_replica_name"></a> [custom\_replica\_name](#input\_custom\_replica\_name) | Custom database replica name. | `string` | `""` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas to create. | `int` | `0` | no |
-| <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | The database flags for the primary instance. See [more details](https://cloud.google.com/sql/docs/mysql/flags) | `list(object({ name = string, value = string }))` | `[]` | no |
+| <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | The database flags for the primary instance. See [more details](https://cloud.google.com/sql/docs/mysql/flags#list-flags-mysql) | `list(object({ name = string, value = string }))` | `[]` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version of MySQL to run | `string` | `"MYSQL_5_7"` | no |
 | <a name="input_db_cpu"></a> [db_cpu](#input\_db\_cpu) | Number of CPUs for the DB instance. Must be even number. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
 | <a name="input_db_mem_gb"></a> [db_mem_gb](#input\_mem\_gb) | Amount of memory for the DB instance in GB. See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |

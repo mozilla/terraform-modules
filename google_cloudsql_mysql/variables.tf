@@ -73,7 +73,7 @@ variable "region" {
 }
 
 variable "database_flags" {
-  description = "The database flags for the primary instance. See [more details](https://cloud.google.com/sql/docs/mysql/flags)"
+  description = "The database flags for the primary instance. See [more details](https://cloud.google.com/sql/docs/mysql/flags#list-flags-mysql)"
   default     = []
   type        = list(object({ name = string, value = string }))
 }
