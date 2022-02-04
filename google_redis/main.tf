@@ -25,11 +25,13 @@ resource "google_redis_instance" "main" {
   connect_mode       = "PRIVATE_SERVICE_ACCESS" # Used for shared VPC access https://cloud.google.com/memorystore/docs/redis/networking
 
   maintenance_policy {
-    description = "Automated weekly maintenance"
     weekly_maintenance_window {
       day = var.maintenance_window_day
       start_time {
-        hours = var.maintenance_window_hour
+        hours   = var.maintenance_window_hour
+        minutes = 0
+        seconds = 0
+        nanos   = 0
       }
     }
   }
