@@ -9,6 +9,7 @@ locals {
 }
 
 resource "google_project_service" "redis" {
+  project            = var.project_id
   disable_on_destroy = "false"
   service            = "redis.googleapis.com"
 }
