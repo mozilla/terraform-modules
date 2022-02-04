@@ -21,10 +21,15 @@ variable "realm" {
   description = "Realm e.g., nonprod."
 }
 
-variable "memory_size_gb" {}
+variable "memory_size_gb" {
+  description = "Memory size in GiB"
+  default     = 1
+}
 
 variable "redis_configs" {
-  type = map(any)
+  description = "Redis configs https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs"
+  type        = map(any)
+
 }
 
 variable "redis_version" {

@@ -22,6 +22,7 @@ resource "google_redis_instance" "main" {
   redis_version      = var.redis_version
   region             = var.region
   tier               = var.tier
+  connect_mode       = "PRIVATE_SERVICE_ACCESS" # Used for shared VPC access https://cloud.google.com/memorystore/docs/redis/networking
 
   maintenance_policy {
     description = "Automated weekly maintenance"
