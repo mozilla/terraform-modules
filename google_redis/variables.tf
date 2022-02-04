@@ -19,6 +19,8 @@ variable "realm" {
   description = "Realm e.g., nonprod."
 }
 
+variable "project_id" {}
+
 variable "memory_size_gb" {
   description = "Memory size in GiB"
   default     = 1
