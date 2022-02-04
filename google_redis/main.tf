@@ -16,7 +16,7 @@ resource "google_project_service" "redis" {
 resource "google_redis_instance" "main" {
   authorized_network = var.authorized_network
   depends_on         = [google_project_service.redis]
-  name               = var.name
+  name               = local.name
   memory_size_gb     = var.memory_size_gb
   redis_configs      = var.redis_configs
   redis_version      = var.redis_version
