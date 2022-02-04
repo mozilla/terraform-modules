@@ -7,8 +7,6 @@ variable "custom_name" {
   description = "Use this field to set a custom name for the redis instance"
 }
 
-variable "project_id" {}
-
 variable "application" {
   description = "Application e.g., bouncer."
 }
