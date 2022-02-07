@@ -11,7 +11,7 @@ locals {
 resource "google_project_service" "redis" {
   project            = var.project_id
   disable_on_destroy = "false"
-  service            = "redis.googleapis.com"
+  service        = "redis.googleapis.com"
 }
 
 resource "google_redis_instance" "main" {
