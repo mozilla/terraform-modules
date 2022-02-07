@@ -1,30 +1,31 @@
 # Terraform Module: Redis
 Creates a Redis instance within GCP using Cloud Memorystore
 
-## Requirements
+## Example
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.11 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 3.0 |
+```hcl
+locals {
+  name        = "test-redis"
+  project_id  = "test-redis"
+  realm       = "nonprod"
+  subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
+}
 
-## Providers
+module "redis" {
+  source = "github.com/mozilla/terraform-modules//google_redis?ref=main"
 
-| Name | Version |
-|------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 3.0 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | n/a |
-
-## Modules
-
-No modules.
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [google-beta_google_redis_instance.main](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_redis_instance) | resource |
-| [google_project_service.redis](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_service) | resource |
+  project_id     = local.project_id
+  application    = local.name
+  environment    = "dev"
+  realm          = local.realm
+  memory_size_gb = 2
+  redis_configs = {
+    maxmemory-policy = "allkeys-lru"
+  }
+  tier               = "STANDARD_HA"
+  authorized_network = local.subnetworks.regions["us-west1"]["network"]
+}
+```
 
 ## Inputs
 
