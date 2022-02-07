@@ -39,6 +39,12 @@ resource "google_redis_instance" "main" {
     }
   }
 
+  labels = {
+    app         = var.application
+    environment = var.environment
+    realm       = var.realm
+  }
+
   lifecycle {
     prevent_destroy = true
   }
