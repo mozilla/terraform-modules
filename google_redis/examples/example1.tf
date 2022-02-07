@@ -1,6 +1,5 @@
 locals {
   name        = "test-redis"
-  project_id  = "test-redis"
   realm       = "nonprod"
   subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
 }
@@ -8,7 +7,6 @@ locals {
 module "redis" {
   source = "github.com/mozilla/terraform-modules//google_redis?ref=main"
 
-  project_id     = local.project_id
   application    = local.name
   environment    = "dev"
   realm          = local.realm

@@ -25,7 +25,8 @@ variable "realm" {
 }
 
 variable "project_id" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "memory_size_gb" {

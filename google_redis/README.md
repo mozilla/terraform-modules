@@ -6,7 +6,6 @@ Creates a Redis instance within GCP using Cloud Memorystore
 ```hcl
 locals {
   name        = "test-redis"
-  project_id  = "test-redis"
   realm       = "nonprod"
   subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
 }
@@ -14,7 +13,6 @@ locals {
 module "redis" {
   source = "github.com/mozilla/terraform-modules//google_redis?ref=main"
 
-  project_id     = local.project_id
   application    = local.name
   environment    = "dev"
   realm          = local.realm
@@ -38,7 +36,7 @@ module "redis" {
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | Day of the week maintenance should occur | `string` | `"TUESDAY"` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | The hour (from 0-23) when maintenance should start | `number` | `16` | no |
 | <a name="input_memory_size_gb"></a> [memory\_size\_gb](#input\_memory\_size\_gb) | Memory size in GiB | `number` | `1` | no |
-| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | n/a | yes |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
 | <a name="input_redis_configs"></a> [redis\_configs](#input\_redis\_configs) | Redis configs https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs | `map(string)` | n/a | yes |
 | <a name="input_redis_version"></a> [redis\_version](#input\_redis\_version) | n/a | `string` | `"REDIS_6_X"` | no |
