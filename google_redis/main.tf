@@ -4,8 +4,10 @@
  */
 
 locals {
-  default_name = "${var.application}-${var.realm}-${var.environment}"
-  name         = coalesce(var.custom_name, local.default_name)
+  default_name          = "${var.application}-${var.realm}-${var.environment}"
+  name                  = coalesce(var.custom_name, local.default_name)
+  default_redis_configs = { activedefrag : "yes" }
+  redis_configs         = merge(local.default_redis_configs, var.redis_configs)
 }
 
 resource "google_project_service" "redis" {
@@ -21,7 +23,7 @@ resource "google_redis_instance" "main" {
   depends_on         = [google_project_service.redis]
   name               = local.name
   memory_size_gb     = var.memory_size_gb
-  redis_configs      = var.redis_configs
+  redis_configs      = local.redis_configs
   redis_version      = var.redis_version
   region             = var.region
   tier               = var.tier
