@@ -37,4 +37,4 @@ jobs:
       with:
         readme_check: "true"
         tfpath: ${{ matrix.directory }}
-        ignore_dir: "**/examples"
+        ignore_dir: "**/examples/**"
