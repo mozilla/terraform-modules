@@ -16,7 +16,7 @@ jobs:
       id: search
       uses: mozilla/tf-actions/matrixify@main
       with:
-        ignore_dir: "**/examples/*"
+        ignore_dir: "examples"
     - name: Outputs
       run: echo "${{ steps.search.outputs.matrix }}"
 
@@ -37,4 +37,3 @@ jobs:
       with:
         readme_check: "true"
         tfpath: ${{ matrix.directory }}
-        ignore_dir: "**/examples/*"
