@@ -17,7 +17,6 @@ jobs:
       uses: mozilla/tf-actions/matrixify@main
       with:
         ignore_dir: "**/examples"
-        ignore_path: "**/examples"
     - name: Outputs
       run: echo "${{ steps.search.outputs.matrix }}"
 
