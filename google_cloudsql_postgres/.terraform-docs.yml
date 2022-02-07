@@ -1,0 +1,14 @@
+# .terraform-docs.yml
+content: |-
+  {{ .Header }}
+
+  ## MVP Example
+
+  ```hcl
+  {{ include "examples/minimal/main.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}  
+
