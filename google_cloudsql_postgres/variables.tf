@@ -4,7 +4,10 @@
 #
 
 variable "project_id" {
+  type    = string
+  default = null
 }
+
 variable "custom_database_name" {
   default     = ""
   description = "Use this field for custom database name."

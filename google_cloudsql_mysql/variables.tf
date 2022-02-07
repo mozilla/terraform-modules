@@ -4,6 +4,11 @@ variable "availability_type" {
   description = "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#availability_type"
 }
 
+variable "project_id" {
+  type    = string
+  default = null
+}
+
 variable "custom_database_name" {
   default     = ""
   description = "Use this field for custom database name."
