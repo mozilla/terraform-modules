@@ -1,69 +1,69 @@
+data "google_project" "project" {
+  project_id = var.project_id
+}
 
 locals {
+  cluster_name        = "${var.name}-${var.realm}"
+  cluster_network_tag = "gke-${local.cluster_name}"
 
-  cluster_resource_labels_defaults = {
-    "name"        = var.name
-    "region"      = var.region
-    "environment" = var.environment
-    "costcenter"  = var.costcenter
-    "terraform"   = "true"
+  labels_defaults = {
+    "realm"     = var.realm
+    "name"      = var.name
+    "region"    = var.region
+    "terraform" = "true"
   }
-  cluster_resource_labels = merge(local.cluster_resource_labels_defaults, var.cluster_resource_labels)
+  labels     = merge(local.labels_defaults, var.labels)
+  project_id = trim(data.google_project.project.id, "/projects/")
 
-  cluster_addons_defaults = {
-    horizontal_pod_autoscaling = true
-    http_load_balancing        = true
-    dns_cache                  = true
-    istio                      = false
-    vertical_pod_autoscaling   = false
-    cloudrun                   = false
+  tags_defaults = [var.realm, var.name, var.region, "terraform"]
+  tags          = setunion(local.tags_defaults, var.tags)
+
+  # monitoring setup
+  resource_usage_export_dataset_id = var.create_resource_usage_export_dataset ? google_bigquery_dataset.dataset[0].id : var.resource_usage_export_dataset_id
+
+  # networking setup
+  master_authorized_networks_defaults = var.realm == "prod" ? [
+    {
+      cidr_block   = "10.151.128.2/32"
+      display_name = "us-central1 prod Bastion"
+    },
+    {
+      cidr_block   = "10.150.128.2/32"
+      display_name = "us-west1 prod Bastion"
+    }
+    ] : [
+    {
+      cidr_block   = "10.151.65.2/32"
+      display_name = "us-central1 nonprod Bastion"
+    },
+    {
+      cidr_block   = "10.150.66.2/32"
+      display_name = "us-west1 nonprod Bastion"
+    }
+  ]
+  master_authorized_networks = setunion(local.master_authorized_networks_defaults, var.master_authorized_networks)
+  master_authorized_networks_config = [{
+    cidr_blocks : local.master_authorized_networks
+  }]
+  master_ipv4_cidr_block      = var.shared_vpc_outputs == null ? var.master_ipv4_cidr_block : var.shared_vpc_outputs.ip_cidr_range.master
+  network                     = var.shared_vpc_outputs == null ? var.network : var.shared_vpc_outputs.network
+  pods_ip_cidr_range_name     = var.shared_vpc_outputs == null ? var.pods_ip_cidr_range_name : var.shared_vpc_outputs.secondary_ip_ranges.pod.range_name
+  services_ip_cidr_range_name = var.shared_vpc_outputs == null ? var.services_ip_cidr_range_name : var.shared_vpc_outputs.secondary_ip_ranges.service.range_name
+  subnetwork                  = var.shared_vpc_outputs == null ? var.subnetwork : var.shared_vpc_outputs.subnetwork
+
+  node_pool_defaults = {
+    disk_size_gb       = 100
+    initial_node_count = 2
+    machine_type       = "n2-standard-4"
+    max_count          = 20
+    max_pods_per_node  = 32
+    max_surge          = 3
+    max_unavailable    = 1
+    min_count          = 1
   }
-  cluster_addons = merge(local.cluster_addons_defaults, var.cluster_addons)
-
-  cluster_features_defaults = {
-    "velero"             = true
-    "external_secrets"   = true
-    "prometheus"         = false
-    "flux"               = false
-    "flux_helm_operator" = false
-  }
-  cluster_features = merge(local.cluster_features_defaults, var.cluster_features)
-
-  velero_defaults = {
-    "credentials.useSecret"                                                = false
-    "configuration.provider"                                               = "gcp"
-    "configuration.backupStorageLocation.name"                             = "gcp"
-    "configuration.backupStorageLocation.bucket"                           = local.cluster_features["velero"] ? google_storage_bucket.bucket[0].name : ""
-    "configuration.backupStorageLocation.config.serviceAccount"            = module.velero_workload_identity.gcp_service_account_email
-    "configuration.volumeSnapshotLocation.name"                            = "gcp"
-    "initContainers[0].name"                                               = "velero-plugin-for-gcp"
-    "initContainers[0].image"                                              = "velero/velero-plugin-for-gcp:v1.1.0"
-    "initContainers[0].volumeMounts[0].mountPath"                          = "/target"
-    "initContainers[0].volumeMounts[0].name"                               = "plugins"
-    "serviceAccount.server.name"                                           = "velero"
-    "serviceAccount.server.annotations.iam\\.gke\\.io/gcp-service-account" = module.velero_workload_identity.gcp_service_account_email
-    "schedules.daily.schedule"                                             = "0 0 * * *"
-    "schedules.daily.template.ttl"                                         = "720h0m0s"
-    "schedules.daily.template.storageLocation"                             = "gcp"
-    "schedules.daily.template.volumeSnapshotLocations[0]"                  = "gcp"
-    "schedules.daily.template.includedNamespaces[0]"                       = "*"
-  }
-  velero_settings = merge(local.velero_defaults, var.velero_settings)
-
-  external_secrets_defaults = {
-    "securityContext.fsGroup"                                       = "65534"
-    "env.POLLER_INTERVAL_MILLISECONDS"                              = "300000"
-    "serviceAccount.name"                                           = "kubernetes-external-secrets"
-    "serviceAccount.annotations.iam\\.gke\\.io/gcp-service-account" = module.external-secrets-workload-identity.gcp_service_account_email
-
-  }
-  external_secrets_settings = merge(local.external_secrets_defaults, var.external_secrets_settings)
-
-  flux_defaults = {
-    "git.path"                                                      = "k8s/"
-    "serviceAccount.name"                                           = "flux"
-    "serviceAccount.annotations.iam\\.gke\\.io/gcp-service-account" = module.flux-workload-identity.gcp_service_account_email
-  }
-  flux_settings = merge(local.flux_defaults, var.flux_settings)
-
+  node_pools              = { for node_pool in var.node_pools : node_pool.name => merge(local.node_pool_defaults, node_pool) }
+  node_pools_labels       = { for node_pool in var.node_pools : node_pool.name => merge(local.labels, lookup(var.node_pools_labels, node_pool.name, {})) }
+  node_pools_oauth_scopes = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_oauth_scopes, node_pool.name, ["https://www.googleapis.com/auth/cloud-platform"]) }
+  node_pools_sysctls      = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_sysctls, node_pool.name, {}) }
+  node_pools_tags         = { for node_pool in var.node_pools : node_pool.name => setunion(local.tags, lookup(var.node_pools_tags, node_pool.name, [])) }
 }

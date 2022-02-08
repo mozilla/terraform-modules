@@ -1,94 +1,84 @@
-# GKE
-Mozilla IT Service Engineering team module for creating a GKE cluster
+<!-- BEGIN_TF_DOCS -->
+# Shared VPC-based GKE Module
 
-This module wraps the upstream terraform registry [GKE module](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/) with some additional niceties
+Module creates an opinionated GKE cluster plus related resources within a Shared VPC context.
 
-Its worth noting that we are using the beta version of the module to take advantage of the workload identity feature
+## Requirements
 
-## Usage:
-Sample usage
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 4.0 |
 
-```hcl
-locals {
-  project_id   = "mozilla-it-service-engineering"
-  name         = "test-cluster"
+## Providers
 
-  node_pools = [
-    {
-      name               = "default-np-1"
-      machine_type       = "e2-small"
-      min_count          = "3"
-      max_count          = "10"
-      max_surge          = "3"
-      auto_repair        = true
-      auto_upgrade       = true
-      initial_node_count = 2
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | 4.11.0 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | 4.11.0 |
 
-    }
-  ]
-}
+## Modules
 
-module "gke" {
-  source       = "github.com/mozilla-it/terraform-modules//gcp/gke?ref=master"
-  costcenter   = "1410"
-  environment  = "dev"
-  project_id   = local.project_id
-  name         = local.name
-  region       = var.region
-  network      = "default"
-  subnetwork   = "default"
-  node_pools   = local.node_pools
-}
-```
+No modules.
 
-There are more options for the `node_pools` input and you these are referenced [here](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine#node_pools-variable)
+## Resources
 
-By default the cluster is configured as a `zonal` cluster, set the `regional` flag to `true` to enable a regional cluster. Read more on regional vs zonal [here](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters#availability)
+| Name | Type |
+|------|------|
+| [google-beta_google_container_cluster.primary](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_container_cluster) | resource |
+| [google-beta_google_container_node_pool.pools](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_container_node_pool) | resource |
+| [google_bigquery_dataset.dataset](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset) | resource |
+| [google_project_iam_member.cluster_service_account-defaults](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
+| [google_project_iam_member.cluster_service_account-gar](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
+| [google_project_iam_member.cluster_service_account-gcr](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
+| [google_service_account.cluster_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
 
-## Setting up flux
-Optionally you can setup flux on the cluster to start doing gitops by enabling a couple of flags.
+## Inputs
 
-```hcl
-locals {
-  project_id   = "mozilla-it-service-engineering"
-  name         = "test-cluster"
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_create_resource_usage_export_dataset"></a> [create\_resource\_usage\_export\_dataset](#input\_create\_resource\_usage\_export\_dataset) | The ID of a BigQuery Dataset for using BigQuery as the destination of resource usage export. Defaults to empty string. | `bool` | `false` | no |
+| <a name="input_description"></a> [description](#input\_description) | The description of the cluster | `string` | `null` | no |
+| <a name="input_enable_network_egress_export"></a> [enable\_network\_egress\_export](#input\_enable\_network\_egress\_export) | Whether to enable network egress metering for this cluster. If enabled, a daemonset will be created in the cluster to meter network egress traffic. Doesn't work with Shared VPC (https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-usage-metering). Defaults to false. | `bool` | `false` | no |
+| <a name="input_enable_resource_consumption_export"></a> [enable\_resource\_consumption\_export](#input\_enable\_resource\_consumption\_export) | Whether to enable resource consumption metering on this cluster. When enabled, a table will be created in the resource export BigQuery dataset to store resource consumption data. The resulting table can be joined with the resource usage table or with BigQuery billing export. Defaults to true. | `bool` | `true` | no |
+| <a name="input_grant_registry_access"></a> [grant\_registry\_access](#input\_grant\_registry\_access) | Grants created cluster-specific service account storage.objectViewer and artifactregistry.reader roles. | `bool` | `true` | no |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The Kubernetes version of the masters. If set to 'latest' it will pull latest available version. Defaults to 'latest'. | `string` | `"latest"` | no |
+| <a name="input_labels"></a> [labels](#input\_labels) | The GCE resource labels (a map of key/value pairs) to be applied to the cluster & other cluster-related resources. Merged with default labels (see locals.tf). | `map(string)` | `{}` | no |
+| <a name="input_maintenance_exclusions"></a> [maintenance\_exclusions](#input\_maintenance\_exclusions) | List of maintenance exclusions. A cluster can have up to three | `list(object({ name = string, start_time = string, end_time = string }))` | `[]` | no |
+| <a name="input_maintenance_start_time"></a> [maintenance\_start\_time](#input\_maintenance\_start\_time) | Time window specified for daily or recurring maintenance operations in RFC3339 format | `string` | `"21:00"` | no |
+| <a name="input_master_authorized_networks"></a> [master\_authorized\_networks](#input\_master\_authorized\_networks) | List of master authorized networks that can access the GKE Master Plane. If none are provided, it defaults to known Bastion hosts for the given realm. See locals.tf for defaults. | `list(object({ cidr_block = string, display_name = string }))` | `[]` | no |
+| <a name="input_master_ipv4_cidr_block"></a> [master\_ipv4\_cidr\_block](#input\_master\_ipv4\_cidr\_block) | The IP range in CIDR notation to use for the hosted master network. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name of the cluster or application (required). | `string` | n/a | yes |
+| <a name="input_network"></a> [network](#input\_network) | Shared VPC Network (formulated as a URL) wherein the cluster will be created. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
+| <a name="input_node_pool_sa_roles"></a> [node\_pool\_sa\_roles](#input\_node\_pool\_sa\_roles) | n/a | `list` | <pre>[<br>  "roles/logging.logWriter",<br>  "roles/monitoring.metricWriter",<br>  "roles/monitoring.viewer",<br>  "roles/stackdriver.resourceMetadata.writer"<br>]</pre> | no |
+| <a name="input_node_pools"></a> [node\_pools](#input\_node\_pools) | Map containing node pools, with each node pool's name being the key and the values being that node pool's configurations. Configurable options per node pool include: `disk_size_gb` (string), `machine_type` (string), `max_count` (number), `max_surge` (number), `max_unavailable` (number), `min_count` (number). See locals.tf for defaults. | `list(map(string))` | <pre>[<br>  {<br>    "name": "tf-default-node-pool"<br>  }<br>]</pre> | no |
+| <a name="input_node_pools_labels"></a> [node\_pools\_labels](#input\_node\_pools\_labels) | Map containing node pools non-default labels (as a map of strings). Each node pool's name is the key. See locals.tf for defaults. | `map(map(map(string)))` | <pre>{<br>  "tf-default-node-pool": {}<br>}</pre> | no |
+| <a name="input_node_pools_oauth_scopes"></a> [node\_pools\_oauth\_scopes](#input\_node\_pools\_oauth\_scopes) | Map containing node pools non-default OAuth scopes (as an list). Each node pool's name is the key. See locals.tf for defaults. | `map(list(string))` | <pre>{<br>  "tf-default-node-pool": []<br>}</pre> | no |
+| <a name="input_node_pools_sysctls"></a> [node\_pools\_sysctls](#input\_node\_pools\_sysctls) | Map containing node pools non-default linux node config sysctls (as a map of maps). Each node pool's name is the key. | `map(map(any))` | <pre>{<br>  "tf-default-node-pool": {}<br>}</pre> | no |
+| <a name="input_node_pools_tags"></a> [node\_pools\_tags](#input\_node\_pools\_tags) | Map containing node pools non-default tags (as an list). Each node pool's name is the key. See locals.tf for defaults. | `map(list(string))` | <pre>{<br>  "tf-default-node-pool": []<br>}</pre> | no |
+| <a name="input_pods_ip_cidr_range_name"></a> [pods\_ip\_cidr\_range\_name](#input\_pods\_ip\_cidr\_range\_name) | The Name of the IP address range for cluster pods IPs. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID to host the cluster in. | `string` | `null` | no |
+| <a name="input_realm"></a> [realm](#input\_realm) | Name of infrastructure realm (e.g. prod or nonprod). | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | Region where cluster & other regional resources should be provisioned. Defaults to us-central1. | `string` | `"us-central1"` | no |
+| <a name="input_registry_project_ids"></a> [registry\_project\_ids](#input\_registry\_project\_ids) | Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects. | `list(string)` | `[]` | no |
+| <a name="input_release_channel"></a> [release\_channel](#input\_release\_channel) | The release channel of this cluster. Accepted values are `UNSPECIFIED`, `RAPID`, `REGULAR` and `STABLE`. Defaults to `REGULAR`. | `string` | `"REGULAR"` | no |
+| <a name="input_resource_usage_export_dataset_id"></a> [resource\_usage\_export\_dataset\_id](#input\_resource\_usage\_export\_dataset\_id) | The ID of a BigQuery Dataset for using BigQuery as the destination of resource usage export. Defaults to null. | `string` | `null` | no |
+| <a name="input_services_ip_cidr_range_name"></a> [services\_ip\_cidr\_range\_name](#input\_services\_ip\_cidr\_range\_name) | The Name of the IP address range for cluster services IPs. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
+| <a name="input_shared_vpc_outputs"></a> [shared\_vpc\_outputs](#input\_shared\_vpc\_outputs) | Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure. | <pre>object({<br>    ip_cidr_range = object({<br>      master  = string<br>      pod     = string<br>      primary = string<br>      service = string<br>    })<br>    network    = string<br>    project_id = string<br>    region     = string<br>    secondary_ip_ranges = object({<br>      pod = object({<br>        ip_cidr_range = string<br>        range_name    = string<br>      })<br>      service = object({<br>        ip_cidr_range = string<br>        range_name    = string<br>      })<br>    })<br>    subnet_name   = string<br>    subnetwork    = string<br>    subnetwork_id = string<br>  })</pre> | `null` | no |
+| <a name="input_subnetwork"></a> [subnetwork](#input\_subnetwork) | Shared VPC Subnetwork (formulated as a URL) wherein the cluster will be created. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | The GCE resource tags (a list of strings) to be applied to the cluster & other cluster-related resources. Merged with default tags (see locals.tf). | `list(string)` | `[]` | no |
 
-  cluster_features = {
-    "flux"               = true
-    "flux_helm_operator" = true
-  }
+## Outputs
 
-  flux_settings = {
-    "git.url"  = "git@github.com:username/repo"
-    "git.path" = "folder"
-  }
-
-  node_pools = [
-    {
-      name               = "default-np-1"
-      machine_type       = "e2-small"
-      min_count          = "3"
-      max_count          = "10"
-      max_surge          = "3"
-      auto_repair        = true
-      auto_upgrade       = true
-      initial_node_count = 2
-
-    }
-  ]
-}
-
-module "gke" {
-  source           = "github.com/mozilla-it/terraform-modules//gcp/gke?ref=master"
-  costcenter       = "1410"
-  environment      = "dev"
-  project_id       = local.project_id
-  name             = local.name
-  region           = var.region
-  network          = "default"
-  subnetwork       = "default"
-  node_pools       = local.node_pools
-  cluster_features = local.cluster_features
-  flux_settings    = local.flux_settings
-}
-```
+| Name | Description |
+|------|-------------|
+| <a name="output_ca_certificate"></a> [ca\_certificate](#output\_ca\_certificate) | CA Certificate for the Cluster |
+| <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Cluster endpoint |
+| <a name="output_location"></a> [location](#output\_location) | Cluster location (region) |
+| <a name="output_master_version"></a> [master\_version](#output\_master\_version) | Current Kubernetes master version |
+| <a name="output_name"></a> [name](#output\_name) | Cluster name |
+| <a name="output_node_pools"></a> [node\_pools](#output\_node\_pools) | List of node pools |
+| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | Cluster Service Account |
+<!-- END_TF_DOCS -->
