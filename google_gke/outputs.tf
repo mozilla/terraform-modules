@@ -1,41 +1,35 @@
-
-output "name" {
-  description = "Cluster name"
-  value       = module.gke.name
+output "ca_certificate" {
+  description = "CA Certificate for the Cluster"
+  value       = google_container_cluster.primary.master_auth.0.cluster_ca_certificate
 }
 
 output "endpoint" {
-  sensitive   = true
   description = "Cluster endpoint"
-  value       = module.gke.endpoint
+  sensitive   = true
+  value       = google_container_cluster.primary.endpoint
 }
 
 output "location" {
-  description = "Cluster location (region if regional cluster, zone if zonal cluster)"
-  value       = module.gke.location
+  description = "Cluster location (region)"
+  value       = google_container_cluster.primary.location
 }
 
 output "master_version" {
-  description = "Current master kubernetes version"
-  value       = module.gke.master_version
+  description = "Current Kubernetes master version"
+  value       = google_container_cluster.primary.master_version
 }
 
-output "node_pools_names" {
-  description = "List of node pools names"
-  value       = module.gke.node_pools_names
+output "name" {
+  description = "Cluster name"
+  value       = google_container_cluster.primary.name
 }
 
-output "node_pools_versions" {
-  description = "List of node pools versions"
-  value       = module.gke.node_pools_versions
+output "node_pools" {
+  description = "List of node pools"
+  value       = google_container_cluster.primary.node_pool
 }
 
-output "zones" {
-  description = "List of zones in which the cluster resides"
-  value       = module.gke.zones
-}
-
-output "kubeconfig" {
-  description = "Raw kubeconfig value"
-  value       = module.gke_auth.kubeconfig_raw
+output "service_account" {
+  description = "Cluster Service Account"
+  value       = google_service_account.cluster_service_account.email
 }
