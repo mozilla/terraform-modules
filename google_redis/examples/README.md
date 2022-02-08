@@ -1,1 +1,0 @@
-# google_redis module examples

@@ -1,6 +1,6 @@
 locals {
   name        = "test-redis"
-  realm       = "nonprod"
+  realm       = "dev"
   subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
 }
 

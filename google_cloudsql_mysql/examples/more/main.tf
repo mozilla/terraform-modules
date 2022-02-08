@@ -1,8 +1,10 @@
+# HI IM JUST TESTING MULTIPLE SUBDIRS ARE BEING IGNORED
+
 locals {
   realm       = "nonprod"
   project_id  = "moz-fx-test-modules-nonprod"
   region      = "us-west1"
-  environment = "stage"
+  environment = "dev"
 
   subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
 }
