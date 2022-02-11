@@ -14,6 +14,7 @@ module "gke" {
   region                          = var.region
   regional                        = var.regional
   zones                           = random_shuffle.zones.result
+  network_project_id              = var.network_project_id
   network                         = var.network
   subnetwork                      = var.subnetwork
   ip_range_pods                   = var.ip_range_pods
@@ -27,6 +28,7 @@ module "gke" {
   cloudrun                        = local.cluster_addons["cloudrun"]
   enable_vertical_pod_autoscaling = local.cluster_addons["vertical_pod_autoscaling"]
   cluster_resource_labels         = local.cluster_resource_labels
+  registry_project_ids            = var.registry_project_ids
 
   # Node configs
   node_metadata = "GKE_METADATA_SERVER"

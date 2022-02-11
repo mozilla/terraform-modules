@@ -2,7 +2,7 @@ locals {
   helm_stable_repository           = "https://kubernetes-charts.storage.googleapis.com"
   helm_incubator_repository        = "http://storage.googleapis.com/kubernetes-charts-incubator"
   helm_vmware_tanzu_repository     = "https://vmware-tanzu.github.io/helm-charts"
-  helm_external_secrets_repository = "https://godaddy.github.io/kubernetes-external-secrets"
+  helm_external_secrets_repository = "https://external-secrets.github.io/kubernetes-external-secrets"
 }
 
 resource "helm_release" "velero" {

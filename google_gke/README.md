@@ -29,7 +29,7 @@ locals {
 }
 
 module "gke" {
-  source       = "github.com/mozilla-it/terraform-modules//gcp/gke?ref=master"
+  source       = "github.com/mozilla/terraform-modules//gcp/gke?ref=master"
   costcenter   = "1410"
   environment  = "dev"
   project_id   = local.project_id

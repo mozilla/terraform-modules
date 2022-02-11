@@ -23,6 +23,12 @@ variable "project_id" {}
 
 variable "name" {}
 
+variable "network_project_id" {
+  type        = string
+  description = "The project ID of the shared VPC's host (for shared vpc support)"
+  default     = ""
+}
+
 variable "network" {}
 
 variable "subnetwork" {}
@@ -74,6 +80,18 @@ variable "node_pools" {
       initial_node_count = 2
     }
   ]
+}
+
+variable "default_max_pods_per_node" {
+  type        = number
+  description = "The maximum number of pods to schedule per node"
+  default     = 32 # based on https://github.com/mozilla-it/global-platform-admin/tree/main/vpc/tf#service-project-network-allocation
+}
+
+variable "registry_project_ids" {
+  type        = list(string)
+  description = "Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects."
+  default     = []
 }
 
 variable "velero_settings" {
