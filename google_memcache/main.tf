@@ -8,7 +8,7 @@ locals {
   name                     = coalesce(var.custom_name, local.default_name)
   default_memcache_configs = {} # Add configs that should be added to all memcache instances here
   memcache_configs         = merge(local.default_memcache_configs, var.memcache_configs)
-  authorized_network       = trimprefix(var.authorized_network, "https://www.googleapis.com/compute/v1/") # Remove the initial part of the URL if the full network URL is passed.
+  authorized_network       = var.authorized_network
 }
 
 resource "google_project_service" "memcache" {

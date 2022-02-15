@@ -5,9 +5,9 @@ Creates a memcache instance within GCP using Cloud Memorystore
 
 ```hcl
 locals {
-  name        = "test-memcache"
-  realm       = "nonprod"
-  subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
+  name     = "test-memcache"
+  realm    = "nonprod"
+  networks = try(data.terraform_remote_state.vpc.outputs.networks.realm[local.realm], {})
 }
 
 module "memcache" {
