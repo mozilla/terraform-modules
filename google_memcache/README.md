@@ -17,7 +17,7 @@ module "memcache" {
   environment        = "dev"
   realm              = local.realm
   memory_size_mb     = 2048
-  authorized_network = local.subnetworks.regions["us-west1"]["network"]
+  authorized_network = local.networks.id
 }
 ```
 
