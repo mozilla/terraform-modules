@@ -1,7 +1,7 @@
 locals {
-  name        = "test-redis"
-  realm       = "nonprod"
-  subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
+  name     = "test-redis"
+  realm    = "nonprod"
+  networks = try(data.terraform_remote_state.vpc.outputs.networks.realm[local.realm], {})
 }
 
 module "redis" {
@@ -15,5 +15,5 @@ module "redis" {
     maxmemory-policy = "allkeys-lru"
   }
   tier               = "STANDARD_HA"
-  authorized_network = local.subnetworks.regions["us-west1"]["network"]
+  authorized_network = local.networks.id
 }
