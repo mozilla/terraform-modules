@@ -36,7 +36,7 @@ module "memcache" {
 | <a name="input_node_count"></a> [node\_count](#input\_node\_count) | n/a | `number` | `1` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `"us-west1"` | no |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `null` | no |
 
 ## Outputs
 
