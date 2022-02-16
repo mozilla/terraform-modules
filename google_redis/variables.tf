@@ -47,7 +47,7 @@ variable "redis_version" {
 }
 
 variable "region" {
-  default = "us-west1"
+  default = null
   type    = string
 }
 
