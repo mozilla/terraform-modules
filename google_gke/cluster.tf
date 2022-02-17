@@ -36,25 +36,19 @@ resource "google_container_cluster" "primary" {
     cluster_secondary_range_name  = local.pods_ip_cidr_range_name
     services_secondary_range_name = local.services_ip_cidr_range_name
   }
-
-  dynamic "master_authorized_networks_config" {
-    for_each = local.master_authorized_networks_config
-
-    content {
-      dynamic "cidr_blocks" {
-        for_each = master_authorized_networks_config.value.cidr_blocks
-
-        content {
-          cidr_block   = lookup(cidr_blocks.value, "cidr_block", "")
-          display_name = lookup(cidr_blocks.value, "display_name", "")
-        }
-      }
-    }
-  }
-
   master_auth {
     client_certificate_config {
       issue_client_certificate = false
+    }
+  }
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.master_authorized_networks
+
+      content {
+        cidr_block   = lookup(cidr_blocks.value, "cidr_block", "")
+        display_name = lookup(cidr_blocks.value, "display_name", "")
+      }
     }
   }
 

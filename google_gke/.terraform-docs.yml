@@ -1,0 +1,38 @@
+# .terraform-docs.yml
+content: |-
+  {{ .Header }}
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+  ## Simple Example
+
+  This uses distinct networking variables and the (module) default node pool.
+
+  ```hcl
+  {{ include "examples/simple.tf" }}
+  ```
+
+  ## Complex Example 1
+
+   This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It also sets up cluster to be able to access GAR images in a different project.
+
+  ```hcl
+  {{ include "examples/complex1.tf" }}
+  ```
+
+  ## Complex Example 2
+
+   This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It creates multiple node pools with some defaults changed per node pool.
+
+  ```hcl
+  {{ include "examples/complex2.tf" }}
+  ```
+

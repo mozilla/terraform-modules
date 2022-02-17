@@ -108,7 +108,7 @@ variable "shared_vpc_outputs" {
 }
 
 variable "master_authorized_networks" {
-  default     = []
+  default     = [{ cidr_block = "192.0.0.8/32", display_name = "tf module placeholder" }]
   description = "List of master authorized networks that can access the GKE Master Plane. If none are provided, it defaults to known Bastion hosts for the given realm. See locals.tf for defaults."
   type        = list(object({ cidr_block = string, display_name = string }))
 }

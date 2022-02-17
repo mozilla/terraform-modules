@@ -18,10 +18,6 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="provider_google"></a> [google](#provider\_google) | 4.11.0 |
 | <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | 4.11.0 |
 
-## Modules
-
-No modules.
-
 ## Resources
 
 | Name | Type |
@@ -48,7 +44,7 @@ No modules.
 | <a name="input_labels"></a> [labels](#input\_labels) | The GCE resource labels (a map of key/value pairs) to be applied to the cluster & other cluster-related resources. Merged with default labels (see locals.tf). | `map(string)` | `{}` | no |
 | <a name="input_maintenance_exclusions"></a> [maintenance\_exclusions](#input\_maintenance\_exclusions) | List of maintenance exclusions. A cluster can have up to three | `list(object({ name = string, start_time = string, end_time = string }))` | `[]` | no |
 | <a name="input_maintenance_start_time"></a> [maintenance\_start\_time](#input\_maintenance\_start\_time) | Time window specified for daily or recurring maintenance operations in RFC3339 format | `string` | `"21:00"` | no |
-| <a name="input_master_authorized_networks"></a> [master\_authorized\_networks](#input\_master\_authorized\_networks) | List of master authorized networks that can access the GKE Master Plane. If none are provided, it defaults to known Bastion hosts for the given realm. See locals.tf for defaults. | `list(object({ cidr_block = string, display_name = string }))` | `[]` | no |
+| <a name="input_master_authorized_networks"></a> [master\_authorized\_networks](#input\_master\_authorized\_networks) | List of master authorized networks that can access the GKE Master Plane. If none are provided, it defaults to known Bastion hosts for the given realm. See locals.tf for defaults. | `list(object({ cidr_block = string, display_name = string }))` | <pre>[<br>  {<br>    "cidr_block": "192.0.0.8/32",<br>    "display_name": "tf module placeholder"<br>  }<br>]</pre> | no |
 | <a name="input_master_ipv4_cidr_block"></a> [master\_ipv4\_cidr\_block](#input\_master\_ipv4\_cidr\_block) | The IP range in CIDR notation to use for the hosted master network. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the cluster or application (required). | `string` | n/a | yes |
 | <a name="input_network"></a> [network](#input\_network) | Shared VPC Network (formulated as a URL) wherein the cluster will be created. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
@@ -81,4 +77,147 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | Cluster name |
 | <a name="output_node_pools"></a> [node\_pools](#output\_node\_pools) | List of node pools |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | Cluster Service Account |
+
+## Simple Example
+
+This uses distinct networking variables and the (module) default node pool.
+
+```hcl
+data "terraform_remote_state" "vpc" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-state-bucket"
+    prefix = "projects/my-sharedvpc-project"
+  }
+}
+
+module "gke" {
+  source = "github.com/mozilla/terraform-modules//google_gke?ref=main"
+
+  name       = "my-cluster"
+  project_id = "shared-clusters"
+  realm      = "nonprod"
+  region     = "us-west1"
+
+  master_ipv4_cidr_block      = "1.2.3.4/28"
+  network                     = "projects/my-vpc-project/global/networks/my-vpc-network"
+  pods_ip_cidr_range_name     = "my-pods-or-cluster-secondary-range-name"
+  services_ip_cidr_range_name = "my-services-secondary-range-name"
+  subnetwork                  = "projects/my-vpc-project/regions/us-west1/subnetworks/my-subnetwork"
+
+  # don't expect metrics to BQ
+  enable_resource_consumption_export = false
+
+  # who can access the k8s control plane
+  # adds currently known, internal bastions by default
+  master_authorized_networks = [
+    {
+      cidr_block   = "1.2.3.4/32"
+      display_name = "bastion"
+    }
+  ]
+}
+```
+
+## Complex Example 1
+
+This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It also sets up cluster to be able to access GAR images in a different project.
+
+```hcl
+data "terraform_remote_state" "vpc" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-state-bucket"
+    prefix = "projects/my-sharedvpc-project"
+  }
+}
+
+module "gke" {
+  source = "github.com/mozilla/terraform-modules//google_gke?ref=main"
+
+  name               = "my-cluster"
+  project_id         = "shared-clusters"
+  realm              = "nonprod"
+  region             = "us-west1"
+  shared_vpc_outputs = data.terraform_remote_state.projects.outputs.projects.shared.nonprod.id["shared-clusters"].regions["us-west1"]
+
+  # export metrics to a module-created BigQuery dataset
+  create_resource_usage_export_dataset = true
+
+  # access docker image GARs in another project
+  # (self-same cluster project id included by default)
+  registry_project_ids = [
+    "team-app1"
+  ]
+
+  # who can access the k8s control plane
+  # adds currently known, internal bastions by default
+  master_authorized_networks = [
+    {
+      cidr_block   = "1.2.3.4/32"
+      display_name = "bastion"
+    }
+  ]
+}
+
+```
+
+## Complex Example 2
+
+This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It creates multiple node pools with some defaults changed per node pool.
+
+```hcl
+data "terraform_remote_state" "vpc" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-state-bucket"
+    prefix = "projects/my-sharedvpc-project"
+  }
+}
+
+module "gke" {
+  source = "github.com/mozilla/terraform-modules//google_gke?ref=main"
+
+  name               = "my-cluster"
+  project_id         = "shared-clusters"
+  realm              = "nonprod"
+  region             = "us-west1"
+  shared_vpc_outputs = data.terraform_remote_state.projects.outputs.projects.shared.nonprod.id["shared-clusters"].regions["us-west1"]
+
+  # export metrics to a pre-created BigQuery dataset
+  resource_usage_export_dataset_id = "cluster_metrics_dataset"
+
+  # Don't use module-defaults node pool
+  # second node pool has special labels for np 2 only;
+  # see locals.tf for default values
+  node_pools = [
+    {
+      name = "nodepool-1"
+    },
+    {
+      name         = "nodepool-2"
+      machine_type = "n2-standard-2"
+      max_count    = 6
+    }
+  ]
+
+  node_pools_labels = {
+    nodepool-2 = {
+      "my-np2-label" = "some-value"
+    }
+  }
+
+  # who can access the k8s control plane
+  # adds currently known, internal bastions by default
+  master_authorized_networks = [
+    {
+      cidr_block   = "1.2.3.4/32"
+      display_name = "bastion"
+    }
+  ]
+}
+```
 <!-- END_TF_DOCS -->

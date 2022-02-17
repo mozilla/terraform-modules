@@ -22,29 +22,6 @@ locals {
   resource_usage_export_dataset_id = var.create_resource_usage_export_dataset ? google_bigquery_dataset.dataset[0].id : var.resource_usage_export_dataset_id
 
   # networking setup
-  master_authorized_networks_defaults = var.realm == "prod" ? [
-    {
-      cidr_block   = "10.151.128.2/32"
-      display_name = "us-central1 prod Bastion"
-    },
-    {
-      cidr_block   = "10.150.128.2/32"
-      display_name = "us-west1 prod Bastion"
-    }
-    ] : [
-    {
-      cidr_block   = "10.151.65.2/32"
-      display_name = "us-central1 nonprod Bastion"
-    },
-    {
-      cidr_block   = "10.150.66.2/32"
-      display_name = "us-west1 nonprod Bastion"
-    }
-  ]
-  master_authorized_networks = setunion(local.master_authorized_networks_defaults, var.master_authorized_networks)
-  master_authorized_networks_config = [{
-    cidr_blocks : local.master_authorized_networks
-  }]
   master_ipv4_cidr_block      = var.shared_vpc_outputs == null ? var.master_ipv4_cidr_block : var.shared_vpc_outputs.ip_cidr_range.master
   network                     = var.shared_vpc_outputs == null ? var.network : var.shared_vpc_outputs.network
   pods_ip_cidr_range_name     = var.shared_vpc_outputs == null ? var.pods_ip_cidr_range_name : var.shared_vpc_outputs.secondary_ip_ranges.pod.range_name
