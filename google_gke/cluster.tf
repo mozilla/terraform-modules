@@ -28,6 +28,17 @@ resource "google_container_cluster" "primary" {
     workload_pool = "${local.project_id}.svc.id.goog"
   }
 
+  # Internal Networking: Defaulting to IPTables & KubeProxy over DataPlane, eBPF & Cilium
+  datapath_provider = local.datapath_provider
+  dynamic "network_policy" {
+    for_each = local.datapath_provider == "ADVANCED_DATAPATH" ? [] : [1]
+
+    content {
+      enabled  = true
+      provider = "CALICO"
+    }
+  }
+
   # Networking: Defaulting to Shared VPC Setup
   network         = local.network
   subnetwork      = local.subnetwork
@@ -50,11 +61,6 @@ resource "google_container_cluster" "primary" {
         display_name = lookup(cidr_blocks.value, "display_name", "")
       }
     }
-  }
-
-  # are we really using gke dataplane v2 (with limitations) over calico?
-  network_policy {
-    enabled = true
   }
 
   private_cluster_config {

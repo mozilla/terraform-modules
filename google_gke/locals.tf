@@ -18,6 +18,9 @@ locals {
   tags_defaults = [var.realm, var.name, var.region, "terraform"]
   tags          = setunion(local.tags_defaults, var.tags)
 
+  # internal networking setup
+  datapath_provider = var.enable_dataplane ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
+
   # monitoring setup
   resource_usage_export_dataset_id = var.create_resource_usage_export_dataset ? google_bigquery_dataset.dataset[0].id : var.resource_usage_export_dataset_id
 

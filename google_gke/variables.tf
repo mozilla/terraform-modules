@@ -78,6 +78,12 @@ variable "maintenance_start_time" {
 #
 # Cluster Networking
 #
+variable "enable_dataplane" {
+  default     = false
+  description = "Whether to enable dataplane v2 on the cluster. Sets DataPath field. Defaults to false."
+  type        = bool
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
