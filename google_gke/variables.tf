@@ -41,7 +41,7 @@ variable "realm" {
 }
 
 variable "region" {
-  default     = "us-central1"
+  default     = null
   description = "Region where cluster & other regional resources should be provisioned. Defaults to us-central1."
   type        = string
 }
