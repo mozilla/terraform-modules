@@ -208,5 +208,10 @@ resource "google_container_node_pool" "pools" {
 
   lifecycle {
     create_before_destroy = true
+
+    ignore_changes = [
+      node_config[0].oauth_scopes,
+      node_config[0].metadata,
+    ]
   }
 }
