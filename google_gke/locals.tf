@@ -22,7 +22,7 @@ locals {
   datapath_provider = var.enable_dataplane ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
 
   # monitoring setup
-  resource_usage_export_dataset_id = var.create_resource_usage_export_dataset ? google_bigquery_dataset.dataset[0].id : var.resource_usage_export_dataset_id
+  resource_usage_export_dataset_id = var.create_resource_usage_export_dataset ? google_bigquery_dataset.dataset[0].dataset_id : var.resource_usage_export_dataset_id
 
   # networking setup
   master_ipv4_cidr_block      = var.shared_vpc_outputs == null ? var.master_ipv4_cidr_block : var.shared_vpc_outputs.ip_cidr_range.master

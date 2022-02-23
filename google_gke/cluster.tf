@@ -88,7 +88,7 @@ resource "google_container_cluster" "primary" {
   }
 
   dynamic "resource_usage_export_config" {
-    for_each = var.resource_usage_export_dataset_id != null ? [{
+    for_each = local.resource_usage_export_dataset_id != null ? [{
       dataset_id                           = local.resource_usage_export_dataset_id
       enable_network_egress_metering       = var.enable_network_egress_export
       enable_resource_consumption_metering = var.enable_resource_consumption_export
