@@ -26,7 +26,7 @@ module "gke" {
   ]
 
   # who can access the k8s control plane
-  # adds currently known, internal bastions by default
+  # adds placeholder bastion network by default
   master_authorized_networks = [
     {
       cidr_block   = "1.2.3.4/32"
