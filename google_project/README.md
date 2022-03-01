@@ -6,7 +6,7 @@ Sets up a single GCP project linked to a billing account plus management metadat
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 3.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.0 |
 
 ## Providers
 
