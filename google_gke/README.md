@@ -1,4 +1,3 @@
-<!-- BEGIN_TF_DOCS -->
 # Shared VPC-based GKE Module
 
 Module creates an opinionated GKE cluster plus related resources within a Shared VPC context.
@@ -29,7 +28,6 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | [google_project_iam_member.cluster_service_account-gar](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
 | [google_project_iam_member.cluster_service_account-gcr](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
 | [google_service_account.cluster_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
-| [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
 
 ## Inputs
 
@@ -56,7 +54,7 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="input_node_pools_sysctls"></a> [node\_pools\_sysctls](#input\_node\_pools\_sysctls) | Map containing node pools non-default linux node config sysctls (as a map of maps). Each node pool's name is the key. | `map(map(any))` | <pre>{<br>  "tf-default-node-pool": {}<br>}</pre> | no |
 | <a name="input_node_pools_tags"></a> [node\_pools\_tags](#input\_node\_pools\_tags) | Map containing node pools non-default tags (as an list). Each node pool's name is the key. See locals.tf for defaults. | `map(list(string))` | <pre>{<br>  "tf-default-node-pool": []<br>}</pre> | no |
 | <a name="input_pods_ip_cidr_range_name"></a> [pods\_ip\_cidr\_range\_name](#input\_pods\_ip\_cidr\_range\_name) | The Name of the IP address range for cluster pods IPs. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
-| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID to host the cluster in. | `string` | `null` | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID to host the cluster in. | `string` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | Name of infrastructure realm (e.g. prod or nonprod). | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region where cluster & other regional resources should be provisioned. Defaults to us-central1. | `string` | `null` | no |
 | <a name="input_registry_project_ids"></a> [registry\_project\_ids](#input\_registry\_project\_ids) | Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects. | `list(string)` | `[]` | no |
@@ -221,4 +219,3 @@ module "gke" {
   ]
 }
 ```
-<!-- END_TF_DOCS -->
