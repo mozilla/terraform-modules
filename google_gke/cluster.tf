@@ -17,7 +17,7 @@ resource "google_container_cluster" "primary" {
   name            = local.cluster_name
   description     = var.description
   location        = var.region
-  project         = local.project_id
+  project         = var.project_id
   resource_labels = local.labels
 
   release_channel {
@@ -25,7 +25,7 @@ resource "google_container_cluster" "primary" {
   }
 
   workload_identity_config {
-    workload_pool = "${local.project_id}.svc.id.goog"
+    workload_pool = "${var.project_id}.svc.id.goog"
   }
 
   # Internal Networking: Defaulting to IPTables & KubeProxy over DataPlane, eBPF & Cilium
@@ -169,7 +169,7 @@ resource "google_container_node_pool" "pools" {
   initial_node_count = each.value.initial_node_count
   location           = var.region
   max_pods_per_node  = each.value.max_pods_per_node
-  project            = local.project_id
+  project            = var.project_id
 
   autoscaling {
     min_node_count = each.value.min_count

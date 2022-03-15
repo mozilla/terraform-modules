@@ -2,20 +2,20 @@
 # Service Account Setup
 #
 locals {
-  registry_projects_list = length(var.registry_project_ids) == 0 ? [local.project_id] : var.registry_project_ids
+  registry_projects_list = length(var.registry_project_ids) == 0 ? [var.project_id] : var.registry_project_ids
 }
 
 resource "google_service_account" "cluster_service_account" {
   account_id   = "gke-${local.cluster_name}"
   display_name = "Terraform-managed service account for cluster ${local.cluster_name}"
-  project      = local.project_id
+  project      = var.project_id
 }
 
 resource "google_project_iam_member" "cluster_service_account-defaults" {
   for_each = toset(var.node_pool_sa_roles)
 
   member  = "serviceAccount:${google_service_account.cluster_service_account.email}"
-  project = local.project_id
+  project = var.project_id
   role    = each.key
 }
 

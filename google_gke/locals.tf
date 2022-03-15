@@ -8,8 +8,7 @@ locals {
     "region"    = var.region
     "terraform" = "true"
   }
-  labels     = merge(local.labels_defaults, var.labels)
-  project_id = var.project_id
+  labels = merge(local.labels_defaults, var.labels)
 
   tags_defaults = [var.realm, var.name, var.region, "terraform"]
   tags          = setunion(local.tags_defaults, var.tags)
