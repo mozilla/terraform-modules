@@ -13,7 +13,7 @@ locals {
     "terraform" = "true"
   }
   labels     = merge(local.labels_defaults, var.labels)
-  project_id = trim(data.google_project.project.id, "/projects/")
+  project_id = data.google_project.project.project_id
 
   tags_defaults = [var.realm, var.name, var.region, "terraform"]
   tags          = setunion(local.tags_defaults, var.tags)
