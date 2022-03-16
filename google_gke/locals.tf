@@ -15,7 +15,7 @@ locals {
   labels     = merge(local.labels_defaults, var.labels)
   project_id = data.google_project.project.project_id
 
-  tags_defaults = [var.realm, var.name, var.region, "terraform"]
+  tags_defaults = [var.realm, var.name, var.region, "terraform", "gke-${var.name}", "gke-clusters"]
   tags          = setunion(local.tags_defaults, var.tags)
 
   # internal networking setup
