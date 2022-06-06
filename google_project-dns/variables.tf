@@ -34,7 +34,7 @@ variable "team_name" {
   type        = string
 
   validation {
-    condition     = contains(["cloudops", "dataops", "servicessre", "websre"], var.team_name)
-    error_message = "Valid values for team_name: cloudops, dataops, servicessre, websre."
+    condition     = contains(["cloudops", "dataops", "dataservices", "platform", "servicessre", "webservices", "websre"], var.team_name)
+    error_message = "Valid values for team_name: cloudops, dataops, dataservices, platform, servicessre, webservices, websre."
   }
 }
