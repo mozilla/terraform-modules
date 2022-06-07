@@ -49,7 +49,7 @@ If you need to generate documentation run:
 ```
 for directory in */
 do
-  terraform-docs --sort-by-required markdown "$directory" > "${directory}README.md"
+  terraform-docs --sort-by required markdown "$directory" > "${directory}README.md"
 done
 ```
 
