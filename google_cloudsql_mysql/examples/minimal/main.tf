@@ -18,7 +18,7 @@ data "terraform_remote_state" "vpc" {
 }
 
 module "mysql_database" {
-  source      = "git@github.com:mozilla/terraform-modules.git/google_cloudsql_mysql?ref=main"
+  source      = "github.com/mozilla/terraform-modules//google_cloudsql_mysql?ref=main"
   application = "testing-mysql"
   environment = local.environment
   realm       = local.realm

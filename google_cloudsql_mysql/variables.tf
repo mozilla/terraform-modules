@@ -38,6 +38,11 @@ variable "environment" {
   description = "Environment e.g., stage."
 }
 
+variable "component" {
+  description = "A logical component of an application"
+  default     = "db"
+}
+
 variable "realm" {
   default     = ""
   description = "Realm e.g., nonprod."

@@ -69,9 +69,10 @@ resource "google_sql_database_instance" "primary" {
     }
 
     user_labels = {
-      app         = var.application
-      environment = var.environment
-      realm       = var.realm
+      app_code       = var.application
+      component_code = format("%s-%s", var.application, var.component)
+      env_code       = var.environment
+      realm          = var.realm
     }
   }
 
@@ -118,6 +119,13 @@ resource "google_sql_database_instance" "replica" {
           value           = lookup(authorized_networks.value, "value", null)
         }
       }
+    }
+
+    user_labels = {
+      app_code       = var.application
+      component_code = format("%s-%s", var.application, var.component)
+      env_code       = var.environment
+      realm          = var.realm
     }
   }
 
