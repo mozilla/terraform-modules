@@ -19,6 +19,11 @@ variable "environment" {
   type        = string
 }
 
+variable "component" {
+  description = "A logical component of an application"
+  default     = "cache"
+}
+
 variable "realm" {
   description = "Realm e.g., nonprod."
   type        = string

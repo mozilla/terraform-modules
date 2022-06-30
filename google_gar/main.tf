@@ -20,8 +20,8 @@ resource "google_artifact_registry_repository" "repository" {
   project       = var.project
 
   labels = {
-    app   = var.application
-    realm = var.realm
+    app_code = var.application
+    realm    = var.realm
   }
 }
 
