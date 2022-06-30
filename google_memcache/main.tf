@@ -36,9 +36,10 @@ resource "google_memcache_instance" "main" {
   }
 
   labels = {
-    app         = var.application
-    environment = var.environment
-    realm       = var.realm
+    app_code       = var.application
+    component_code = format("%s-%s", var.application, var.component)
+    env_code       = var.environment
+    realm          = var.realm
   }
 
   lifecycle {
