@@ -46,4 +46,9 @@ locals {
   node_pools_oauth_scopes = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_oauth_scopes, node_pool.name, ["https://www.googleapis.com/auth/cloud-platform"]) }
   node_pools_sysctls      = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_sysctls, node_pool.name, {}) }
   node_pools_tags         = { for node_pool in var.node_pools : node_pool.name => setunion(local.tags, lookup(var.node_pools_tags, node_pool.name, [])) }
+
+  # Google Group for RBAC
+  cluster_authenticator_security_group = var.google_group_name == null ? [] : [{
+    security_group = var.google_group_name
+  }]
 }
