@@ -6,7 +6,6 @@
 # * enable_l4_ilb_subsetting (needs further impact investigation)
 # * shielded_instance_config.enable_secure_boot & shielded_instance_config.enable_integrity_monitoring (needs further impact investigation)
 # * database_encryption to be added with CloudKMS key (postponed for adding CloudKMS keys structure to Terraform or secrets management)
-# * authenticator_groups_config (postponed)
 
 #
 # GKE Cluster
@@ -111,6 +110,14 @@ resource "google_container_cluster" "primary" {
 
     network_policy_config {
       disabled = false
+    }
+  }
+
+  # Google Groups for RBAC
+  dynamic "authenticator_groups_config" {
+    for_each = local.cluster_authenticator_security_group
+    content {
+      security_group = authenticator_groups_config.value.security_group
     }
   }
 
