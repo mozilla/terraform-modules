@@ -1,5 +1,5 @@
 output "gke_service_account" {
-  value = module.google_gke_tenant.gke-service-account
+  value = module.google_gke_tenant.gke_service_account
 }
 
 output "deploy_service_account" {
