@@ -32,7 +32,7 @@ Calls submodules to bootstrap a tenant project
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | The Github repository running the deployment workflows in the format org/repository | `string` | n/a | yes |
 | <a name="input_wip_name"></a> [wip\_name](#input\_wip\_name) | The name of the workload identity provider | `string` | n/a | yes |
 | <a name="input_wip_project_number"></a> [wip\_project\_number](#input\_wip\_project\_number) | The project number of the project the workload identity provider lives in | `number` | n/a | yes |
-| <a name="input_project_id"></a> [project_id](#input\_project\_id) | n/a | `string` | `null` | yes |
+| <a name="input_project"></a> [project](#input\_project) | n/a | `string` | `null` | yes |
 | <a name="input_application"></a> [application](#input\_application) | n/a | `string` | `null` | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | n/a | `string` | `null` | yes |
 

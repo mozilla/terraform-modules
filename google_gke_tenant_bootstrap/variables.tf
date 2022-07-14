@@ -1,4 +1,4 @@
-variable "project_id" {
+variable "project" {
   default     = null
   description = "The project ID in which we're doing this work."
   type        = string
