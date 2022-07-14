@@ -1,0 +1,31 @@
+variable "location" {
+  type        = string
+  default     = "global"
+  description = "Location of the logging bucket. Supported regions https://cloud.google.com/logging/docs/region-support#bucket-regions"
+}
+
+variable "retention_days" {
+  type        = number
+  default     = 30
+  description = "Log retention for logs, values between 1 and 3650 days"
+}
+
+variable "application" {
+  type        = string
+  description = "Application, e.g. bouncer."
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment, e.g. dev, stage, prod"
+}
+
+variable "project" {
+  type    = string
+  default = null
+}
+
+variable "logging_writer_service_account_member" {
+  type        = string
+  description = "The unique_writer_identity service account that is provisioned when creating a Logging Sink"
+}
