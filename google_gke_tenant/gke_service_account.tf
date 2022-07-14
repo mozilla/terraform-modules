@@ -20,11 +20,12 @@ resource "google_project_iam_member" "sa-role-token-creator" {
   member  = "serviceAccount:${google_service_account.gke-account.name}"
 }
 
-resource "google_project_iam_member" "sa-role-secret-viewer" {
-  project = var.project_id
-  role    = "roles/secretmanager.viewer"
-  member  = "serviceAccount:${google_service_account.gke-account.name}"
-}
+# needed for tag- or regex-based loading of secrets, but not for explicit secret names
+#resource "google_project_iam_member" "sa-role-secret-viewer" {
+#  project = var.project_id
+#  role    = "roles/secretmanager.viewer"
+#  member  = "serviceAccount:${google_service_account.gke-account.name}"
+#}
 
 resource "google_project_iam_member" "sa-role-secret-accessor" {
   project = var.project_id
