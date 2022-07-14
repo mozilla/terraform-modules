@@ -38,3 +38,18 @@ variable "application" {
   type        = string
 }
 
+variable "wip_project_number" {
+  type        = number
+  description = "The project number of the project the workload identity provider lives in"
+}
+
+variable "wip_name" {
+  type        = string
+  description = "The name of the workload identity provider"
+  default     = "github-actions"
+}
+
+variable "github_repository" {
+  type        = string
+  description = "The Github repository running the deployment workflows in the format org/repository"
+}
