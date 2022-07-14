@@ -1,5 +1,5 @@
-module "google_gsm_for_gke" {
-  source = "github.com/mozilla/terraform-modules//google_gsm_for_gke?ref=main"
+module "google_gke_tenant" {
+  source = "github.com/mozilla/terraform-modules//google_gke_tenant?ref=main"
 
   project_id         = var.project_id
   environment        = var.environment
