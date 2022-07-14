@@ -20,7 +20,7 @@ module "google_deployment_accounts" {
 module "google_gar" {
   source = "github.com/mozilla/terraform-modules//google_gar?ref=main"
 
-  project            = var.project_id
-  application        = var.application
-  realm              = var.realm      
+  project     = var.project_id
+  application = var.application
+  realm       = var.realm      
 }
