@@ -246,3 +246,9 @@ variable "registry_project_ids" {
   description = "Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects."
   type        = list(string)
 }
+
+variable "google_group_name" {
+  default     = null
+  description = "Name of the Google security group for use with Kubernetes RBAC. Must be in format: gke-security-groups@yourdomain.com"
+  type        = string
+}

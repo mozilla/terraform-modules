@@ -1,4 +1,3 @@
-<!-- BEGIN_TF_DOCS -->
 # Shared VPC-based GKE Module
 
 Module creates an opinionated GKE cluster plus related resources within a Shared VPC context.
@@ -15,8 +14,8 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.11.0 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | 4.11.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | ~> 4.0 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | ~> 4.0 |
 
 ## Resources
 
@@ -40,6 +39,7 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="input_enable_dataplane"></a> [enable\_dataplane](#input\_enable\_dataplane) | Whether to enable dataplane v2 on the cluster. Sets DataPath field. Defaults to false. | `bool` | `false` | no |
 | <a name="input_enable_network_egress_export"></a> [enable\_network\_egress\_export](#input\_enable\_network\_egress\_export) | Whether to enable network egress metering for this cluster. If enabled, a daemonset will be created in the cluster to meter network egress traffic. Doesn't work with Shared VPC (https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-usage-metering). Defaults to false. | `bool` | `false` | no |
 | <a name="input_enable_resource_consumption_export"></a> [enable\_resource\_consumption\_export](#input\_enable\_resource\_consumption\_export) | Whether to enable resource consumption metering on this cluster. When enabled, a table will be created in the resource export BigQuery dataset to store resource consumption data. The resulting table can be joined with the resource usage table or with BigQuery billing export. Defaults to true. | `bool` | `true` | no |
+| <a name="input_google_group_name"></a> [google\_group\_name](#input\_google\_group\_name) | Name of the Google security group for use with Kubernetes RBAC. Must be in format: gke-security-groups@yourdomain.com | `string` | `null` | no |
 | <a name="input_grant_registry_access"></a> [grant\_registry\_access](#input\_grant\_registry\_access) | Grants created cluster-specific service account storage.objectViewer and artifactregistry.reader roles. | `bool` | `true` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The Kubernetes version of the masters. If set to 'latest' it will pull latest available version. Defaults to 'latest'. | `string` | `"latest"` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | The GCE resource labels (a map of key/value pairs) to be applied to the cluster & other cluster-related resources. Merged with default labels (see locals.tf). | `map(string)` | `{}` | no |
@@ -221,4 +221,3 @@ module "gke" {
   ]
 }
 ```
-<!-- END_TF_DOCS -->
