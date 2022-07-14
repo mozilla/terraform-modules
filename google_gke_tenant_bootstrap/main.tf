@@ -22,5 +22,5 @@ module "google_gar" {
 
   project     = var.project_id
   application = var.application
-  realm       = var.realm      
+  realm       = var.realm
 }

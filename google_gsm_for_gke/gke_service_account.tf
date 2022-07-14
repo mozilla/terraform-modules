@@ -16,19 +16,19 @@ resource "google_service_account_iam_binding" "workload-identity-for-gke" {
 # permissions for use with External Secrets Operator in GKE
 #
 resource "google_project_iam_member" "sa-role-token-creator" {
-  project  = var.project
-  role     = "roles/iam.serviceAccountTokenCreator"
-  member   = "serviceAccount:${google_service_account.gke-account.name}"
+  project = var.project
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${google_service_account.gke-account.name}"
 }
 
 resource "google_project_iam_member" "sa-role-secret-viewer" {
-  project  = var.project
-  role     = "roles/secretmanager.viewer"
-  member   = "serviceAccount:${google_service_account.gke-account.name}"
+  project = var.project
+  role    = "roles/secretmanager.viewer"
+  member  = "serviceAccount:${google_service_account.gke-account.name}"
 }
 
 resource "google_project_iam_member" "sa-role-secret-accessor" {
-  project  = var.project
-  role     = "roles/secretmanager.secretAccessor"
-  member   = "serviceAccount:${google_service_account.gke-account.name}"
+  project = var.project
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.gke-account.name}"
 }
