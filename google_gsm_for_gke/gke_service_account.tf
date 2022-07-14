@@ -5,7 +5,6 @@ resource "google_service_account" "gke-account" {
 }
 
 resource "google_service_account_iam_binding" "workload-identity-for-gke" {
-  project            = var.project_id
   service_account_id = google_service_account.gke-account.name
   role               = "roles/iam.workloadIdentityUser"
   members = [
