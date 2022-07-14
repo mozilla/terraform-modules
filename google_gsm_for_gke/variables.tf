@@ -5,7 +5,7 @@ variable "project_id" {
 }
 
 variable "environment" {
-  default     = []
+  default     = null
   description = "Environment to create (like, 'dev', 'stage', or 'prod')"
   type        = string
 }
