@@ -8,7 +8,7 @@ resource "google_service_account_iam_binding" "workload-identity-for-gke" {
   service_account_id = google_service_account.gke-account.name
   role               = "roles/iam.workloadIdentityUser"
   members = [
-    "serviceAccount:${var.cluster_project_id}.svc.id.goog[${var.namespace}/external-secrets]"
+    "serviceAccount:${var.cluster_project_id}.svc.id.goog[${var.application}-${var.environment}/external-secrets]"
   ]
 }
 
