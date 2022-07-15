@@ -5,19 +5,13 @@ variable "project" {
 }
 
 variable "realm" {
-  description = "Name of infrastructure realm (e.g. prod or nonprod)."
+  description = "Name of infrastructure realm (e.g. prod, nonprod, mgmt, or global)."
   type        = string
 
   validation {
-    condition     = contains(["mgmt", "nonprod", "prod"], var.realm)
-    error_message = "Valid values for realm: mgmt, nonprod, prod."
+    condition     = contains(["mgmt", "global", "nonprod", "prod"], var.realm)
+    error_message = "Valid values for realm: nonprod, prod, mgmt, or global."
   }
-}
-
-variable "region" {
-  default     = null
-  description = "Region where cluster & other regional resources should be provisioned."
-  type        = string
 }
 
 variable "environment" {

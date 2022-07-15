@@ -4,7 +4,7 @@ module "google_gke_tenant" {
   project_id         = var.project
   environment        = var.environment
   cluster_project_id = var.gke_cluster_project_id
-  namespace          = var.application
+  application        = var.application
 }
 
 module "google_deployment_accounts" {
