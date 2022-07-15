@@ -18,7 +18,7 @@ variable "cluster_project_id" {
 
 variable "application" {
   default     = null
-  description = "The namespace prefix for the app's namespaces in k8s. Probably just a short name for the app."
+  description = "Application name, eg. bouncer"
   type        = string
 }
 
