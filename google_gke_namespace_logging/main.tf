@@ -17,8 +17,8 @@ resource "google_logging_project_bucket_config" "namespace" {
   retention_days = var.retention_days
 }
 
-
 resource "google_project_iam_member" "logging_bucket_writer" {
+  count   = var.logging_writer_service_account_member != "" ? 1 : 0
   project = var.project
   role    = "roles/logging.bucketWriter"
   member  = var.logging_writer_service_account_member
