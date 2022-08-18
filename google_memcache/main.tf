@@ -31,8 +31,11 @@ resource "google_memcache_instance" "main" {
   node_count       = var.node_count
   memcache_version = var.memcache_version
 
-  memcache_parameters {
-    params = local.memcache_configs
+  dynamic "memcache_parameters" {
+    for_each = local.memcache_configs
+    content {
+      params = local.memcache_configs
+    }
   }
 
   labels = {
