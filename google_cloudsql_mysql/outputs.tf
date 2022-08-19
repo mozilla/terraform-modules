@@ -25,3 +25,7 @@ output "private_ip_address" {
 output "database_instance" {
   value = google_sql_database_instance.primary
 }
+
+output "replica_instance" {
+  value = var.replica_count == 0 ? null : google_sql_database_instance.replica
+}
