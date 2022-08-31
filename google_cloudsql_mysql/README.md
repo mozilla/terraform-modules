@@ -41,6 +41,7 @@ output "mysql_database" {
   sensitive = true
   value     = module.mysql_database
 }
+
 ```
 
 ## Example with more
@@ -103,6 +104,7 @@ output "mysql_database" {
   sensitive = true
   value     = module.mysql_database
 }
+
 ```
 
 ## Inputs
@@ -110,6 +112,7 @@ output "mysql_database" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `any` | n/a | yes |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `any` | n/a | yes |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | A list of authorized\_network maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list` | `[]` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#availability_type | `string` | `"ZONAL"` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
@@ -121,7 +124,6 @@ output "mysql_database" {
 | <a name="input_db_mem_gb"></a> [db\_mem\_gb](#input\_db\_mem\_gb) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether the instance is protected from deletion | `bool` | `true` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `any` | n/a | yes |
 | <a name="input_force_ha"></a> [force\_ha](#input\_force\_ha) | If set to true, create a mysql replica for HA. Currently the availability\_type works only for postgres | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
 | <a name="input_ip_configuration_require_ssl"></a> [ip\_configuration\_require\_ssl](#input\_ip\_configuration\_require\_ssl) | n/a | `bool` | `true` | no |
@@ -144,5 +146,6 @@ output "mysql_database" {
 | <a name="output_ip_addresses"></a> [ip\_addresses](#output\_ip\_addresses) | n/a |
 | <a name="output_private_ip_address"></a> [private\_ip\_address](#output\_private\_ip\_address) | n/a |
 | <a name="output_public_ip_address"></a> [public\_ip\_address](#output\_public\_ip\_address) | n/a |
+| <a name="output_replica_instance"></a> [replica\_instance](#output\_replica\_instance) | n/a |
 | <a name="output_self_link"></a> [self\_link](#output\_self\_link) | n/a |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
