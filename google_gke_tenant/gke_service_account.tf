@@ -4,12 +4,10 @@ resource "google_service_account" "gke-account" {
   project     = var.project_id
 }
 
-resource "google_service_account_iam_binding" "workload-identity-for-gke" {
+resource "google_service_account_iam_member" "workload-identity-for-gke" {
   service_account_id = google_service_account.gke-account.name
   role               = "roles/iam.workloadIdentityUser"
-  members = [
-    "serviceAccount:${var.cluster_project_id}.svc.id.goog[${var.application}-${var.environment}/external-secrets]"
-  ]
+  member             = "serviceAccount:${var.cluster_project_id}.svc.id.goog[${var.application}-${var.environment}/external-secrets]"
 }
 
 # permissions for use with External Secrets Operator in GKE
