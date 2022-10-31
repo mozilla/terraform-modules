@@ -18,6 +18,12 @@ variable "aws_vpn_gateway_id" {
   type        = string
 }
 
+variable "gcp_advertised_ip_ranges" {
+  default     = []
+  description = "value"
+  type        = set(object({description = string, range = string}))
+}
+
 variable "gcp_network_name" {
   default     = "default"
   description = "GCP VPN network name"

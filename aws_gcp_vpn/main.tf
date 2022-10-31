@@ -55,6 +55,18 @@ resource "google_compute_router" "default" {
 
   bgp {
     asn = var.gcp_private_asn
+
+    advertise_mode    = length(var.gcp_advertised_ip_ranges) > 0 ? "CUSTOM" : "DEFAULT"
+    advertised_groups = length(var.gcp_advertised_ip_ranges) > 0 ? ["ALL_SUBNETS"] : []
+
+    dynamic "advertised_ip_ranges" {
+      for_each = var.gcp_advertised_ip_ranges
+
+      content {
+        description = advertised_ip_ranges.value.description
+        range       = advertised_ip_ranges.value.range
+      }
+    }
   }
 }
 
