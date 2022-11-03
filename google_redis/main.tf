@@ -17,7 +17,6 @@ resource "google_project_service" "redis" {
 }
 
 resource "google_redis_instance" "main" {
-  provider           = google-beta # At this time the beta provider is required to define the maintenance_policy
   project            = var.project_id
   authorized_network = var.authorized_network
   depends_on         = [google_project_service.redis]
