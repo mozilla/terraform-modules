@@ -51,9 +51,9 @@ resource "google_compute_backend_service" "default" {
       serve_while_stale            = lookup(var.cdn_policy, "serve_while_stale", null)
       signed_url_cache_max_age_sec = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
       cache_key_policy {
-        include_host         = true
-        include_protocol     = true
-        include_query_string = true
+        include_host         = lookup(lookup(var.cdn_policy, "cache_key_policy", {}), "include_host", true)
+        include_protocol     = lookup(lookup(var.cdn_policy, "cache_key_policy", {}), "include_protocol", true)
+        include_query_string = lookup(lookup(var.cdn_policy, "cache_key_policy", {}), "include_query_string", true)
       }
     }
   }
