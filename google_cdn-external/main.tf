@@ -3,7 +3,7 @@
  */
 
 locals {
-  name_prefix = "${var.application}-${var.environment}-${var.name}-cdn"
+  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
 }
 
 resource "google_compute_global_network_endpoint_group" "default" {

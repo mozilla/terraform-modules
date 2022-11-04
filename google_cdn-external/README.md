@@ -37,19 +37,18 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_addresses"></a> [addresses](#input\_addresses) | IP Addresses. | <pre>object({<br>    ipv4 = string,<br>    ipv6 = string,<br>  })</pre> | n/a | yes |
 | <a name="input_application"></a> [application](#input\_application) | Application name. | `string` | n/a | yes |
-| <a name="input_certs"></a> [certs](#input\_certs) | List of certificates ids. If this list is empty, this will be HTTP only. | `list(string)` | n/a | yes |
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment name. | `string` | n/a | yes |
-| <a name="input_name"></a> [name](#input\_name) | Name of distribution. | `string` | n/a | yes |
-| <a name="input_origin_fqdn"></a> [origin\_fqdn](#input\_origin\_fqdn) | Origin's fqdn: e.g., 'mozilla.org'. | `string` | n/a | yes |
-| <a name="input_primary_hostname"></a> [primary\_hostname](#input\_primary\_hostname) | Primary hostname of service. | `string` | n/a | yes |
-| <a name="input_realm"></a> [realm](#input\_realm) | Realm name. | `string` | n/a | yes |
 | <a name="input_backend_timeout_sec"></a> [backend\_timeout\_sec](#input\_backend\_timeout\_sec) | Timeout for backend service. | `number` | `10` | no |
 | <a name="input_cdn_policy"></a> [cdn\_policy](#input\_cdn\_policy) | CDN policy config to be passed to backend service. | `map(any)` | `{}` | no |
+| <a name="input_certs"></a> [certs](#input\_certs) | List of certificates ids. If this list is empty, this will be HTTP only. | `list(string)` | n/a | yes |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment name. | `string` | n/a | yes |
 | <a name="input_https_redirect"></a> [https\_redirect](#input\_https\_redirect) | Redirect from http to https. | `bool` | `true` | no |
 | <a name="input_log_sample_rate"></a> [log\_sample\_rate](#input\_log\_sample\_rate) | Sample rate for Cloud Logging. Must be in the interval [0, 1]. | `number` | `1` | no |
+| <a name="input_name"></a> [name](#input\_name) | Optional name of distribution. | `string` | `""` | no |
+| <a name="input_origin_fqdn"></a> [origin\_fqdn](#input\_origin\_fqdn) | Origin's fqdn: e.g., 'mozilla.org'. | `string` | n/a | yes |
 | <a name="input_origin_port"></a> [origin\_port](#input\_origin\_port) | Port to use for origin. | `number` | `443` | no |
 | <a name="input_origin_protocol"></a> [origin\_protocol](#input\_origin\_protocol) | Protocol for the origin. | `string` | `"HTTPS"` | no |
 | <a name="input_path_rewrites"></a> [path\_rewrites](#input\_path\_rewrites) | Dictionary of path matchers. | <pre>map(object({<br>    hosts  = list(string)<br>    paths  = list(string)<br>    target = string<br>  }))</pre> | `{}` | no |
+| <a name="input_primary_hostname"></a> [primary\_hostname](#input\_primary\_hostname) | Primary hostname of service. | `string` | n/a | yes |
 
 ## Outputs
 
