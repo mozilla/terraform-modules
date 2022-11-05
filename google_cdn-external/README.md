@@ -1,6 +1,5 @@
 # Google CDN Distribution for external endpoints
 
-
 ## Requirements
 
 | Name | Version |
@@ -51,7 +50,6 @@ No modules.
 | <a name="input_origin_protocol"></a> [origin\_protocol](#input\_origin\_protocol) | Protocol for the origin. | `string` | `"HTTPS"` | no |
 | <a name="input_path_rewrites"></a> [path\_rewrites](#input\_path\_rewrites) | Dictionary of path matchers. | <pre>map(object({<br>    hosts  = list(string)<br>    paths  = list(string)<br>    target = string<br>  }))</pre> | `{}` | no |
 | <a name="input_primary_hostname"></a> [primary\_hostname](#input\_primary\_hostname) | Primary hostname of service. | `string` | n/a | yes |
-| <a name="input_realm"></a> [realm](#input\_realm) | Realm name. | `string` | n/a | yes |
 
 ## Outputs
 

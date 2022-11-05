@@ -8,11 +8,6 @@ variable "environment" {
   description = "Environment name."
 }
 
-variable "realm" {
-  type        = string
-  description = "Realm name."
-}
-
 variable "name" {
   type        = string
   description = "Name of distribution."
