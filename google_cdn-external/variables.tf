@@ -10,7 +10,8 @@ variable "environment" {
 
 variable "name" {
   type        = string
-  description = "Name of distribution."
+  description = "Optional name of distribution."
+  default     = ""
 }
 
 variable "origin_fqdn" {
