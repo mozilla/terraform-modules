@@ -8,14 +8,10 @@ variable "environment" {
   description = "Environment name."
 }
 
-variable "realm" {
-  type        = string
-  description = "Realm name."
-}
-
 variable "name" {
   type        = string
-  description = "Name of distribution."
+  description = "Optional name of distribution."
+  default     = ""
 }
 
 variable "origin_fqdn" {
