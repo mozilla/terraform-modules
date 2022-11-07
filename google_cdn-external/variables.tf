@@ -71,6 +71,12 @@ variable "cdn_policy" {
   default     = {}
 }
 
+variable "cache_key_policy" {
+  description = "Cache key policy config to be passed to backend service."
+  type        = map(any)
+  default     = {}
+}
+
 variable "log_sample_rate" {
   description = "Sample rate for Cloud Logging. Must be in the interval [0, 1]."
   type        = number

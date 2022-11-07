@@ -38,6 +38,7 @@ No modules.
 | <a name="input_addresses"></a> [addresses](#input\_addresses) | IP Addresses. | <pre>object({<br>    ipv4 = string,<br>    ipv6 = string,<br>  })</pre> | n/a | yes |
 | <a name="input_application"></a> [application](#input\_application) | Application name. | `string` | n/a | yes |
 | <a name="input_backend_timeout_sec"></a> [backend\_timeout\_sec](#input\_backend\_timeout\_sec) | Timeout for backend service. | `number` | `10` | no |
+| <a name="input_cache_key_policy"></a> [cache\_key\_policy](#input\_cache\_key\_policy) | Cache key policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_cdn_policy"></a> [cdn\_policy](#input\_cdn\_policy) | CDN policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_certs"></a> [certs](#input\_certs) | List of certificates ids. If this list is empty, this will be HTTP only. | `list(string)` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. | `string` | n/a | yes |
