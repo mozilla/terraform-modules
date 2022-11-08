@@ -58,8 +58,10 @@ resource "google_compute_backend_service" "default" {
       }
       dynamic "negative_caching_policy" {
         for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }
-        code     = each.value.code
-        ttl      = each.value.ttl
+        content {
+          code = each.value.code
+          ttl  = each.value.ttl
+        }
       }
     }
   }

@@ -79,11 +79,11 @@ variable "cache_key_policy" {
 
 variable "negative_caching_policy" {
   description = "Negative caching policy config to be passed to backend service."
-  type        = list(object({
-                    code = string
-                    ttl  = string
-                }))
-  default     = []
+  type = list(object({
+    code = string
+    ttl  = string
+  }))
+  default = []
 }
 
 variable "log_sample_rate" {
