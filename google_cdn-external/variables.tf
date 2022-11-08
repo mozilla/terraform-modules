@@ -65,6 +65,12 @@ variable "path_rewrites" {
   default = {}
 }
 
+variable "compression_mode" {
+  description = "Can be AUTOMATIC or DISABLED"
+  type        = string
+  default     = "DISABLED"
+}
+
 variable "cdn_policy" {
   description = "CDN policy config to be passed to backend service."
   type        = map(any)
