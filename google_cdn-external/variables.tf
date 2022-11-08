@@ -77,6 +77,15 @@ variable "cache_key_policy" {
   default     = {}
 }
 
+variable "negative_caching_policy" {
+  description = "Negative caching policy config to be passed to backend service."
+  type        = list(object({
+                    code = string
+                    ttl  = string
+                }))
+  default     = []
+}
+
 variable "log_sample_rate" {
   description = "Sample rate for Cloud Logging. Must be in the interval [0, 1]."
   type        = number
