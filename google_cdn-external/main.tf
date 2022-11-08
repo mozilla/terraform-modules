@@ -24,6 +24,7 @@ resource "google_compute_backend_service" "default" {
   enable_cdn                      = true
   timeout_sec                     = var.backend_timeout_sec
   connection_draining_timeout_sec = 10
+  compression_mode                = var.compression_mode
 
   protocol = var.origin_protocol
 
@@ -59,8 +60,8 @@ resource "google_compute_backend_service" "default" {
       dynamic "negative_caching_policy" {
         for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }
         content {
-          code = each.value.code
-          ttl  = each.value.ttl
+          code = negative_caching_policy.value.code
+          ttl  = negative_caching_policy.value.ttl
         }
       }
     }
