@@ -5,13 +5,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.0, < 5 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 4.42, < 5 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 3.0, < 5 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 4.42, < 5 |
 
 ## Modules
 
@@ -41,10 +41,12 @@ No modules.
 | <a name="input_cache_key_policy"></a> [cache\_key\_policy](#input\_cache\_key\_policy) | Cache key policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_cdn_policy"></a> [cdn\_policy](#input\_cdn\_policy) | CDN policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_certs"></a> [certs](#input\_certs) | List of certificates ids. If this list is empty, this will be HTTP only. | `list(string)` | n/a | yes |
+| <a name="input_compression_mode"></a> [compression\_mode](#input\_compression\_mode) | Can be AUTOMATIC or DISABLED | `string` | `"DISABLED"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. | `string` | n/a | yes |
 | <a name="input_https_redirect"></a> [https\_redirect](#input\_https\_redirect) | Redirect from http to https. | `bool` | `true` | no |
 | <a name="input_log_sample_rate"></a> [log\_sample\_rate](#input\_log\_sample\_rate) | Sample rate for Cloud Logging. Must be in the interval [0, 1]. | `number` | `1` | no |
 | <a name="input_name"></a> [name](#input\_name) | Optional name of distribution. | `string` | `""` | no |
+| <a name="input_negative_caching_policy"></a> [negative\_caching\_policy](#input\_negative\_caching\_policy) | Negative caching policy config to be passed to backend service. | <pre>list(object({<br>    code = string<br>    ttl  = string<br>  }))</pre> | `[]` | no |
 | <a name="input_origin_fqdn"></a> [origin\_fqdn](#input\_origin\_fqdn) | Origin's fqdn: e.g., 'mozilla.org'. | `string` | n/a | yes |
 | <a name="input_origin_port"></a> [origin\_port](#input\_origin\_port) | Port to use for origin. | `number` | `443` | no |
 | <a name="input_origin_protocol"></a> [origin\_protocol](#input\_origin\_protocol) | Protocol for the origin. | `string` | `"HTTPS"` | no |

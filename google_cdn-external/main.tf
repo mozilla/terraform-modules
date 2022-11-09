@@ -24,6 +24,7 @@ resource "google_compute_backend_service" "default" {
   enable_cdn                      = true
   timeout_sec                     = var.backend_timeout_sec
   connection_draining_timeout_sec = 10
+  compression_mode                = var.compression_mode
 
   protocol = var.origin_protocol
 
@@ -48,12 +49,20 @@ resource "google_compute_backend_service" "default" {
       client_ttl                   = lookup(var.cdn_policy, "client_ttl", null)
       default_ttl                  = lookup(var.cdn_policy, "default_ttl", null)
       max_ttl                      = lookup(var.cdn_policy, "max_ttl", null)
+      negative_caching             = lookup(var.cdn_policy, "negative_caching", null)
       serve_while_stale            = lookup(var.cdn_policy, "serve_while_stale", null)
       signed_url_cache_max_age_sec = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
       cache_key_policy {
         include_host         = lookup(var.cache_key_policy, "include_host", true)
         include_protocol     = lookup(var.cache_key_policy, "include_protocol", true)
         include_query_string = lookup(var.cache_key_policy, "include_query_string", true)
+      }
+      dynamic "negative_caching_policy" {
+        for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }
+        content {
+          code = negative_caching_policy.value.code
+          ttl  = negative_caching_policy.value.ttl
+        }
       }
     }
   }
