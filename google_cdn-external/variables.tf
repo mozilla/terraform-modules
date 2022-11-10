@@ -103,3 +103,9 @@ variable "backend_timeout_sec" {
   default     = 10
   description = "Timeout for backend service."
 }
+
+variable "quic_override" {
+  description = "Specifies the QUIC override policy. Possible values `NONE`, `ENABLE`, `DISABLE`"
+  type        = string
+  default     = "DISABLE"
+}

@@ -121,6 +121,7 @@ resource "google_compute_target_https_proxy" "default" {
   name             = local.name_prefix
   url_map          = google_compute_url_map.default.id
   ssl_certificates = var.certs
+  quic_override    = var.quic_override
 }
 
 resource "google_compute_global_forwarding_rule" "http" {
