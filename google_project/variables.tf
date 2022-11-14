@@ -49,7 +49,7 @@ variable "extra_project_labels" {
 }
 
 variable "risk_level" {
-  default     = "low"
+  default     = ""
   description = "Level of risk the project poses, usually obtained from an RRA"
   type        = string
 }
