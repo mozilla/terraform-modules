@@ -58,8 +58,23 @@ variable "db_mem_gb" {
   default     = "12"
 }
 
+variable "replica_db_cpu" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
+  default     = "2"
+}
+
+variable "replica_db_mem_gb" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
+  default     = "12"
+}
+
 variable "tier_override" {
   description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.db_cpu and var.db_mem_gb"
+  default     = ""
+}
+
+variable "replica_tier_override" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.replica_db_cpu and var.replica_db_mem_gb"
   default     = ""
 }
 
