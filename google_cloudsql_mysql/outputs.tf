@@ -29,3 +29,11 @@ output "database_instance" {
 output "replica_instance" {
   value = var.replica_count == 0 ? null : google_sql_database_instance.replica
 }
+
+output "replica_private_ip_address" {
+  value = var.replica_count == 0 ? null : google_sql_database_instance.replica[*].private_ip_address
+}
+
+output "replica_public_ip_address" {
+  value = var.replica_count == 0 ? null : google_sql_database_instance.replica[*].public_ip_address
+}
