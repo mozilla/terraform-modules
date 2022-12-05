@@ -252,3 +252,9 @@ variable "google_group_name" {
   description = "Name of the Google security group for use with Kubernetes RBAC. Must be in format: gke-security-groups@yourdomain.com"
   type        = string
 }
+
+variable "filestore_csi_driver" {
+  default     = false
+  type        = bool
+  description = "The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes"
+}
