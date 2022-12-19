@@ -264,3 +264,9 @@ variable "service_account_id" {
   description = "Id of the service account to be provisioned, overrides the default 'gke-cluster_name' value"
   type        = string
 }
+
+variable "monitoring_config_enable_components" {
+  default     = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  description = "Monitoring configuration for the cluster"
+  type        = list(string)
+}

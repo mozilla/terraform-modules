@@ -80,10 +80,7 @@ resource "google_container_cluster" "primary" {
     ]
   }
   monitoring_config {
-    enable_components = [
-      "SYSTEM_COMPONENTS",
-      "WORKLOADS"
-    ]
+    enable_components = var.monitoring_config_enable_components
   }
 
   dynamic "resource_usage_export_config" {
