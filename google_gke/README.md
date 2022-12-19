@@ -34,6 +34,8 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_name"></a> [name](#input\_name) | Name of the cluster or application (required). | `string` | n/a | yes |
+| <a name="input_realm"></a> [realm](#input\_realm) | Name of infrastructure realm (e.g. prod or nonprod). | `string` | n/a | yes |
 | <a name="input_create_resource_usage_export_dataset"></a> [create\_resource\_usage\_export\_dataset](#input\_create\_resource\_usage\_export\_dataset) | The ID of a BigQuery Dataset for using BigQuery as the destination of resource usage export. Defaults to empty string. | `bool` | `false` | no |
 | <a name="input_description"></a> [description](#input\_description) | The description of the cluster | `string` | `null` | no |
 | <a name="input_enable_dataplane"></a> [enable\_dataplane](#input\_enable\_dataplane) | Whether to enable dataplane v2 on the cluster. Sets DataPath field. Defaults to false. | `bool` | `false` | no |
@@ -49,7 +51,6 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="input_master_authorized_networks"></a> [master\_authorized\_networks](#input\_master\_authorized\_networks) | List of master authorized networks that can access the GKE Master Plane. If none are provided, it defaults to known Bastion hosts for the given realm. See locals.tf for defaults. | `list(object({ cidr_block = string, display_name = string }))` | <pre>[<br>  {<br>    "cidr_block": "192.0.0.8/32",<br>    "display_name": "tf module placeholder"<br>  }<br>]</pre> | no |
 | <a name="input_master_ipv4_cidr_block"></a> [master\_ipv4\_cidr\_block](#input\_master\_ipv4\_cidr\_block) | The IP range in CIDR notation to use for the hosted master network. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
 | <a name="input_monitoring_config_enable_components"></a> [monitoring\_config\_enable\_components](#input\_monitoring\_config\_enable\_components) | Monitoring configuration for the cluster | `list(string)` | <pre>[<br>  "SYSTEM_COMPONENTS",<br>  "WORKLOADS"<br>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | Name of the cluster or application (required). | `string` | n/a | yes |
 | <a name="input_network"></a> [network](#input\_network) | Shared VPC Network (formulated as a URL) wherein the cluster will be created. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
 | <a name="input_node_pool_sa_roles"></a> [node\_pool\_sa\_roles](#input\_node\_pool\_sa\_roles) | n/a | `list` | <pre>[<br>  "roles/logging.logWriter",<br>  "roles/monitoring.metricWriter",<br>  "roles/monitoring.viewer",<br>  "roles/stackdriver.resourceMetadata.writer"<br>]</pre> | no |
 | <a name="input_node_pools"></a> [node\_pools](#input\_node\_pools) | Map containing node pools, with each node pool's name being the key and the values being that node pool's configurations. Configurable options per node pool include: `disk_size_gb` (string), `machine_type` (string), `max_count` (number), `max_surge` (number), `max_unavailable` (number), `min_count` (number). See locals.tf for defaults. | `list(map(string))` | <pre>[<br>  {<br>    "name": "tf-default-node-pool"<br>  }<br>]</pre> | no |
@@ -57,9 +58,9 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="input_node_pools_oauth_scopes"></a> [node\_pools\_oauth\_scopes](#input\_node\_pools\_oauth\_scopes) | Map containing node pools non-default OAuth scopes (as an list). Each node pool's name is the key. See locals.tf for defaults. | `map(list(string))` | <pre>{<br>  "tf-default-node-pool": []<br>}</pre> | no |
 | <a name="input_node_pools_sysctls"></a> [node\_pools\_sysctls](#input\_node\_pools\_sysctls) | Map containing node pools non-default linux node config sysctls (as a map of maps). Each node pool's name is the key. | `map(map(any))` | <pre>{<br>  "tf-default-node-pool": {}<br>}</pre> | no |
 | <a name="input_node_pools_tags"></a> [node\_pools\_tags](#input\_node\_pools\_tags) | Map containing node pools non-default tags (as an list). Each node pool's name is the key. See locals.tf for defaults. | `map(list(string))` | <pre>{<br>  "tf-default-node-pool": []<br>}</pre> | no |
+| <a name="input_node_pools_taints"></a> [node\_pools\_taints](#input\_node\_pools\_taints) | Map containing node pools taints. Each node pool's name is the key. See locals.tf for defaults. | `map(map(map(string)))` | <pre>{<br>  "tf-default-node-pool": {}<br>}</pre> | no |
 | <a name="input_pods_ip_cidr_range_name"></a> [pods\_ip\_cidr\_range\_name](#input\_pods\_ip\_cidr\_range\_name) | The Name of the IP address range for cluster pods IPs. Overidden by shared\_vpc\_outputs. | `string` | `null` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID to host the cluster in. | `string` | `null` | no |
-| <a name="input_realm"></a> [realm](#input\_realm) | Name of infrastructure realm (e.g. prod or nonprod). | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region where cluster & other regional resources should be provisioned. Defaults to us-central1. | `string` | `null` | no |
 | <a name="input_registry_project_ids"></a> [registry\_project\_ids](#input\_registry\_project\_ids) | Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects. | `list(string)` | `[]` | no |
 | <a name="input_release_channel"></a> [release\_channel](#input\_release\_channel) | The release channel of this cluster. Accepted values are `UNSPECIFIED`, `RAPID`, `REGULAR` and `STABLE`. Defaults to `REGULAR`. | `string` | `"REGULAR"` | no |
@@ -122,11 +123,12 @@ module "gke" {
     }
   ]
 }
+
 ```
 
 ## Complex Example 1
 
-This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It also sets up cluster to be able to access GAR images in a different project.
+ This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It also sets up cluster to be able to access GAR images in a different project.
 
 ```hcl
 data "terraform_remote_state" "vpc" {
@@ -166,11 +168,12 @@ module "gke" {
   ]
 }
 
+
 ```
 
 ## Complex Example 2
 
-This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It creates multiple node pools with some defaults changed per node pool.
+ This uses a Mozilla-internal Shared VPC Terraform outputs variable for networking. It creates multiple node pools with some defaults changed per node pool.
 
 ```hcl
 data "terraform_remote_state" "vpc" {
@@ -223,4 +226,5 @@ module "gke" {
     }
   ]
 }
+
 ```
