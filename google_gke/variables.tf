@@ -197,7 +197,7 @@ variable "node_pools_tags" {
 
 variable "node_pools_taints" {
   description = "Map containing node pools taints. Each node pool's name is the key. See locals.tf for defaults."
-  type        = map(map(map(string)))
+  type        = map(map(string))
   default = {
     tf-default-node-pool = {}
   }
