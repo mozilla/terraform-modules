@@ -207,7 +207,7 @@ resource "google_container_node_pool" "pools" {
     workload_metadata_config {
       mode = "GKE_METADATA"
     }
-    taint = local.node_pools_taints
+    taint = local.node_pools_taints[each.key]
   }
 
   upgrade_settings {
@@ -221,7 +221,6 @@ resource "google_container_node_pool" "pools" {
     ignore_changes = [
       node_config[0].oauth_scopes,
       node_config[0].metadata,
-      node_config[0].taint
     ]
   }
 }
