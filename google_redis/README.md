@@ -31,7 +31,9 @@ module "redis" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `string` | n/a | yes |
 | <a name="input_authorized_network"></a> [authorized\_network](#input\_authorized\_network) | The network name of the shared VPC | `string` | n/a | yes |
+| <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"cache"` | no |
 | <a name="input_custom_name"></a> [custom\_name](#input\_custom\_name) | Use this field to set a custom name for the redis instance | `string` | `""` | no |
+| <a name="input_enable_persistence"></a> [enable\_persistence](#input\_enable\_persistence) | Controls whether peristence features are enabled | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `string` | n/a | yes |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | Day of the week maintenance should occur | `string` | `"TUESDAY"` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | The hour (from 0-23) when maintenance should start | `number` | `16` | no |

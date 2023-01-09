@@ -28,6 +28,14 @@ resource "google_redis_instance" "main" {
   tier               = var.tier
   connect_mode       = "PRIVATE_SERVICE_ACCESS" # Used for shared VPC access https://cloud.google.com/memorystore/docs/redis/networking
 
+  dynamic "persistence_config" {
+    for_each = var.enable_persistence ? [1] : []
+    content {
+      persistence_mode    = "RDB"
+      rdb_snapshot_period = "ONE_HOUR"
+    }
+  }
+
   maintenance_policy {
     weekly_maintenance_window {
       day = var.maintenance_window_day
