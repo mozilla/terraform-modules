@@ -8,6 +8,7 @@ locals {
   database_name         = coalesce(var.custom_database_name, local.default_database_name)
   tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
   replica_tier          = coalesce(var.replica_tier_override, "db-custom-${var.replica_db_cpu}-${var.replica_db_mem_gb * 1024}")
+  replica_region        = coalesce(var.replica_region_override, var.region)
 
   default_replica_name = "${local.database_name}-replica"
   replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
@@ -85,7 +86,7 @@ resource "google_sql_database_instance" "replica" {
   count                = var.replica_count
   name                 = "${local.replica_name}-${count.index}"
   project              = var.project_id
-  region               = var.region
+  region               = local.replica_region
   database_version     = var.database_version
   master_instance_name = google_sql_database_instance.primary.name
 
