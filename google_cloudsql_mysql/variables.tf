@@ -135,3 +135,29 @@ variable "maintenance_window_hour" {
 variable "maintenance_window_update_track" {
   default = "stable"
 }
+
+variable "query_insights_enabled" {
+  description = "enable / disable query insights"
+  type        = bool
+  default     = false
+}
+
+variable "query_plans_per_minute" {
+  type    = number
+  default = 5
+}
+
+variable "query_string_length" {
+  type    = number
+  default = 1024
+}
+
+variable "record_application_tags" {
+  type    = bool
+  default = false
+}
+
+variable "record_client_address" {
+  type    = bool
+  default = false
+}
