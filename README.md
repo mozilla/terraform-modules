@@ -6,6 +6,7 @@ These modules are intended for Mozilla usage internally. They are not built or s
 
 ## Automation
 
+### Pre-commit Checks
 This repository uses [pre-commit](https://pre-commit.com/) for running some pre-git-commit checks. Install pre-commit locally (see link for instructions) for your own workspace to also run these checks on every git commit. Pipenv files are included optionally if you use such tooling for managing your pre-commit (or other Python packages) installation.
 
 This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run stateless (e.g. no Terraform state or provider connections required) automated checks, including the following:
@@ -16,6 +17,28 @@ This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run sta
   * a `main.tf` file exists;
   * a `versions.tf` file exists & contains value `terraform.required_version`;
 * security checks are run, including validating providers used are allowed & secrets scanning (via same pre-commit tooling).
+
+### Versioning and Releases
+
+Versioning is automated based on [Semantic Versioning](https://semver.org/) using [`semantic-release`](https://github.com/semantic-release/semantic-release).
+Release changelogs are automated by enforcing [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+as a PR check using [`semantic-pull-request`](https://github.com/marketplace/actions/semantic-pull-request).
+
+Conventional commit convention will be checked on:
+* commit message for **PRs with a single commit**
+* PR title for **PRs with multiple commits**
+
+Additionally, commit squashing is required before merging for PRs with multiple commits.
+
+#### Valid PR titles examples:
+
+- `fix: GKE bastion host default notes.`
+- `feat: Copy google-cdn-external from cloudops-infra.`
+- `refactor!: Drop support for Terraform 0.12.`
+- `feat(google_cloudsql_mysql): Add query insights settings.`
+
+Note that since PR titles only have a single line, you have to use the ! syntax for breaking changes.
+
 
 ## Creating modules
 
@@ -54,17 +77,6 @@ done
 ```
 
 Alternatively, `pre-commit install` on this repository to automatically format the docs on commit.
-
-### Versioning
-
-Currently, for Mozilla SRE Terraform modules versioning, we simply use git commits or git tags, using a `module-name_tag-version` structure, and the GitHub repository for the Terraform GitHub source. So:
-
-1. Person pushes Terraform modules changes to mozilla/terraform-modules;
-2. Person optionally tags their mozilla/terraform-modules module git commit following structure `module-name_tag-version`;
-3. Person who always wants to work on the latest version of that module pins to main (softly not recommended);
-4. Person who wants to stay on a pinned “version” of that module pins to a git commit or git tag (see usage instructions below).
-
-This does not give us version filtering, nor a clear mapping of Terraform modules source code to versions - however, we do have some backlog tickets to address fully-featured Terraform modules versioning & publication in future sprints.
 
 ## Using these modules
 
