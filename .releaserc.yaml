@@ -1,8 +1,7 @@
 ---
 branches:
   - main
-  # TODO Remove before merge
-  - chore/automate-versioning-and-releases
+
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
