@@ -30,14 +30,29 @@ Conventional commit convention will be checked on:
 
 Additionally, commit squashing is required before merging for PRs with multiple commits.
 
-#### Valid PR titles examples:
+#### Release rules matching
+From [`semantic-release/commit-analyzer`](https://github.com/semantic-release/commit-analyzer):
 
-- `fix: GKE bastion host default notes.`
-- `feat: Copy google-cdn-external from cloudops-infra.`
-- `refactor!: Drop support for Terraform 0.12.`
-- `feat(google_cloudsql_mysql): Add query insights settings.`
+- Commits with a breaking change will be associated with a `major` release.
+- Commits with `type` 'feat' will be associated with a `minor` release.
+- Commits with `type` 'fix' will be associated with a `patch` release.
+- Commits with `type` 'perf' will be associated with a `patch` release.
+- Commits with scope `no-release` will not be associated with a release type even if they have a breaking change or the `type` 'feat', 'fix' or 'perf'.
+- Commits with `type` 'style' will not be associated with a release type.
+- Commits with `type` 'test' will not be associated with a release type.
+- Commits with `type` 'chore' will not be associated with a release type.
 
-Note that since PR titles only have a single line, you have to use the ! syntax for breaking changes.
+
+#### Valid commit messages and PR titles :
+The tables below shows which commit message or PR title gets you which release type when `semantic-release` runs (using the default configuration):
+
+| PR title / commit message                                                                                                                                                                        | Release type                                                                                                                                |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `fix: GKE bastion host default notes.`                                                                                                                                                           | ~~Patch~~ Fix Release                                                                                                                       |
+| `feat: Copy google-cdn-external from cloudops-infra.`                                                                                                                                            | ~~Minor~~ Feature Release                                                                                                                   |
+| `feat(google_cloudsql_mysql): Add query insights settings.`                                                                                                                                      | ~~Minor~~ Feature Release                                                                                                                   |
+| `refactor!: Drop support for Terraform 0.12.`                                                                                                                                                    | ~~Major~~ Breaking Release <br /> (Note that since PR titles only have a single line, you have to use the `!` syntax for breaking changes.) |
+| `perf(pencil): remove graphiteWidth option`<br><br>`BREAKING CHANGE: The graphiteWidth option has been removed.`<br>`The default graphite width of 10mm is always used for performance reasons.` | ~~Major~~ Breaking Release <br /> (Note that the `BREAKING CHANGE: ` token must be in the footer of the commit message)                     |
 
 
 ## Creating modules
