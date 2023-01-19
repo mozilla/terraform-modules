@@ -28,6 +28,15 @@ Conventional commit convention will be checked on:
 * commit message for **PRs with a single commit**
 * PR title for **PRs with multiple commits**
 
+> #### 💡 Tip
+>
+> Push an empty commit to force `Semantic PR` check on the PR title instead of the commit message if `Semantic PR`
+> GitHub Action prevents merging because a commit message does not respect the Conventional Commits specification.
+> ```shell
+> git commit --allow-empty -m "Semantic PR check"
+> ```
+
+
 Additionally, commit squashing is required before merging for PRs with multiple commits.
 
 #### Release rules matching
