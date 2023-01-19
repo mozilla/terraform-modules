@@ -6,6 +6,7 @@ These modules are intended for Mozilla usage internally. They are not built or s
 
 ## Automation
 
+### Pre-commit Checks
 This repository uses [pre-commit](https://pre-commit.com/) for running some pre-git-commit checks. Install pre-commit locally (see link for instructions) for your own workspace to also run these checks on every git commit. Pipenv files are included optionally if you use such tooling for managing your pre-commit (or other Python packages) installation.
 
 This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run stateless (e.g. no Terraform state or provider connections required) automated checks, including the following:
@@ -16,6 +17,52 @@ This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run sta
   * a `main.tf` file exists;
   * a `versions.tf` file exists & contains value `terraform.required_version`;
 * security checks are run, including validating providers used are allowed & secrets scanning (via same pre-commit tooling).
+
+### Versioning and Releases
+
+Versioning is automated based on [Semantic Versioning](https://semver.org/) using [`semantic-release`](https://github.com/semantic-release/semantic-release).
+Release changelogs are automated by enforcing [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+as a PR check using [`semantic-pull-request`](https://github.com/marketplace/actions/semantic-pull-request).
+
+Conventional commit convention will be checked on:
+* commit message for **PRs with a single commit**
+* PR title for **PRs with multiple commits**
+
+> #### 💡 Tip
+>
+> Push an empty commit to force `Semantic PR` check on the PR title instead of the commit message if `Semantic PR`
+> GitHub Action prevents merging because a commit message does not respect the Conventional Commits specification.
+> ```shell
+> git commit --allow-empty -m "Semantic PR check"
+> ```
+
+
+Additionally, commit squashing is required before merging for PRs with multiple commits.
+
+#### Release rules matching
+From [`semantic-release/commit-analyzer`](https://github.com/semantic-release/commit-analyzer):
+
+- Commits with a breaking change will be associated with a `major` release.
+- Commits with `type` 'feat' will be associated with a `minor` release.
+- Commits with `type` 'fix' will be associated with a `patch` release.
+- Commits with `type` 'perf' will be associated with a `patch` release.
+- Commits with scope `no-release` will not be associated with a release type even if they have a breaking change or the `type` 'feat', 'fix' or 'perf'.
+- Commits with `type` 'style' will not be associated with a release type.
+- Commits with `type` 'test' will not be associated with a release type.
+- Commits with `type` 'chore' will not be associated with a release type.
+
+
+#### Valid commit messages and PR titles :
+The tables below shows which commit message or PR title gets you which release type when `semantic-release` runs (using the default configuration):
+
+| PR title / commit message                                                                                                                                                                        | Release type                                                                                                                                |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `fix: GKE bastion host default notes.`                                                                                                                                                           | ~~Patch~~ Fix Release                                                                                                                       |
+| `feat: Copy google-cdn-external from cloudops-infra.`                                                                                                                                            | ~~Minor~~ Feature Release                                                                                                                   |
+| `feat(google_cloudsql_mysql): Add query insights settings.`                                                                                                                                      | ~~Minor~~ Feature Release                                                                                                                   |
+| `refactor!: Drop support for Terraform 0.12.`                                                                                                                                                    | ~~Major~~ Breaking Release <br /> (Note that since PR titles only have a single line, you have to use the `!` syntax for breaking changes.) |
+| `perf(pencil): remove graphiteWidth option`<br><br>`BREAKING CHANGE: The graphiteWidth option has been removed.`<br>`The default graphite width of 10mm is always used for performance reasons.` | ~~Major~~ Breaking Release <br /> (Note that the `BREAKING CHANGE: ` token must be in the footer of the commit message)                     |
+
 
 ## Creating modules
 
@@ -54,17 +101,6 @@ done
 ```
 
 Alternatively, `pre-commit install` on this repository to automatically format the docs on commit.
-
-### Versioning
-
-Currently, for Mozilla SRE Terraform modules versioning, we simply use git commits or git tags, using a `module-name_tag-version` structure, and the GitHub repository for the Terraform GitHub source. So:
-
-1. Person pushes Terraform modules changes to mozilla/terraform-modules;
-2. Person optionally tags their mozilla/terraform-modules module git commit following structure `module-name_tag-version`;
-3. Person who always wants to work on the latest version of that module pins to main (softly not recommended);
-4. Person who wants to stay on a pinned “version” of that module pins to a git commit or git tag (see usage instructions below).
-
-This does not give us version filtering, nor a clear mapping of Terraform modules source code to versions - however, we do have some backlog tickets to address fully-featured Terraform modules versioning & publication in future sprints.
 
 ## Using these modules
 
