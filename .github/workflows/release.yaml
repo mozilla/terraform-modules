@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - fix/bump-version
 
 jobs:
   release:
