@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - fix/bump-version
 
 jobs:
   release:
@@ -21,4 +20,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release@20 --dry-run
+        run: npx semantic-release@20

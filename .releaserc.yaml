@@ -1,6 +1,5 @@
 branches:
   - main
-  - fix/bump-version
 
 plugins:
   - "@semantic-release/commit-analyzer"
