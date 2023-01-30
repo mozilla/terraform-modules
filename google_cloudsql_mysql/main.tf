@@ -75,10 +75,21 @@ resource "google_sql_database_instance" "primary" {
       env_code       = var.environment
       realm          = var.realm
     }
+
+    dynamic "insights_config" {
+      for_each = var.query_insights_enabled == true ? [1] : []
+
+      content {
+        query_insights_enabled  = var.query_insights_enabled
+        query_plans_per_minute  = var.query_plans_per_minute
+        query_string_length     = var.query_string_length
+        record_application_tags = var.record_application_tags
+        record_client_address   = var.record_client_address
+      }
+    }
   }
 
   deletion_protection = var.deletion_protection
-
 }
 
 resource "google_sql_database_instance" "replica" {
@@ -134,5 +145,4 @@ resource "google_sql_database_instance" "replica" {
   }
 
   deletion_protection = var.deletion_protection
-
 }
