@@ -83,6 +83,11 @@ variable "replica_region_override" {
   default     = ""
 }
 
+variable "replica_availability_type_override" {
+  description = "This OVERRIDES var.availability_type for replicas (replicas use var.availability_type per default).)"
+  default     = ""
+}
+
 variable "instance_version" {
   default     = "v1"
   description = "Version of database. Use this field if you need to spin up a new database instance."
