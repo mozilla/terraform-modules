@@ -22,7 +22,13 @@ variable "custom_replica_name" {
 variable "deletion_protection" {
   default     = true
   type        = bool
-  description = "Whether the instance is protected from deletion"
+  description = "Whether the instance is protected from deletion (TF)"
+}
+
+variable "deletion_protection_enabled" {
+  default     = true
+  type        = bool
+  description = "Whether the instance is protected from deletion (API)"
 }
 
 variable "replica_count" {

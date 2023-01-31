@@ -30,6 +30,8 @@ resource "google_sql_database_instance" "primary" {
 
     availability_type = var.availability_type
 
+    deletion_protection_enabled = var.deletion_protection_enabled
+
     disk_type = "PD_SSD"
     dynamic "database_flags" {
       for_each = var.database_flags
@@ -110,6 +112,8 @@ resource "google_sql_database_instance" "replica" {
     tier = local.replica_tier
 
     availability_type = local.replica_availability_type
+
+    deletion_protection_enabled = var.deletion_protection_enabled
 
     dynamic "database_flags" {
       for_each = var.database_flags
