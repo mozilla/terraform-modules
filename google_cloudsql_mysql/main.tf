@@ -4,11 +4,12 @@
  */
 
 locals {
-  default_database_name = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
-  database_name         = coalesce(var.custom_database_name, local.default_database_name)
-  tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
-  replica_tier          = coalesce(var.replica_tier_override, "db-custom-${var.replica_db_cpu}-${var.replica_db_mem_gb * 1024}")
-  replica_region        = coalesce(var.replica_region_override, var.region)
+  default_database_name     = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
+  database_name             = coalesce(var.custom_database_name, local.default_database_name)
+  tier                      = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
+  replica_tier              = coalesce(var.replica_tier_override, "db-custom-${var.replica_db_cpu}-${var.replica_db_mem_gb * 1024}")
+  replica_region            = coalesce(var.replica_region_override, var.region)
+  replica_availability_type = coalesce(var.replica_availability_type_override, var.availability_type)
 
   default_replica_name = "${local.database_name}-replica"
   replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
@@ -108,7 +109,7 @@ resource "google_sql_database_instance" "replica" {
   settings {
     tier = local.replica_tier
 
-    availability_type = var.availability_type
+    availability_type = local.replica_availability_type
 
     dynamic "database_flags" {
       for_each = var.database_flags
