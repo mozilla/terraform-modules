@@ -5,8 +5,3 @@ output "stream_id" {
 output "stream_name" {
   value = google_datastream_stream.default.name
 }
-
-output "stream_status" {
-  value = google_datastream_stream.default.status
-}
-
