@@ -6,6 +6,11 @@ variable "environment" {
   description = "Environment e.g., stage."
 }
 
+variable "location" {
+  default     = "us-west1"
+  description = "Where to create the datastream profiles and the destination datasets"
+}
+
 variable "realm" {
   default     = ""
   description = "Realm e.g., nonprod."
