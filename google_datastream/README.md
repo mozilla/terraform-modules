@@ -9,13 +9,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.48.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.51.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 4.48.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | ~> 4.51.0 |
 
 ## Inputs
 
@@ -25,6 +25,8 @@
 | <a name="input_component"></a> [component](#input\_component) | n/a | `string` | `"datastream"` | no |
 | <a name="input_datastream_subnet"></a> [datastream\_subnet](#input\_datastream\_subnet) | The subnet in our VPC for datastream to use. Like '172.19.0.0/29'. See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/27920489/GCP+Subnet+Allocations for what's been allocated. | `any` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `any` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Where to create the datastream profiles and the destination datasets | `string` | `"us-west1"` | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Name of the project | `any` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | `""` | no |
 | <a name="input_vpc_network"></a> [vpc\_network](#input\_vpc\_network) | The id of the default VPC shared by all our projects | `any` | n/a | yes |
 
@@ -32,13 +34,6 @@
 
 | Name | Description |
 |------|-------------|
-| <a name="output_connection_name"></a> [connection\_name](#output\_connection\_name) | n/a |
-| <a name="output_database_instance"></a> [database\_instance](#output\_database\_instance) | n/a |
-| <a name="output_ip_addresses"></a> [ip\_addresses](#output\_ip\_addresses) | n/a |
-| <a name="output_private_ip_address"></a> [private\_ip\_address](#output\_private\_ip\_address) | n/a |
-| <a name="output_public_ip_address"></a> [public\_ip\_address](#output\_public\_ip\_address) | n/a |
-| <a name="output_replica_instance"></a> [replica\_instance](#output\_replica\_instance) | n/a |
-| <a name="output_replica_private_ip_address"></a> [replica\_private\_ip\_address](#output\_replica\_private\_ip\_address) | n/a |
-| <a name="output_replica_public_ip_address"></a> [replica\_public\_ip\_address](#output\_replica\_public\_ip\_address) | n/a |
-| <a name="output_self_link"></a> [self\_link](#output\_self\_link) | n/a |
-| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
+| <a name="output_stream_id"></a> [stream\_id](#output\_stream\_id) | n/a |
+| <a name="output_stream_name"></a> [stream\_name](#output\_stream\_name) | n/a |
+| <a name="output_stream_status"></a> [stream\_status](#output\_stream\_status) | n/a |
