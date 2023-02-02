@@ -1,0 +1,16 @@
+formatter: markdown
+content: |-
+
+  # google_datastream
+  ## WARNING! This is very un-customized. You will probably have to modify the module to suit your own needs.
+
+  {{ .Header }}
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
