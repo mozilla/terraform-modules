@@ -32,7 +32,18 @@ variable "datastream_subnet" {
   description = "The subnet in our VPC for datastream to use. Like '172.19.0.0/29'. See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/27920489/GCP+Subnet+Allocations for what's been allocated."
 }
 
-variable "source_connection_profile_name" {
-  description = "You need to create a source_connection_profile manually (https://console.cloud.google.com/datastream/connection-profiles/create) and provide the Connection profile name you chose here. YOU WON'T BE ABLE TO CREATE THIS UNTIL APPLYING THIS PLAN THE FIRST TIME"
-  default     = "profile"
+#variable "source_connection_profile_name" {
+#  description = "You need to create a source_connection_profile manually (https://console.cloud.google.com/datastream/connection-profiles/create) and provide the Connection profile name you chose here. YOU WON'T BE ABLE TO CREATE THIS UNTIL APPLYING THIS PLAN THE FIRST TIME"
+#  default     = "profile"
+#}
+
+variable "postgresql_profile" {
+  description = "PostgreSQL profile"
+  type = object({
+    hostname = string
+    username = string
+    database = string
+  })
+  default = {}
 }
+

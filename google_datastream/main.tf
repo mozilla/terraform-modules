@@ -20,24 +20,25 @@ resource "google_datastream_private_connection" "default" {
   }
 }
 
-# Not using this, because we don't want passwords in terraform's state
-#
-#resource "google_datastream_connection_profile" "source_connection_profile" {
-#  display_name          = "Datastream private connection profile for ${var.application}-${var.realm}-${var.environment}"
-#  location              = var.location
-#  connection_profile_id = "datastream-conn-${var.environment}-${var.location}"
-#
-#  postgresql_profile {
-#    hostname = "thisiswrong"
-#    username = "thisiswrong"
-#    password = "thisiswrong"
-#    database = "thisiswrong"
-#  }
-#
-#  private_connectivity {
-#    private_connection = google_datastream_private_connection.default.id
-#  }
-#}
+resource "google_datastream_connection_profile" "source_connection_profile" {
+  display_name          = "Datastream private connection profile for ${var.application}-${var.realm}-${var.environment}"
+  location              = var.location
+  connection_profile_id = "datastream-conn-${var.environment}-${var.location}"
+
+  dynamic "postgresql_profile" {
+    for_each = { for profile in var.postgresql_profile : "${profile.hostname}.${profile.username}.${profile.database}" => profile }
+    content {
+      hostname = profile.value.hostname
+      username = profile.value.username
+      database = profile.value.database
+      password = "thisisnotarealpassword"
+    }
+  }
+
+  private_connectivity {
+    private_connection = google_datastream_private_connection.default.id
+  }
+}
 
 data "google_bigquery_default_service_account" "bq_sa" {
 }
