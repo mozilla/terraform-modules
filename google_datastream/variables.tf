@@ -11,6 +11,10 @@ variable "location" {
   description = "Where to create the datastream profiles and the destination datasets"
 }
 
+variable "project_id" {
+  description = "Name of the project"
+}
+
 variable "realm" {
   default     = ""
   description = "Realm e.g., nonprod."
