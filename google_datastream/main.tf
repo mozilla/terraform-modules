@@ -1,3 +1,7 @@
+locals {
+  connection_profile_name = "projects/${var.project_id}/locations/${var.location}/connectionProfiles/${var.source_connection_profile_name}"
+}
+
 resource "google_datastream_private_connection" "default" {
   display_name          = "Datastream private connection profile for ${var.application}-${var.realm}-${var.environment}"
   location              = var.location
@@ -60,8 +64,7 @@ resource "google_datastream_stream" "default" {
   location     = var.location
   display_name = "Datastream for ${var.project_id}-${var.environment}-${var.location}"
   source_config {
-    #source_connection_profile = google_datastream_connection_profile.source_connection_profile.id
-    source_connection_profile = var.source_connection_profile
+    source_connection_profile = local.connection_profile_name
     mysql_source_config {}
   }
   destination_config {

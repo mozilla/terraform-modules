@@ -3,6 +3,10 @@ content: |-
 
   # google_datastream
   ## WARNING! This is very un-customized. You will probably have to modify the module to suit your own needs.
+  
+  Warning part II: this will fail on apply the first time because the source_connection_profile does not yet exist. Once it fails, you can proceed to https://console.cloud.google.com/datastream/connection-profiles/create in your project and create a valid profile with the database details. Then capture the resource path for that profile and provide it as source_connection_profile in the inputs below. Then you can re-plan and re-apply.
+
+    So you apply once, this creates the Private Connection Profile. Then you create the Source Connection Profile manually in console, which references the Private Connection Profile. Then you re-plan and re-apply so the Datastream can reference the new Source Connection Profile you just manually made.
 
   {{ .Header }}
 
