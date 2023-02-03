@@ -44,6 +44,5 @@ variable "postgresql_profile" {
     username = string
     database = string
   })
-  default = {}
 }
 
