@@ -84,6 +84,12 @@ variable "enable_dataplane" {
   type        = bool
 }
 
+variable "disable_snat_status" {
+  default     = false
+  description = "Whether the cluster disables default in-node sNAT rules. Defaults to false."
+  type        = bool
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
