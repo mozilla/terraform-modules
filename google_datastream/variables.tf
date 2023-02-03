@@ -39,10 +39,11 @@ variable "datastream_subnet" {
 
 variable "postgresql_profile" {
   description = "PostgreSQL profile"
-  type = object({
+  type = list(object({
     hostname = string
     username = string
     database = string
-  })
+  }))
+  default = []
 }
 
