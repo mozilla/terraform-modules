@@ -1,5 +1,5 @@
 #locals {
-  #connection_profile_name = "projects/${var.project_id}/locations/${var.location}/connectionProfiles/${var.source_connection_profile_name}"
+#connection_profile_name = "projects/${var.project_id}/locations/${var.location}/connectionProfiles/${var.source_connection_profile_name}"
 #}
 
 resource "google_datastream_private_connection" "default" {
