@@ -38,6 +38,10 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  default_snat_status {
+    disabled = var.disable_snat_status
+  }
+
   # Networking: Defaulting to Shared VPC Setup
   network         = local.network
   subnetwork      = local.subnetwork
