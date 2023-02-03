@@ -28,9 +28,9 @@ resource "google_datastream_connection_profile" "source_connection_profile" {
   dynamic "postgresql_profile" {
     for_each = { for profile in var.postgresql_profile : "${profile.hostname}.${profile.username}.${profile.database}" => profile }
     content {
-      hostname = profile.value.hostname
-      username = profile.value.username
-      database = profile.value.database
+      hostname = postgresql_profile.value.hostname
+      username = postgresql_profile.value.username
+      database = postgresql_profile.value.database
       password = "thisisnotarealpassword"
     }
   }
