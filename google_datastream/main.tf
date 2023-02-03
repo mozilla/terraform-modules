@@ -40,15 +40,6 @@ resource "google_datastream_connection_profile" "source_connection_profile" {
   }
 }
 
-data "google_bigquery_default_service_account" "bq_sa" {
-}
-
-resource "google_kms_crypto_key_iam_member" "bigquery_key_user" {
-  crypto_key_id = "bigquery-kms-name"
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:${data.google_bigquery_default_service_account.bq_sa.email}"
-}
-
 resource "google_datastream_connection_profile" "destination_connection_profile" {
   display_name          = "Datastream BQ connection profile for ${var.project_id}-${var.environment}-${var.location}"
   location              = var.location
@@ -73,8 +64,7 @@ resource "google_datastream_stream" "default" {
     bigquery_destination_config {
       source_hierarchy_datasets {
         dataset_template {
-          location     = var.location
-          kms_key_name = "bigquery-kms-name"
+          location = var.location
         }
       }
     }
