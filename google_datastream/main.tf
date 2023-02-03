@@ -49,9 +49,6 @@ resource "google_datastream_connection_profile" "destination_connection_profile"
 }
 
 resource "google_datastream_stream" "default" {
-  depends_on = [
-    google_kms_crypto_key_iam_member.bigquery_key_user
-  ]
   stream_id    = "datastream-${var.project_id}-${var.environment}-${var.location}"
   location     = var.location
   display_name = "Datastream for ${var.project_id}-${var.environment}-${var.location}"
