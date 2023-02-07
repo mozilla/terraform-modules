@@ -48,25 +48,25 @@ resource "google_datastream_connection_profile" "destination_connection_profile"
   bigquery_profile {}
 }
 
-resource "google_datastream_stream" "default" {
-  stream_id    = "datastream-${var.project_id}-${var.environment}-${var.location}"
-  location     = var.location
-  display_name = "Datastream for ${var.project_id}-${var.environment}-${var.location}"
-  source_config {
-    source_connection_profile = google_datastream_connection_profile.source_connection_profile.id
-    mysql_source_config {}
-  }
-  destination_config {
-    destination_connection_profile = google_datastream_connection_profile.destination_connection_profile.id
-    bigquery_destination_config {
-      source_hierarchy_datasets {
-        dataset_template {
-          location = var.location
-        }
-      }
-    }
-  }
-
-  backfill_all {
-  }
-}
+#resource "google_datastream_stream" "default" {
+#  stream_id    = "datastream-${var.project_id}-${var.environment}-${var.location}"
+#  location     = var.location
+#  display_name = "Datastream for ${var.project_id}-${var.environment}-${var.location}"
+#  source_config {
+#    source_connection_profile = google_datastream_connection_profile.source_connection_profile.id
+#    mysql_source_config {}
+#  }
+#  destination_config {
+#    destination_connection_profile = google_datastream_connection_profile.destination_connection_profile.id
+#    bigquery_destination_config {
+#      source_hierarchy_datasets {
+#        dataset_template {
+#          location = var.location
+#        }
+#      }
+#    }
+#  }
+#
+#  backfill_all {
+#  }
+#}
