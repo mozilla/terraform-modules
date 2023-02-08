@@ -20,25 +20,25 @@ resource "google_datastream_private_connection" "default" {
   }
 }
 
-resource "google_datastream_connection_profile" "source_connection_profile" {
-  display_name          = "Datastream private connection profile for ${var.application}-${var.realm}-${var.environment}"
-  location              = var.location
-  connection_profile_id = "datastream-conn-${var.environment}-${var.location}"
-
-  dynamic "postgresql_profile" {
-    for_each = { for profile in var.postgresql_profile : "${profile.hostname}.${profile.username}.${profile.database}" => profile }
-    content {
-      hostname = postgresql_profile.value.hostname
-      username = postgresql_profile.value.username
-      database = postgresql_profile.value.database
-      password = "thisisnotarealpassword"
-    }
-  }
-
-  private_connectivity {
-    private_connection = google_datastream_private_connection.default.id
-  }
-}
+#resource "google_datastream_connection_profile" "source_connection_profile" {
+#  display_name          = "Datastream private connection profile for ${var.application}-${var.realm}-${var.environment}"
+#  location              = var.location
+#  connection_profile_id = "datastream-conn-${var.environment}-${var.location}"
+#
+#  dynamic "postgresql_profile" {
+#    for_each = { for profile in var.postgresql_profile : "${profile.hostname}.${profile.username}.${profile.database}" => profile }
+#    content {
+#      hostname = postgresql_profile.value.hostname
+#      username = postgresql_profile.value.username
+#      database = postgresql_profile.value.database
+#      password = "thisisnotarealpassword"
+#    }
+#  }
+#
+#  private_connectivity {
+#    private_connection = google_datastream_private_connection.default.id
+#  }
+#}
 
 resource "google_datastream_connection_profile" "destination_connection_profile" {
   display_name          = "Datastream BQ connection profile for ${var.project_id}-${var.environment}-${var.location}"
