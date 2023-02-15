@@ -284,3 +284,9 @@ variable "monitoring_config_enable_components" {
   description = "Monitoring configuration for the cluster"
   type        = list(string)
 }
+
+variable "monitoring_enable_managed_prometheus" {
+  type        = bool
+  description = "Configuration for Managed Service for Prometheus. Whether or not the managed collection is enabled."
+  default     = false
+}
