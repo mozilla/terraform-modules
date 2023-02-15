@@ -16,6 +16,7 @@ locals {
   default_database_name = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
   database_name         = coalesce(var.custom_database_name, local.default_database_name)
   tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
+  ip_addresses          = google_sql_database_instance.primary.ip_address
 }
 
 resource "google_sql_database_instance" "primary" {

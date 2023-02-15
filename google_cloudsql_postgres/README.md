@@ -79,4 +79,13 @@ output "postgres_database" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_db_instance_ip"></a> [db\_instance\_ip](#output\_db\_instance\_ip) | n/a |
+| <a name="output_self_link"></a> [self\_link](#output\_self\_link) | n/a |
+| <a name="output_connection_name"></a> [connection\_name](#output\_connection\_name) | n/a |
+| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
+| <a name="output_ip_addresses"></a> [ip\_addresses](#output\_ip\_addresses) | n/a |
+| <a name="output_public_ip_address"></a> [public\_ip\_address](#output\_public\_ip\_address) | n/a |
+| <a name="output_private_ip_address"></a> [private\_ip\_address](#output\_private\_ip\_address) | n/a |
+| <a name="output_database_instance"></a> [database\_instance](#output\_database\_instance) | n/a |
+| <a name="output_replica_instance"></a> [replica\_instance](#output\_replica\_instance) | n/a |
+| <a name="output_replica_public_ip_address"></a> [replica\_public\_ip\_address](#output\_replica\_public\_ip\_address) | n/a |
+| <a name="output_replica_private_ip_address"></a> [replica\_private\_ip\_address](#output\_replica\_private\_ip\_address) | n/a |
