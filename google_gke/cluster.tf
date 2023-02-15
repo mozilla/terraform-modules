@@ -83,8 +83,16 @@ resource "google_container_cluster" "primary" {
       "WORKLOADS"
     ]
   }
+
   monitoring_config {
     enable_components = var.monitoring_config_enable_components
+    dynamic "managed_prometheus" {
+      for_each = var.monitoring_enable_managed_prometheus ? [1] : []
+
+      content {
+        enabled = var.monitoring_enable_managed_prometheus
+      }
+    }
   }
 
   dynamic "resource_usage_export_config" {
