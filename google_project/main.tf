@@ -30,3 +30,19 @@ resource "google_project_service" "project" {
   service            = each.key
   disable_on_destroy = false
 }
+
+resource "google_project_iam_audit_config" "data_access_high {
+   count = var.risk_level == "high" ? 1 : 0
+
+  project = local.project_id
+  service = "allServices"
+  audit_log_config {
+    log_type = "ADMIN_READ"
+  }
+  audit_log_config {
+    log_type = "DATA_READ"
+  }
+  audit_log_config {
+    log_type = "DATA_WRITE"
+  }
+}
