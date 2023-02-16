@@ -31,7 +31,7 @@ resource "google_project_service" "project" {
   disable_on_destroy = false
 }
 
-resource "google_project_iam_audit_config" "data_access_high {
+resource "google_project_iam_audit_config" "data_access_high" {
    count = var.risk_level == "high" ? 1 : 0
 
   project = local.project_id
