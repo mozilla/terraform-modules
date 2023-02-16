@@ -72,3 +72,9 @@ variable "maintenance_window_hour" {
   default     = 16
   type        = number
 }
+
+variable "enable_persistence" {
+  description = "Controls whether peristence features are enabled"
+  default     = false
+  type        = bool
+}

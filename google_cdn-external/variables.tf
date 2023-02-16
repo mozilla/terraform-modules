@@ -65,6 +65,12 @@ variable "path_rewrites" {
   default = {}
 }
 
+variable "security_policy" {
+  description = "Security policy as defined by google_compute_security_policy"
+  type        = string
+  default     = null
+}
+
 variable "compression_mode" {
   description = "Can be AUTOMATIC or DISABLED"
   type        = string

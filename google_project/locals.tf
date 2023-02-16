@@ -15,6 +15,7 @@ locals {
     program_code   = var.program_code
     program_name   = var.program_name
     realm          = var.realm
+    risk_level     = var.risk_level
   }
   all_project_labels = merge(local.default_project_labels, var.extra_project_labels)
 

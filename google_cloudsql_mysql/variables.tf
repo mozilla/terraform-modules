@@ -22,7 +22,13 @@ variable "custom_replica_name" {
 variable "deletion_protection" {
   default     = true
   type        = bool
-  description = "Whether the instance is protected from deletion"
+  description = "Whether the instance is protected from deletion (TF)"
+}
+
+variable "deletion_protection_enabled" {
+  default     = true
+  type        = bool
+  description = "Whether the instance is protected from deletion (API)"
 }
 
 variable "replica_count" {
@@ -58,8 +64,33 @@ variable "db_mem_gb" {
   default     = "12"
 }
 
+variable "replica_db_cpu" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
+  default     = "2"
+}
+
+variable "replica_db_mem_gb" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
+  default     = "12"
+}
+
 variable "tier_override" {
   description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.db_cpu and var.db_mem_gb"
+  default     = ""
+}
+
+variable "replica_tier_override" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.replica_db_cpu and var.replica_db_mem_gb"
+  default     = ""
+}
+
+variable "replica_region_override" {
+  description = "This OVERRIDES var.region for replicas (replicas use var.region per default)."
+  default     = ""
+}
+
+variable "replica_availability_type_override" {
+  description = "This OVERRIDES var.availability_type for replicas (replicas use var.availability_type per default).)"
   default     = ""
 }
 
@@ -119,4 +150,30 @@ variable "maintenance_window_hour" {
 
 variable "maintenance_window_update_track" {
   default = "stable"
+}
+
+variable "query_insights_enabled" {
+  description = "enable / disable query insights"
+  type        = bool
+  default     = false
+}
+
+variable "query_plans_per_minute" {
+  type    = number
+  default = 5
+}
+
+variable "query_string_length" {
+  type    = number
+  default = 1024
+}
+
+variable "record_application_tags" {
+  type    = bool
+  default = false
+}
+
+variable "record_client_address" {
+  type    = bool
+  default = false
 }

@@ -4,9 +4,12 @@
  */
 
 locals {
-  default_database_name = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
-  database_name         = coalesce(var.custom_database_name, local.default_database_name)
-  tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
+  default_database_name     = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
+  database_name             = coalesce(var.custom_database_name, local.default_database_name)
+  tier                      = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
+  replica_tier              = coalesce(var.replica_tier_override, "db-custom-${var.replica_db_cpu}-${var.replica_db_mem_gb * 1024}")
+  replica_region            = coalesce(var.replica_region_override, var.region)
+  replica_availability_type = coalesce(var.replica_availability_type_override, var.availability_type)
 
   default_replica_name = "${local.database_name}-replica"
   replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
@@ -26,6 +29,8 @@ resource "google_sql_database_instance" "primary" {
     tier = local.tier
 
     availability_type = var.availability_type
+
+    deletion_protection_enabled = var.deletion_protection_enabled
 
     disk_type = "PD_SSD"
     dynamic "database_flags" {
@@ -74,17 +79,28 @@ resource "google_sql_database_instance" "primary" {
       env_code       = var.environment
       realm          = var.realm
     }
+
+    dynamic "insights_config" {
+      for_each = var.query_insights_enabled == true ? [1] : []
+
+      content {
+        query_insights_enabled  = var.query_insights_enabled
+        query_plans_per_minute  = var.query_plans_per_minute
+        query_string_length     = var.query_string_length
+        record_application_tags = var.record_application_tags
+        record_client_address   = var.record_client_address
+      }
+    }
   }
 
   deletion_protection = var.deletion_protection
-
 }
 
 resource "google_sql_database_instance" "replica" {
   count                = var.replica_count
   name                 = "${local.replica_name}-${count.index}"
   project              = var.project_id
-  region               = var.region
+  region               = local.replica_region
   database_version     = var.database_version
   master_instance_name = google_sql_database_instance.primary.name
 
@@ -93,7 +109,12 @@ resource "google_sql_database_instance" "replica" {
   }
 
   settings {
-    tier = local.tier
+    tier = local.replica_tier
+
+    availability_type = local.replica_availability_type
+
+    deletion_protection_enabled = var.deletion_protection_enabled
+
     dynamic "database_flags" {
       for_each = var.database_flags
       content {
@@ -130,5 +151,4 @@ resource "google_sql_database_instance" "replica" {
   }
 
   deletion_protection = var.deletion_protection
-
 }

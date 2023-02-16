@@ -84,6 +84,12 @@ variable "enable_dataplane" {
   type        = bool
 }
 
+variable "disable_snat_status" {
+  default     = false
+  description = "Whether the cluster disables default in-node sNAT rules. Defaults to false."
+  type        = bool
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
@@ -195,6 +201,14 @@ variable "node_pools_tags" {
   }
 }
 
+variable "node_pools_taints" {
+  description = "Map containing node pools taints. Each node pool's name is the key. See locals.tf for defaults."
+  type        = map(list(map(string)))
+  default = {
+    tf-default-node-pool = [{}]
+  }
+}
+
 #
 # Monitoring
 #
@@ -251,4 +265,28 @@ variable "google_group_name" {
   default     = null
   description = "Name of the Google security group for use with Kubernetes RBAC. Must be in format: gke-security-groups@yourdomain.com"
   type        = string
+}
+
+variable "filestore_csi_driver" {
+  default     = false
+  type        = bool
+  description = "The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes"
+}
+
+variable "service_account_id" {
+  default     = null
+  description = "Id of the service account to be provisioned, overrides the default 'gke-cluster_name' value"
+  type        = string
+}
+
+variable "monitoring_config_enable_components" {
+  default     = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  description = "Monitoring configuration for the cluster"
+  type        = list(string)
+}
+
+variable "monitoring_enable_managed_prometheus" {
+  type        = bool
+  description = "Configuration for Managed Service for Prometheus. Whether or not the managed collection is enabled."
+  default     = false
 }

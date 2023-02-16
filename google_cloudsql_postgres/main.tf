@@ -16,6 +16,7 @@ locals {
   default_database_name = "${var.application}-${var.realm}-${var.environment}-${var.instance_version}"
   database_name         = coalesce(var.custom_database_name, local.default_database_name)
   tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
+  ip_addresses          = google_sql_database_instance.primary.ip_address
 }
 
 resource "google_sql_database_instance" "primary" {
@@ -27,8 +28,9 @@ resource "google_sql_database_instance" "primary" {
   database_version = var.database_version
 
   settings {
-    tier              = local.tier
-    availability_type = var.availability_type
+    deletion_protection_enabled = var.deletion_protection_enabled
+    tier                        = local.tier
+    availability_type           = var.availability_type
 
     backup_configuration {
       enabled                        = true
@@ -94,7 +96,6 @@ resource "google_sql_database_instance" "primary" {
   }
 
   deletion_protection = var.deletion_protection
-
 }
 
 resource "google_sql_database_instance" "replica" {
@@ -105,7 +106,9 @@ resource "google_sql_database_instance" "replica" {
   master_instance_name = google_sql_database_instance.primary.name
 
   settings {
-    tier = local.tier
+    deletion_protection_enabled = var.deletion_protection_enabled
+    tier                        = local.tier
+
     dynamic "database_flags" {
       for_each = var.database_flags
       content {
@@ -146,5 +149,4 @@ resource "google_sql_database_instance" "replica" {
   }
 
   deletion_protection = var.deletion_protection
-
 }

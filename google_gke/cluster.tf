@@ -38,6 +38,10 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  default_snat_status {
+    disabled = var.disable_snat_status
+  }
+
   # Networking: Defaulting to Shared VPC Setup
   network         = local.network
   subnetwork      = local.subnetwork
@@ -79,11 +83,16 @@ resource "google_container_cluster" "primary" {
       "WORKLOADS"
     ]
   }
+
   monitoring_config {
-    enable_components = [
-      "SYSTEM_COMPONENTS",
-      "WORKLOADS"
-    ]
+    enable_components = var.monitoring_config_enable_components
+    dynamic "managed_prometheus" {
+      for_each = var.monitoring_enable_managed_prometheus ? [1] : []
+
+      content {
+        enabled = var.monitoring_enable_managed_prometheus
+      }
+    }
   }
 
   dynamic "resource_usage_export_config" {
@@ -110,6 +119,10 @@ resource "google_container_cluster" "primary" {
 
     network_policy_config {
       disabled = false
+    }
+
+    gcp_filestore_csi_driver_config {
+      enabled = var.filestore_csi_driver
     }
   }
 
@@ -206,6 +219,7 @@ resource "google_container_node_pool" "pools" {
     workload_metadata_config {
       mode = "GKE_METADATA"
     }
+    taint = local.node_pools_taints[each.key]
   }
 
   upgrade_settings {

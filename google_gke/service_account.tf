@@ -6,7 +6,7 @@ locals {
 }
 
 resource "google_service_account" "cluster_service_account" {
-  account_id   = "gke-${local.cluster_name}"
+  account_id   = var.service_account_id == null ? "gke-${local.cluster_name}" : var.service_account_id
   display_name = "Terraform-managed service account for cluster ${local.cluster_name}"
   project      = local.project_id
 }

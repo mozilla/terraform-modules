@@ -26,6 +26,8 @@ resource "google_compute_backend_service" "default" {
   connection_draining_timeout_sec = 10
   compression_mode                = var.compression_mode
 
+  security_policy = var.security_policy
+
   protocol = var.origin_protocol
 
   custom_request_headers = [

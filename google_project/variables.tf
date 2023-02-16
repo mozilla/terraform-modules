@@ -48,6 +48,12 @@ variable "extra_project_labels" {
   default     = {}
 }
 
+variable "risk_level" {
+  default     = ""
+  description = "Level of risk the project poses, usually obtained from an RRA"
+  type        = string
+}
+
 #
 # Variables to possibly Archive?
 #

@@ -38,6 +38,19 @@ resource "google_memcache_instance" "main" {
     }
   }
 
+  maintenance_policy {
+    weekly_maintenance_window {
+      day      = var.maintenance_window_day
+      duration = var.maintenance_duration
+      start_time {
+        hours   = var.maintenance_window_hour
+        minutes = 0
+        seconds = 0
+        nanos   = 0
+      }
+    }
+  }
+
   labels = {
     app_code       = var.application
     component_code = format("%s-%s", var.application, var.component)
