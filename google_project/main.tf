@@ -32,7 +32,7 @@ resource "google_project_service" "project" {
 }
 
 resource "google_project_iam_audit_config" "data_access_high" {
-  count = local.labels.risk_level == "high" ? 1 : 0
+  count = var.labels.risk_level == "high" ? 1 : 0
 
   project = local.project_id
   service = "allServices"
