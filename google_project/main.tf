@@ -48,7 +48,7 @@ resource "google_project_iam_audit_config" "data_access_high" {
 }
 
 resource "google_logging_project_exclusion" "data_access_exclusions" {
-  for_each = var.tenants
+  for_each = local.project
 
   name        = "exclude-data-access-${each.key}"
   description = "Exclude data access logs except BigQuery, secrets manager, and IAM for ${each.key}"
