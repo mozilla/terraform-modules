@@ -48,12 +48,12 @@ resource "google_project_iam_audit_config" "data_access_high" {
 }
 
 resource "google_logging_project_exclusion" "data_access_exclusions" {
-  for_each    = var.tenants
+  for_each = var.tenants
 
   name        = "exclude-data-access-${each.key}"
   description = "Exclude data access logs except BigQuery, secrets manager, and IAM for ${each.key}"
 
-  filter      = <<EOT
+  filter = <<EOT
 cloudaudit.googleapis.com/data_access
 AND NOT protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 AND NOT protopayload.metadata."serviceName"="secretmanager.googleapis.com"
