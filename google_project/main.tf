@@ -58,3 +58,4 @@ AND NOT protoPayload.serviceName="secretmanager.googleapis.com"
 AND NOT protoPayload.serviceName="iam.googleapis.com"
   EOT
 }
+
