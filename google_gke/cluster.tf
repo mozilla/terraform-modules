@@ -38,6 +38,13 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  dynamic "cost_management_config" {
+    for_each = var.enable_cost_allocation ? [1] : []
+    content {
+      enabled = var.enable_cost_allocation
+    }
+  }
+
   default_snat_status {
     disabled = var.disable_snat_status
   }
