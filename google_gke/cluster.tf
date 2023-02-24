@@ -66,13 +66,17 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  private_cluster_config {
-    enable_private_endpoint = true
-    enable_private_nodes    = true
-    master_ipv4_cidr_block  = local.master_ipv4_cidr_block
+  dynamic "private_cluster_config" {
+    for_each = var.enable_private_cluster ? [1] : []
 
-    master_global_access_config {
-      enabled = true
+    content {
+      enable_private_endpoint = var.enable_private_cluster
+      enable_private_nodes    = var.enable_private_cluster
+      master_ipv4_cidr_block  = local.master_ipv4_cidr_block
+
+      master_global_access_config {
+        enabled = var.enable_private_cluster
+      }
     }
   }
 
