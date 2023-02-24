@@ -90,6 +90,12 @@ variable "disable_snat_status" {
   type        = bool
 }
 
+variable "enable_private_cluster" {
+  default     = true
+  description = "Determines whether the cluster is private or public. Defaults to private"
+  type        = bool
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
