@@ -286,7 +286,7 @@ variable "service_account_id" {
 }
 
 variable "monitoring_config_enable_components" {
-  default     = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  default     = ["SYSTEM_COMPONENTS"]
   description = "Monitoring configuration for the cluster"
   type        = list(string)
 }
