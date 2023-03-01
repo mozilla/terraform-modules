@@ -129,7 +129,7 @@ resource "google_container_cluster" "primary" {
     }
 
     network_policy_config {
-      disabled = false
+      disabled = local.datapath_provider == "ADVANCED_DATAPATH" ? true : false
     }
 
     gcp_filestore_csi_driver_config {
