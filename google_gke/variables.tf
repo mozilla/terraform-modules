@@ -296,3 +296,9 @@ variable "monitoring_enable_managed_prometheus" {
   description = "Configuration for Managed Service for Prometheus. Whether or not the managed collection is enabled."
   default     = false
 }
+
+variable "enable_cost_allocation" {
+  type        = bool
+  description = "Enables Cost Allocation Feature and the cluster name and namespace of your GKE workloads appear in the labels field of the billing export to BigQuery"
+  default     = false
+}
