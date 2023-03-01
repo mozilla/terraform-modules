@@ -19,7 +19,8 @@ locals {
   tags          = setunion(local.tags_defaults, var.tags)
 
   # internal networking setup
-  datapath_provider = var.enable_dataplane ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
+  datapath_provider     = var.enable_dataplane ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
+  network_policy_config = var.enable_dataplane ? true : false
 
   # monitoring setup
   resource_usage_export_dataset_id = var.create_resource_usage_export_dataset ? google_bigquery_dataset.dataset[0].dataset_id : var.resource_usage_export_dataset_id

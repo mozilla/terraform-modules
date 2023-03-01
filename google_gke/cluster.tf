@@ -129,7 +129,7 @@ resource "google_container_cluster" "primary" {
     }
 
     network_policy_config {
-      disabled = false
+      disabled = local.network_policy_config
     }
 
     gcp_filestore_csi_driver_config {
