@@ -30,9 +30,9 @@ resource "google_compute_backend_service" "default" {
 
   protocol = var.origin_protocol
 
-  custom_request_headers = [
-    "host: ${var.origin_fqdn}"
-  ]
+  custom_request_headers = concat(["host: ${var.origin_fqdn}"], var.custom_request_headers)
+
+  custom_response_headers = var.custom_response_headers
 
   backend {
     group = google_compute_global_network_endpoint_group.default.self_link
@@ -55,9 +55,13 @@ resource "google_compute_backend_service" "default" {
       serve_while_stale            = lookup(var.cdn_policy, "serve_while_stale", null)
       signed_url_cache_max_age_sec = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
       cache_key_policy {
-        include_host         = lookup(var.cache_key_policy, "include_host", true)
-        include_protocol     = lookup(var.cache_key_policy, "include_protocol", true)
-        include_query_string = lookup(var.cache_key_policy, "include_query_string", true)
+        include_host           = lookup(var.cache_key_policy, "include_host", true)
+        include_protocol       = lookup(var.cache_key_policy, "include_protocol", true)
+        include_query_string   = lookup(var.cache_key_policy, "include_query_string", true)
+        include_http_headers   = lookup(var.cache_key_policy, "include_https_heaers", null)
+        include_named_cookies  = lookup(var.cache_key_policy, "include_named_cookies", null)
+        query_string_whitelist = lookup(var.cache_key_policy, "query_string_whitelist", null)
+        query_string_blacklist = lookup(var.cache_key_policy, "query_string_blacklist", null)
       }
       dynamic "negative_caching_policy" {
         for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }

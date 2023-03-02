@@ -115,3 +115,15 @@ variable "quic_override" {
   type        = string
   default     = "DISABLE"
 }
+
+variable "custom_response_headers" {
+  description = "Specifies custom response headers"
+  type        = list(string)
+  default     = null
+}
+
+variable "custom_request_headers" {
+  description = "Specifies custom response headers"
+  type        = list(string)
+  default     = null
+}
