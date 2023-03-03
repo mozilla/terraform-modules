@@ -39,6 +39,13 @@ variable "primary_hostname" {
 variable "certs" {
   type        = list(string)
   description = "List of certificates ids. If this list is empty, this will be HTTP only."
+  default     = []
+}
+
+variable "certificate_map" {
+  type        = string
+  description = "CertificateMap for certificates using cert-manager"
+  default     = ""
 }
 
 variable "https_redirect" {
@@ -85,7 +92,7 @@ variable "cdn_policy" {
 
 variable "cache_key_policy" {
   description = "Cache key policy config to be passed to backend service."
-  type        = map(any)
+  type        = any
   default     = {}
 }
 
