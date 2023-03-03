@@ -58,7 +58,7 @@ resource "google_compute_backend_service" "default" {
         include_host           = lookup(var.cache_key_policy, "include_host", true)
         include_protocol       = lookup(var.cache_key_policy, "include_protocol", true)
         include_query_string   = lookup(var.cache_key_policy, "include_query_string", true)
-        include_http_headers   = lookup(var.cache_key_policy, "include_https_heaers", null)
+        include_http_headers   = lookup(var.cache_key_policy, "include_http_headers", null)
         include_named_cookies  = lookup(var.cache_key_policy, "include_named_cookies", null)
         query_string_whitelist = lookup(var.cache_key_policy, "query_string_whitelist", null)
         query_string_blacklist = lookup(var.cache_key_policy, "query_string_blacklist", null)
