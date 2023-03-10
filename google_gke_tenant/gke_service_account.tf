@@ -4,10 +4,26 @@ resource "google_service_account" "gke-account" {
   project     = var.project_id
 }
 
-resource "google_service_account_iam_member" "workload-identity-for-gke" {
-  service_account_id = google_service_account.gke-account.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.cluster_project_id}.svc.id.goog[${var.application}-${var.environment}/external-secrets]"
+module "workload-identity-for-tenant-sa" {
+  source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=main"
+
+  name                = "gha-${var.application}"
+  namespace           = "${var.application}-${var.environment}"
+  project_id          = var.cluster_project_id
+  use_existing_k8s_sa = true
+  use_existing_gcp_sa = true
+  gcp_sa_name         = google_service_account.gke-account.email
+}
+
+module "workload-identity-for-tenant-external-secrets-sa" {
+  source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=main"
+
+  name                = "external-secrets"
+  namespace           = "${var.application}-${var.environment}"
+  project_id          = var.cluster_project_id
+  use_existing_k8s_sa = true
+  use_existing_gcp_sa = true
+  gcp_sa_name         = google_service_account.gke-account.email
 }
 
 # permissions for use with External Secrets Operator in GKE
