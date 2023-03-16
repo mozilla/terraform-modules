@@ -57,5 +57,6 @@ log_id("cloudaudit.googleapis.com/data_access")
 AND NOT protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 AND NOT protoPayload.serviceName="secretmanager.googleapis.com"
 AND NOT protoPayload.serviceName="iam.googleapis.com"
+AND NOT protoPayload.serviceName="sts.googleapis.com"
   EOT
 }
