@@ -119,11 +119,11 @@ variable "shared_vpc_outputs" {
         ip_cidr_range = string
         range_name    = string
       })
-      additional_ip_ranges = map(map(string))
     })
-    subnet_name   = string
-    subnetwork    = string
-    subnetwork_id = string
+    additional_ip_ranges = map(map(string))
+    subnet_name          = string
+    subnetwork           = string
+    subnetwork_id        = string
   })
 }
 
