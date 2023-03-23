@@ -213,11 +213,12 @@ resource "google_container_node_pool" "pools" {
   }
 
   dynamic "network_config" {
-    for_each = try([{ pod_range = each.value.pod_range }], [])
+    for_each = try({ (each.value.pod_range) = { enable_private_nodes = each.value.enable_private_nodes } }, {})
 
     content {
-      create_pod_range = false
-      pod_range        = each.value.pod_range
+      create_pod_range     = false
+      pod_range            = each.key
+      enable_private_nodes = each.value.enable_private_nodes
     }
   }
 
