@@ -101,10 +101,11 @@ variable "shared_vpc_outputs" {
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
   type = object({
     ip_cidr_range = object({
-      master  = string
-      pod     = string
-      primary = string
-      service = string
+      master     = string
+      pod        = string
+      primary    = string
+      service    = string
+      additional = map(string)
     })
     network    = string
     project_id = string
@@ -118,6 +119,7 @@ variable "shared_vpc_outputs" {
         ip_cidr_range = string
         range_name    = string
       })
+      additional_ip_ranges = map(map(string))
     })
     subnet_name   = string
     subnetwork    = string
