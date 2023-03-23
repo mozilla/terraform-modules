@@ -212,6 +212,15 @@ resource "google_container_node_pool" "pools" {
     auto_upgrade = true
   }
 
+  dynamic "network_config" {
+    for_each = try([{ pod_range = each.value.pod_range }], [])
+
+    content {
+      create_pod_range = false
+      pod_range        = each.value.pod_range
+    }
+  }
+
   node_config {
     disk_size_gb = each.value.disk_size_gb
     image_type   = "COS_CONTAINERD"
