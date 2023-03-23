@@ -217,8 +217,8 @@ resource "google_container_node_pool" "pools" {
 
     content {
       create_pod_range     = false
-      pod_range            = each.key
-      enable_private_nodes = each.value.enable_private_nodes
+      pod_range            = network_config.key
+      enable_private_nodes = network_config.value.enable_private_nodes
     }
   }
 
