@@ -178,7 +178,7 @@ variable "node_pools" {
 }
 
 variable "node_pools_labels" {
-  description = "Map containing node pools non-default labels (as a map of strings). Each node pool's name is the key. See locals.tf for defaults."
+  description = "Map containing node pools non-default labels (as a map of strings). Each key is used as node pool's name prefix. See locals.tf for defaults."
   type        = map(map(string))
   default = {
     tf-default-node-pool = {}
