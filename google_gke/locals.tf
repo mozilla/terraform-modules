@@ -40,6 +40,7 @@ locals {
     max_surge          = 3
     max_unavailable    = 1
     min_count          = 1
+    use_name_prefix    = true
   }
   node_pools              = { for node_pool in var.node_pools : node_pool.name => merge(local.node_pool_defaults, node_pool) }
   node_pools_labels       = { for node_pool in var.node_pools : node_pool.name => merge(local.labels, lookup(var.node_pools_labels, node_pool.name, {})) }
