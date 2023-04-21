@@ -33,7 +33,7 @@ locals {
 
   node_pool_defaults = {
     disk_size_gb       = 100
-    disk_type          = "pd-standard"
+    disk_type          = "pd-balanced"
     initial_node_count = 2
     machine_type       = "n2-standard-4"
     max_count          = 20
