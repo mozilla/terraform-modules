@@ -168,7 +168,7 @@ variable "subnetwork" {
 # Cluster Nodes
 #
 variable "node_pools" {
-  description = "Map containing node pools, with each node pool's name being the key and the values being that node pool's configurations. Configurable options per node pool include: `disk_size_gb` (string), `machine_type` (string), `max_count` (number), `max_surge` (number), `max_unavailable` (number), `min_count` (number). See locals.tf for defaults."
+  description = "Map containing node pools, with each node pool's name being the key and the values being that node pool's configurations. Configurable options per node pool include: `disk_size_gb` (string), `disk_type` (string)`, `machine_type` (string), `max_count` (number), `max_surge` (number), `max_unavailable` (number), `min_count` (number). See locals.tf for defaults."
   type        = list(map(string))
   default = [
     {
