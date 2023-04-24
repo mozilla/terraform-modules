@@ -224,6 +224,7 @@ resource "google_container_node_pool" "pools" {
 
   node_config {
     disk_size_gb = each.value.disk_size_gb
+    disk_type    = each.value.disk_type
     image_type   = "COS_CONTAINERD"
     labels       = local.node_pools_labels[each.key]
     dynamic "linux_node_config" {
