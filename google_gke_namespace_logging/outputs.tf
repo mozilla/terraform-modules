@@ -1,7 +1,7 @@
 output "logging_bucket_id" {
-  value = google_logging_project_bucket_config[0].namespace.id
+  value = var.log_destination == "bucket" ? google_logging_project_bucket_config.namespace[*].id : null
 }
 
 output "logging_dataset_id" {
-  value = google_bigquery_dataset.namespace[0].id
+  value = var.log_destination == "bigquery" ? google_bigquery_dataset.namespace[*].id : null
 }
