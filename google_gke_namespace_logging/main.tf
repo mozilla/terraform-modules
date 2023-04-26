@@ -27,7 +27,7 @@ resource "google_project_iam_member" "logging_bucket_writer" {
   condition {
     title       = "Log bucket writer for ${local.tenant_namespace}"
     expression  = "resource.name.endsWith(\"locations/${var.location}/buckets/gke-${local.tenant_namespace}-log-bucket\")"
-    description = "Grants logging.bucketWriter role to service account ${var.logging_writer_service_account_member} used by gke-$local.tenant_namespace}-sink"
+    description = "Grants logging.bucketWriter role to service account ${var.logging_writer_service_account_member} used by gke-${local.tenant_namespace}-sink"
   }
 }
 
@@ -51,6 +51,6 @@ resource "google_project_iam_member" "logging_dataset_writer" {
   condition {
     title       = "Log dataset writer for ${local.tenant_namespace}"
     expression  = "resource.name.endsWith(\"datasets/gke-${local.tenant_namespace}-log-dataset\")"
-    description = "Grants bigquery.dataEditor role to service account ${var.logging_writer_service_account_member} used by gke-$local.tenant_namespace}-sink"
+    description = "Grants bigquery.dataEditor role to service account ${var.logging_writer_service_account_member} used by gke-${local.tenant_namespace}-sink"
   }
 }
