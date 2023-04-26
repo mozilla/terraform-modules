@@ -32,9 +32,10 @@ resource "google_project_iam_member" "logging_bucket_writer" {
 }
 
 resource "google_bigquery_dataset" "namespace" {
-  count       = var.log_destination == "bigquery" ? 1 : 0
-  dataset_id  = "gke-${local.tenant_namespace}-log-dataset"
-  description = "Log dataset for ${local.tenant_namespace}"
+  count         = var.log_destination == "bigquery" ? 1 : 0
+  dataset_id    = replace("gke-${local.tenant_namespace}-log-dataset", "-", "_")
+  friendly_name = "gke-${local.tenant_namespace}-log-dataset"
+  description   = "Log dataset for ${local.tenant_namespace}"
 
   default_table_expiration_ms     = var.retention_days * 86400000
   default_partition_expiration_ms = var.retention_days * 86400000
