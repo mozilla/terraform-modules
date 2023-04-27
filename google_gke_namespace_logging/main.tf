@@ -44,7 +44,7 @@ resource "google_bigquery_dataset" "namespace" {
 
 resource "google_bigquery_dataset_iam_member" "logging_dataset_writer" {
   count      = var.log_destination == "bigquery" ? 1 : 0
-  dataset_id = google_bigquery_dataset.namespace.dataset_id
+  dataset_id = google_bigquery_dataset.namespace[0].dataset_id
   role       = "roles/bigquery.dataEditor"
   member     = var.logging_writer_service_account_member
 }
