@@ -10,6 +10,7 @@ locals {
 }
 
 resource "google_logging_project_bucket_config" "namespace" {
+  count          = var.log_destination == "bucket" ? 1 : 0
   project        = var.project
   location       = var.location
   bucket_id      = "gke-${local.tenant_namespace}-log-bucket"
@@ -26,6 +27,24 @@ resource "google_project_iam_member" "logging_bucket_writer" {
   condition {
     title       = "Log bucket writer for ${local.tenant_namespace}"
     expression  = "resource.name.endsWith(\"locations/${var.location}/buckets/gke-${local.tenant_namespace}-log-bucket\")"
-    description = "Grants logging.bucketWriter role to service account ${var.logging_writer_service_account_member} used by gke-$local.tenant_namespace}-sink"
+    description = "Grants logging.bucketWriter role to service account ${var.logging_writer_service_account_member} used by gke-${local.tenant_namespace}-sink"
   }
+}
+
+resource "google_bigquery_dataset" "namespace" {
+  count         = var.log_destination == "bigquery" ? 1 : 0
+  dataset_id    = replace("gke-${local.tenant_namespace}-log", "-", "_")
+  friendly_name = "gke-${local.tenant_namespace}-log-dataset"
+  description   = "Log dataset for ${local.tenant_namespace}"
+
+  default_table_expiration_ms     = var.retention_days * 86400000
+  default_partition_expiration_ms = var.retention_days * 86400000
+  location                        = "US"
+}
+
+resource "google_bigquery_dataset_iam_member" "logging_dataset_writer" {
+  count      = var.log_destination == "bigquery" ? 1 : 0
+  dataset_id = google_bigquery_dataset.namespace[0].dataset_id
+  role       = "roles/bigquery.dataEditor"
+  member     = var.logging_writer_service_account_member
 }
