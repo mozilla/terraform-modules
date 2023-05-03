@@ -58,9 +58,10 @@ variable "addresses" {
 variable "path_rewrites" {
   description = "Dictionary of path matchers."
   type = map(object({
-    hosts  = list(string)
-    paths  = list(string)
-    target = string
+    hosts                = list(string)
+    paths                = list(string)
+    target               = string
+    backend_bucket_paths = optional(map(list(string)))
   }))
   default = {}
 }

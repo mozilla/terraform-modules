@@ -142,6 +142,13 @@ resource "google_compute_url_map" "default" {
           }
         }
       }
+      dynamic "path_rule" {
+        for_each = coalesce(path_matcher.value.backend_bucket_paths, {})
+        content {
+          paths   = path_rule.value
+          service = path_rule.key
+        }
+      }
     }
   }
 }
