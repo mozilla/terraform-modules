@@ -22,7 +22,6 @@
 - In SQL you'll need to create a Publication, create a replication slot, and modify permissions for the datastream replication sql user (the console will provide sample queries to accomplish this)
 
 
-
 ## Requirements
 
 | Name | Version |
