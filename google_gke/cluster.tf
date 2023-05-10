@@ -194,8 +194,8 @@ resource "google_container_cluster" "primary" {
 resource "google_container_node_pool" "pools" {
   for_each    = local.node_pools
   provider    = google-beta
-  name        = each.use_name_prefix == false ? each.key : null
-  name_prefix = each.use_name_prefix == true ? each.key : null
+  name        = each.value.use_name_prefix == false ? each.key : null
+  name_prefix = each.value.use_name_prefix == true ? each.key : null
 
   cluster            = google_container_cluster.primary.name
   initial_node_count = each.value.initial_node_count
