@@ -29,9 +29,3 @@ variable "logging_writer_service_account_member" {
   type        = string
   description = "The unique_writer_identity service account that is provisioned when creating a Logging Sink"
 }
-
-variable "log_destination" {
-  type        = string
-  description = "Destination for tenant application logs. Can be bucket or bigquery"
-  default     = "bucket"
-}
