@@ -115,3 +115,21 @@ variable "quic_override" {
   type        = string
   default     = "DISABLE"
 }
+
+variable "custom_response_headers" {
+  type        = list(string)
+  default     = null
+  description = "Headers that the HTTP/S load balancer should add to proxied responses."
+}
+
+variable "backend_type" {
+  type        = string
+  default     = "service"
+  description = "Backend type to create. Must be set to one of [service, bucket]."
+}
+
+variable "bucket_name" {
+  type        = string
+  default     = ""
+  description = "Name of GCS bucket to use as CDN backend. Required if backend_type is set to 'bucket'."
+}

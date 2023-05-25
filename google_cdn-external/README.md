@@ -21,6 +21,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [google_compute_backend_bucket.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_bucket) | resource |
 | [google_compute_backend_service.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_service) | resource |
 | [google_compute_global_forwarding_rule.http](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_forwarding_rule) | resource |
 | [google_compute_global_forwarding_rule.https](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_forwarding_rule) | resource |
@@ -42,9 +43,12 @@ No modules.
 | <a name="input_origin_fqdn"></a> [origin\_fqdn](#input\_origin\_fqdn) | Origin's fqdn: e.g., 'mozilla.org'. | `string` | n/a | yes |
 | <a name="input_primary_hostname"></a> [primary\_hostname](#input\_primary\_hostname) | Primary hostname of service. | `string` | n/a | yes |
 | <a name="input_backend_timeout_sec"></a> [backend\_timeout\_sec](#input\_backend\_timeout\_sec) | Timeout for backend service. | `number` | `10` | no |
+| <a name="input_backend_type"></a> [backend\_type](#input\_backend\_type) | Backend type to create. Must be set to one of [service, bucket]. | `string` | `"service"` | no |
+| <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Name of GCS bucket to use as CDN backend. Required if backend\_type is set to 'bucket'. | `string` | `""` | no |
 | <a name="input_cache_key_policy"></a> [cache\_key\_policy](#input\_cache\_key\_policy) | Cache key policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_cdn_policy"></a> [cdn\_policy](#input\_cdn\_policy) | CDN policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_compression_mode"></a> [compression\_mode](#input\_compression\_mode) | Can be AUTOMATIC or DISABLED | `string` | `"DISABLED"` | no |
+| <a name="input_custom_response_headers"></a> [custom\_response\_headers](#input\_custom\_response\_headers) | Headers that the HTTP/S load balancer should add to proxied responses. | `list(string)` | `null` | no |
 | <a name="input_https_redirect"></a> [https\_redirect](#input\_https\_redirect) | Redirect from http to https. | `bool` | `true` | no |
 | <a name="input_log_sample_rate"></a> [log\_sample\_rate](#input\_log\_sample\_rate) | Sample rate for Cloud Logging. Must be in the interval [0, 1]. | `number` | `1` | no |
 | <a name="input_name"></a> [name](#input\_name) | Optional name of distribution. | `string` | `""` | no |
