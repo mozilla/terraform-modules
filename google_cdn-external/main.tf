@@ -3,23 +3,33 @@
  */
 
 locals {
-  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
+  name_prefix             = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
+  url_map_default_service = var.backend_type == "bucket" ? try(google_compute_backend_bucket.default[0].id, "") : try(google_compute_backend_service.default[0].id, "")
+  url_map_self_link       = var.backend_type == "bucket" ? try(google_compute_backend_bucket.default[0].self_link, "") : try(google_compute_backend_service.default[0].self_link, "")
 }
 
 resource "google_compute_global_network_endpoint_group" "default" {
+  count = var.backend_type == "service" ? 1 : 0
+
   name                  = local.name_prefix
   default_port          = var.origin_port
   network_endpoint_type = "INTERNET_FQDN_PORT"
 }
 
 resource "google_compute_global_network_endpoint" "default" {
-  global_network_endpoint_group = google_compute_global_network_endpoint_group.default.name
+  count = var.backend_type == "service" ? 1 : 0
+
+  global_network_endpoint_group = length(google_compute_global_network_endpoint_group.default) > 0 ? google_compute_global_network_endpoint_group.default[0].name : ""
 
   fqdn = var.origin_fqdn
   port = var.origin_port
+
+  depends_on = [google_compute_global_network_endpoint_group.default]
 }
 
 resource "google_compute_backend_service" "default" {
+  count = var.backend_type == "service" ? 1 : 0
+
   name                            = local.name_prefix
   enable_cdn                      = true
   timeout_sec                     = var.backend_timeout_sec
@@ -33,9 +43,10 @@ resource "google_compute_backend_service" "default" {
   custom_request_headers = [
     "host: ${var.origin_fqdn}"
   ]
+  custom_response_headers = var.custom_response_headers
 
   backend {
-    group = google_compute_global_network_endpoint_group.default.self_link
+    group = google_compute_global_network_endpoint_group.default[0].self_link
   }
 
   log_config {
@@ -72,10 +83,42 @@ resource "google_compute_backend_service" "default" {
   depends_on = [google_compute_global_network_endpoint.default]
 }
 
+resource "google_compute_backend_bucket" "default" {
+  count = var.backend_type == "bucket" ? 1 : 0
+
+  name        = local.name_prefix
+  bucket_name = var.bucket_name
+  enable_cdn  = true
+
+  compression_mode        = var.compression_mode
+  custom_response_headers = var.custom_response_headers
+
+  dynamic "cdn_policy" {
+    for_each = var.cdn_policy != {} ? [1] : []
+
+    content {
+      cache_mode                   = lookup(var.cdn_policy, "cache_mode", null)
+      client_ttl                   = lookup(var.cdn_policy, "client_ttl", null)
+      default_ttl                  = lookup(var.cdn_policy, "default_ttl", null)
+      max_ttl                      = lookup(var.cdn_policy, "max_ttl", null)
+      negative_caching             = lookup(var.cdn_policy, "negative_caching", null)
+      serve_while_stale            = lookup(var.cdn_policy, "serve_while_stale", null)
+      signed_url_cache_max_age_sec = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
+      dynamic "negative_caching_policy" {
+        for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }
+        content {
+          code = negative_caching_policy.value.code
+          ttl  = negative_caching_policy.value.ttl
+        }
+      }
+    }
+  }
+}
+
 resource "google_compute_url_map" "default" {
   name = local.name_prefix
 
-  default_service = google_compute_backend_service.default.id
+  default_service = local.url_map_default_service
 
   dynamic "host_rule" {
     for_each = var.path_rewrites
@@ -89,10 +132,10 @@ resource "google_compute_url_map" "default" {
     for_each = var.path_rewrites
     content {
       name            = path_matcher.key
-      default_service = google_compute_backend_service.default.self_link
+      default_service = local.url_map_self_link
       path_rule {
         paths   = path_matcher.value.paths
-        service = google_compute_backend_service.default.self_link
+        service = local.url_map_self_link
         route_action {
           url_rewrite {
             path_prefix_rewrite = path_matcher.value.target
