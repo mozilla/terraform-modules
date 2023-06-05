@@ -78,3 +78,20 @@ variable "enable_persistence" {
   default     = false
   type        = bool
 }
+
+variable "transit_encryption_mode" {
+  description = "Controls whether tls is enabled"
+  default     = "DISABLED"
+  type        = string
+
+  validation {
+    condition     = can(regex("^(DISABLED|SERVER_AUTHENTICATION)$", var.transit_encryption_mode))
+    error_message = "Must be DISABLED or SERVER_AUTHENTICATION."
+  }
+}
+
+variable "auth_enabled" {
+  description = "Controls whether auth is enabled"
+  default     = false
+  type        = bool
+}
