@@ -7,10 +7,9 @@ locals {
   # when both a bucket and backend service are specified, prefer the backend
   # service as the default backend, and use backend_bucket_paths to route
   # specific paths to the backend bucket
-  url_map_default_service        = var.backend_type == "bucket" ? one(google_compute_backend_bucket.default[*].id) : one(google_compute_backend_service.default[*].id)
-  url_map_self_link              = var.backend_type == "bucket" ? one(google_compute_backend_bucket.default[*].self_link) : one(google_compute_backend_service.default[*].self_link)
-  backend_bucket_default_service = one(google_compute_backend_bucket.default[*].id)
-  backend_bucket_self_link       = one(google_compute_backend_bucket.default[*].self_link)
+  url_map_default_service  = var.backend_type == "bucket" ? one(google_compute_backend_bucket.default[*].id) : one(google_compute_backend_service.default[*].id)
+  url_map_self_link        = var.backend_type == "bucket" ? one(google_compute_backend_bucket.default[*].self_link) : one(google_compute_backend_service.default[*].self_link)
+  backend_bucket_self_link = one(google_compute_backend_bucket.default[*].self_link)
 }
 
 resource "google_compute_global_network_endpoint_group" "default" {
