@@ -3,13 +3,17 @@
  */
 
 locals {
-  name_prefix             = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
-  url_map_default_service = var.backend_type == "bucket" ? try(google_compute_backend_bucket.default[0].id, "") : try(google_compute_backend_service.default[0].id, "")
-  url_map_self_link       = var.backend_type == "bucket" ? try(google_compute_backend_bucket.default[0].self_link, "") : try(google_compute_backend_service.default[0].self_link, "")
+  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
+  # when both a bucket and backend service are specified, prefer the backend
+  # service as the default backend, and use backend_bucket_paths to route
+  # specific paths to the backend bucket
+  url_map_default_service  = var.backend_type == "bucket" ? one(google_compute_backend_bucket.default[*].id) : one(google_compute_backend_service.default[*].id)
+  url_map_self_link        = var.backend_type == "bucket" ? one(google_compute_backend_bucket.default[*].self_link) : one(google_compute_backend_service.default[*].self_link)
+  backend_bucket_self_link = one(google_compute_backend_bucket.default[*].self_link)
 }
 
 resource "google_compute_global_network_endpoint_group" "default" {
-  count = var.backend_type == "service" ? 1 : 0
+  count = contains(["service", "service_and_bucket"], var.backend_type) ? 1 : 0
 
   name                  = local.name_prefix
   default_port          = var.origin_port
@@ -17,7 +21,7 @@ resource "google_compute_global_network_endpoint_group" "default" {
 }
 
 resource "google_compute_global_network_endpoint" "default" {
-  count = var.backend_type == "service" ? 1 : 0
+  count = contains(["service", "service_and_bucket"], var.backend_type) ? 1 : 0
 
   global_network_endpoint_group = length(google_compute_global_network_endpoint_group.default) > 0 ? google_compute_global_network_endpoint_group.default[0].name : ""
 
@@ -28,7 +32,7 @@ resource "google_compute_global_network_endpoint" "default" {
 }
 
 resource "google_compute_backend_service" "default" {
-  count = var.backend_type == "service" ? 1 : 0
+  count = contains(["service", "service_and_bucket"], var.backend_type) ? 1 : 0
 
   name                            = local.name_prefix
   enable_cdn                      = true
@@ -84,7 +88,7 @@ resource "google_compute_backend_service" "default" {
 }
 
 resource "google_compute_backend_bucket" "default" {
-  count = var.backend_type == "bucket" ? 1 : 0
+  count = contains(["bucket", "service_and_bucket"], var.backend_type) ? 1 : 0
 
   name        = local.name_prefix
   bucket_name = var.bucket_name
@@ -140,6 +144,13 @@ resource "google_compute_url_map" "default" {
           url_rewrite {
             path_prefix_rewrite = path_matcher.value.target
           }
+        }
+      }
+      dynamic "path_rule" {
+        for_each = path_matcher.value.backend_bucket_paths != null ? [1] : []
+        content {
+          paths   = path_matcher.value.backend_bucket_paths
+          service = local.backend_bucket_self_link
         }
       }
     }

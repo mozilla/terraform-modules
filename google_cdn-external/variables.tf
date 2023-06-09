@@ -58,9 +58,10 @@ variable "addresses" {
 variable "path_rewrites" {
   description = "Dictionary of path matchers."
   type = map(object({
-    hosts  = list(string)
-    paths  = list(string)
-    target = string
+    hosts                = list(string)
+    paths                = list(string)
+    target               = string
+    backend_bucket_paths = optional(list(string))
   }))
   default = {}
 }
@@ -125,11 +126,11 @@ variable "custom_response_headers" {
 variable "backend_type" {
   type        = string
   default     = "service"
-  description = "Backend type to create. Must be set to one of [service, bucket]."
+  description = "Backend type to create. Must be set to one of [service, bucket, service_and_bucket]. When service_and_bucket, the default backend is the service"
 }
 
 variable "bucket_name" {
   type        = string
   default     = ""
-  description = "Name of GCS bucket to use as CDN backend. Required if backend_type is set to 'bucket'."
+  description = "Name of GCS bucket to use as CDN backend. Required if backend_type is set to 'bucket' or 'service_and_bucket'."
 }
