@@ -96,3 +96,15 @@ variable "realm" {
     error_message = "Valid values for realm: global, nonprod, prod."
   }
 }
+
+variable "_default_bucket_log_retention" {
+  description = "Log Retention days applied to the _Default Logs Storage Bucket"
+  type        = number
+  default     = 30
+}
+
+variable "_default_bucket_enable_analytics" {
+  description = "Enable / Disable Log Analytics on the _Default Logs Storage Bucket"
+  type        = bool
+  default     = false
+}

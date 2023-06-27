@@ -6,14 +6,14 @@ Sets up a single GCP project linked to a billing account plus management metadat
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 3.90.1 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.1.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | ~> 4.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
@@ -23,7 +23,10 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [google_logging_project_bucket_config._default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_project_bucket_config) | resource |
+| [google_logging_project_exclusion.data_access_exclusions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_project_exclusion) | resource |
 | [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project) | resource |
+| [google_project_iam_audit_config.data_access_high](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_audit_config) | resource |
 | [google_project_service.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_service) | resource |
 | [random_id.project](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 
@@ -36,7 +39,9 @@ No modules.
 | <a name="input_component_code"></a> [component\_code](#input\_component\_code) | Defaults to app\_code-uncat. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv | `string` | `""` | no |
 | <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | Cost center of the project or resource. Default is 5650 (Services Engineering) | `string` | `"5650"` | no |
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the project. Defaults to project\_name | `string` | `""` | no |
+| <a name="input_enable_log_analytics"></a> [enable\_log\_analytics](#input\_enable\_log\_analytics) | Enable / Disable Log Analytics on the \_Default Logs Storage Bucket | `bool` | `false` | no |
 | <a name="input_extra_project_labels"></a> [extra\_project\_labels](#input\_extra\_project\_labels) | Extra project labels (a map of key/value pairs) to be applied to the Project. | `map(string)` | `{}` | no |
+| <a name="input_log_retention_default_bucket"></a> [log\_retention\_default\_bucket](#input\_log\_retention\_default\_bucket) | Log Retention days applied to the \_Default Logs Storage Bucket | `number` | `30` | no |
 | <a name="input_parent_id"></a> [parent\_id](#input\_parent\_id) | Parent folder (with GCP). | `string` | n/a | yes |
 | <a name="input_program_code"></a> [program\_code](#input\_program\_code) | Program Code of the project or resource: https://mana.mozilla.org/wiki/display/FINArchive/Program+Codes. Drop the `PC - `, lowercase the string and substitute spaces for dashes. | `string` | `"firefox-services"` | no |
 | <a name="input_program_name"></a> [program\_name](#input\_program\_name) | Name of the Firefox program being one of: ci, data, infrastructure, services, web. | `string` | `"services"` | no |
@@ -44,7 +49,7 @@ No modules.
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of project e.g., autopush | `string` | n/a | yes |
 | <a name="input_project_services"></a> [project\_services](#input\_project\_services) | List of google\_project\_service APIs to enable. | `list(string)` | `[]` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm is a grouping of environments being one of: global, nonprod, prod | `string` | `""` | no |
-| <a name="risk_level"></a> [risk\_level](#input\_risk\_level) | The risk level of the project, usually comes from an RRA | `string` | `"low"` | yes |
+| <a name="input_risk_level"></a> [risk\_level](#input\_risk\_level) | Level of risk the project poses, usually obtained from an RRA | `string` | `""` | no |
 
 ## Outputs
 
