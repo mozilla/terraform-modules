@@ -19,9 +19,9 @@ content: |-
     - Enter the username, password, IP (this is the IP of the CloudSQL Proxy from above), and database name
     - For Postgresql specifically, you'll also be instructed to:
       - Enable logical replication on the database
-        - This involves adding a database flag (which requires a db reboot)
-      - Create a publication and a replication slot
-        - In SQL you'll need to create a Publication, create a replication slot, and modify permissions for the datastream replication sql user (the console will provide sample queries to accomplish this)
+      - This involves adding a database flag (which requires a db reboot)
+    - Create a publication and a replication slot
+      - In SQL you'll need to create a Publication, create a replication slot, and modify permissions for the datastream replication sql user (the console will provide sample queries to accomplish this)
   
   {{ .Header }}
 
