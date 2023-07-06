@@ -9,6 +9,12 @@ variable "environment" {
   type        = string
 }
 
+variable "gha_environments" {
+  description = "Github environments from which to deploy. If specified, this overrides the environment variable."
+  type        = list(string)
+  default     = []
+}
+
 variable "project" {
   type    = string
   default = null
