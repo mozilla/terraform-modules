@@ -9,6 +9,17 @@ variable "environment" {
   type        = string
 }
 
+# Note that it is never wise to use the gha_environments variable to bypass
+# any required protection rules you may have for pushing to the production
+# environment. Ideally, you should have at least one Github environment that
+# requires manual approval for deploying to production, and that particular
+# Github environment should be included in the gha_environments list.
+variable "gha_environments" {
+  description = "Github environments from which to deploy. If specified, this overrides the environment variable."
+  type        = list(string)
+  default     = []
+}
+
 variable "project" {
   type    = string
   default = null
