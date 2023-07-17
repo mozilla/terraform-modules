@@ -71,6 +71,7 @@ resource "google_container_cluster" "primary" {
         display_name = lookup(cidr_blocks.value, "display_name", "")
       }
     }
+    gcp_public_cidrs_access_enabled = var.enable_public_cidrs_access
   }
 
   dynamic "private_cluster_config" {
