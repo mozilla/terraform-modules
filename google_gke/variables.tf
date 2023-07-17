@@ -96,6 +96,12 @@ variable "enable_private_cluster" {
   type        = bool
 }
 
+variable "enable_public_cidrs_access" {
+  default     = false
+  description = "Whether the control plane is open to Google public IPs. Defaults to false."
+  type        = bool
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
