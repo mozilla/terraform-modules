@@ -204,6 +204,8 @@ resource "google_container_node_pool" "pools" {
   max_pods_per_node  = each.value.max_pods_per_node
   project            = local.project_id
 
+  node_locations = lookup(each.value, "node_locations", null) != null ? jsondecode(each.value.node_locations) : null
+
   autoscaling {
     min_node_count = each.value.min_count
     max_node_count = each.value.max_count
