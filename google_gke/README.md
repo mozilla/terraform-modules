@@ -7,15 +7,15 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.51.0 |
-| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 4.51.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.76.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 4.76.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 4.51.0 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | ~> 4.51.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | ~> 4.76.0 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | ~> 4.76.0 |
 
 ## Resources
 
@@ -44,6 +44,7 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="input_enable_public_cidrs_access"></a> [enable\_public\_cidrs\_access](#input\_enable\_public\_cidrs\_access) | Whether the control plane is open to Google public IPs. Defaults to false. | `bool` | `false` | no |
 | <a name="input_enable_resource_consumption_export"></a> [enable\_resource\_consumption\_export](#input\_enable\_resource\_consumption\_export) | Whether to enable resource consumption metering on this cluster. When enabled, a table will be created in the resource export BigQuery dataset to store resource consumption data. The resulting table can be joined with the resource usage table or with BigQuery billing export. Defaults to true. | `bool` | `true` | no |
 | <a name="input_filestore_csi_driver"></a> [filestore\_csi\_driver](#input\_filestore\_csi\_driver) | The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes | `bool` | `false` | no |
+| <a name="input_gcs_fuse_csi_driver"></a> [gcs\_fuse\_csi\_driver](#input\_gcs\_fuse\_csi\_driver) | The status of the GCSFuse CSI driver addon, which allows the usage of a gcs bucket as volumes | `bool` | `false` | no |
 | <a name="input_google_group_name"></a> [google\_group\_name](#input\_google\_group\_name) | Name of the Google security group for use with Kubernetes RBAC. Must be in format: gke-security-groups@yourdomain.com | `string` | `null` | no |
 | <a name="input_grant_registry_access"></a> [grant\_registry\_access](#input\_grant\_registry\_access) | Grants created cluster-specific service account storage.objectViewer and artifactregistry.reader roles. | `bool` | `true` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The Kubernetes version of the masters. If set to 'latest' it will pull latest available version. Defaults to 'latest'. | `string` | `"latest"` | no |

@@ -287,6 +287,12 @@ variable "filestore_csi_driver" {
   description = "The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes"
 }
 
+variable "gcs_fuse_csi_driver" {
+  default     = false
+  type        = bool
+  description = "The status of the GCSFuse CSI driver addon, which allows the usage of a gcs bucket as volumes"
+}
+
 variable "service_account_id" {
   default     = null
   description = "Id of the service account to be provisioned, overrides the default 'gke-cluster_name' value"
