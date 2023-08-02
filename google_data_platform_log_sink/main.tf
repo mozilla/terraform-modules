@@ -1,3 +1,18 @@
+/**
+ * # Data Platform Log Sink Module
+ *
+ * This module creates a Pub/Sub log sink to send server-side Glean data
+ * ingested from Cloud Logging to the Data Platform. See
+ * https://mozilla-hub.atlassian.net/browse/DSRE-1378 for background.
+ *
+ * Currently only one Data Platform log sink is permitted per-project and only
+ * project-level sinks are supported.
+ *
+ * Using this module requires access to DSRE terraform remote state. Only
+ * Atlantis service accounts have access to manage IAM on the Data Platform
+ * logging topic.
+ */
+
 data "terraform_remote_state" "shared_project" {
   backend = "gcs"
 

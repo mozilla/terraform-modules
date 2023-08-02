@@ -1,0 +1,1 @@
+# google_data_platform_log_sink examples

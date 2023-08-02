@@ -1,3 +1,16 @@
+# Data Platform Log Sink Module
+
+This module creates a Pub/Sub log sink to send server-side Glean data
+ingested from Cloud Logging to the Data Platform. See
+https://mozilla-hub.atlassian.net/browse/DSRE-1378 for background.
+
+Currently only one data platform log sink is permitted per-project and only
+project-level sinks are supported.
+
+Using this module requires access to DSRE terraform remote state. Only
+Atlantis service accounts have access to manage IAM on the Data Platform
+logging topic.
+
 ## Requirements
 
 | Name | Version |
@@ -29,10 +42,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_environment"></a> [environment](#input\_environment) | Application environment | `string` | n/a | yes |
+| <a name="input_environment"></a> [environment](#input\_environment) | Application environment. This determines whether to configure the log sink to send logs to the Data Platform's staging environment or production environment | `string` | n/a | yes |
 | <a name="input_log_filter"></a> [log\_filter](#input\_log\_filter) | Log filter string, because presumably you don't want everything? Maybe you do? Example: 'resource.type="http\_load\_balancer" resource.labels.target\_proxy\_name="productdelivery-prod-cdn"' | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | GCP project ID | `string` | n/a | yes |
-| <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
+| <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. This determines whether to configure the log sink to send logs to the Data Platform's nonprod or prod realm | `string` | n/a | yes |
 
 ## Outputs
 

@@ -1,10 +1,10 @@
 variable "environment" {
   type        = string
-  description = "Application environment"
+  description = "Application environment. This determines whether to configure the log sink to send logs to the Data Platform's staging environment or production environment"
 }
 
 variable "realm" {
-  description = "Realm e.g., nonprod."
+  description = "Realm e.g., nonprod. This determines whether to configure the log sink to send logs to the Data Platform's nonprod or prod realm"
   type        = string
 }
 
