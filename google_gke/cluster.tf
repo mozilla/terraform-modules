@@ -235,6 +235,15 @@ resource "google_container_node_pool" "pools" {
     disk_type    = each.value.disk_type
     image_type   = "COS_CONTAINERD"
     labels       = local.node_pools_labels[each.key]
+
+    dynamic "guest_accelerator" {
+      for_each = lookup(each.value, "guest_accelerator", null) != null ? [1] : []
+      content {
+        type  = each.value.guest_accelerator
+        count = 1
+      }
+    }
+
     dynamic "linux_node_config" {
       for_each = length(local.node_pools_sysctls[each.key]) != 0 ? [1] : []
 
