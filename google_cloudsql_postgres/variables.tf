@@ -121,3 +121,13 @@ variable "enable_private_path_for_google_cloud_services" {
   default     = false
   description = "If true, will allow Google Cloud Services access over private IP."
 }
+
+variable "enable_insights_config_on_replica" {
+  default     = false
+  description = "If true, will allow enable insights config on replica"
+}
+
+variable "replica_availability_type" {
+  default     = "ZONAL"
+  description = "Allow setting availability configuration of replica"
+}

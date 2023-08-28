@@ -109,6 +109,17 @@ resource "google_sql_database_instance" "replica" {
   settings {
     deletion_protection_enabled = var.deletion_protection_enabled
     tier                        = local.tier
+    availability_type           = var.replica_availability_type
+
+    dynamic "insights_config" {
+      for_each = var.enable_insights_config_on_replica ? range(1) : []
+      content {
+        query_insights_enabled  = true
+        query_string_length     = 1024
+        record_application_tags = true
+        record_client_address   = true
+      }
+    }
 
     dynamic "database_flags" {
       for_each = var.database_flags
