@@ -6,7 +6,7 @@ variable "location" {
 
 variable "retention_days" {
   type        = number
-  default     = 30
+  default     = 90
   description = "Log retention for logs, values between 1 and 3650 days"
 }
 
