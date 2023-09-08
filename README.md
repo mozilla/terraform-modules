@@ -85,7 +85,7 @@ The name should follow the format `provider_module-name` like `google_gke-cluste
 
 By default, anyone who is an owner or contributor on this repository can review, approve & merge PRs on any module.
 
-If you want to ensure specific people or teams have to review changes to certain modules, put a `CODEOWNERS` file in your module's subdirectory.
+If you want to ensure specific people or teams have to review changes to certain modules, add an entry `CODEOWNERS`.
 
 ### Documentation
 
