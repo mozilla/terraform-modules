@@ -18,7 +18,7 @@ locals {
 
   enable_ha = var.realm == "prod" ? true : false
 
-  replica_enable_private_path_for_google_cloud_services = coalesce(var.replica_enable_private_path_for_google_cloud_services, var.enable_private_path_for_google_cloud_services)
+  replica_enable_private_path_for_google_cloud_services = var.replica_enable_private_path_for_google_cloud_services == false ? false : coalesce(var.replica_enable_private_path_for_google_cloud_services, var.enable_private_path_for_google_cloud_services)
 }
 
 resource "google_sql_database_instance" "primary" {
