@@ -17,6 +17,8 @@ locals {
   ip_addresses = google_sql_database_instance.primary.ip_address
 
   enable_ha = var.realm == "prod" ? true : false
+
+  replica_enable_private_path_for_google_cloud_services = coalesce(var.replica_enable_private_path_for_google_cloud_services, var.enable_private_path_for_google_cloud_services)
 }
 
 resource "google_sql_database_instance" "primary" {
@@ -54,9 +56,10 @@ resource "google_sql_database_instance" "primary" {
     }
 
     ip_configuration {
-      ipv4_enabled    = var.enable_public_ip
-      private_network = var.network
-      require_ssl     = var.ip_configuration_require_ssl
+      ipv4_enabled                                  = var.enable_public_ip
+      private_network                               = var.network
+      require_ssl                                   = var.ip_configuration_require_ssl
+      enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         content {
@@ -129,9 +132,10 @@ resource "google_sql_database_instance" "replica" {
     }
 
     ip_configuration {
-      ipv4_enabled    = var.enable_public_ip
-      private_network = var.network
-      require_ssl     = var.ip_configuration_require_ssl
+      ipv4_enabled                                  = var.enable_public_ip
+      private_network                               = var.network
+      require_ssl                                   = var.ip_configuration_require_ssl
+      enable_private_path_for_google_cloud_services = local.replica_enable_private_path_for_google_cloud_services
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         content {

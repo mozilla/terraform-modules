@@ -5,8 +5,9 @@ variable "availability_type" {
 }
 
 variable "project_id" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "GCP Project ID"
 }
 
 variable "custom_database_name" {
@@ -110,7 +111,8 @@ variable "enable_public_ip" {
 }
 
 variable "region" {
-  default = "us-west1"
+  default     = "us-west1"
+  description = "Region to use for Google SQL instance"
 }
 
 variable "database_flags" {
@@ -135,45 +137,65 @@ variable "authorized_networks" {
 }
 
 variable "ip_configuration_require_ssl" {
-  default = true
+  default     = true
+  description = "Enforces SSL connections over IP"
 }
 
 variable "maintenance_window_day" {
   # Tuesday
-  default = 2
+  default     = 2
+  description = "Maintenance window day"
 }
 
 variable "maintenance_window_hour" {
   # UTC hour
-  default = 16
+  default     = 16
+  description = "Maintenance window hour"
 }
 
 variable "maintenance_window_update_track" {
-  default = "stable"
+  default     = "stable"
+  description = "Receive updates earlier (canary) or later (stable)"
 }
 
 variable "query_insights_enabled" {
-  description = "enable / disable query insights"
+  description = "Enable / disable Query Insights (See: https://cloud.google.com/sql/docs/mysql/using-query-insights)"
   type        = bool
   default     = false
 }
 
 variable "query_plans_per_minute" {
-  type    = number
-  default = 5
+  description = "Query Insights: sampling rate"
+  type        = number
+  default     = 5
 }
 
 variable "query_string_length" {
-  type    = number
-  default = 1024
+  description = "Query Insights: length of queries"
+  type        = number
+  default     = 1024
 }
 
 variable "record_application_tags" {
-  type    = bool
-  default = false
+  description = "Query Insights: storage application tags"
+  type        = bool
+  default     = false
 }
 
 variable "record_client_address" {
-  type    = bool
-  default = false
+  description = "Query Insights: store client IP address"
+  type        = bool
+  default     = false
+}
+
+variable "enable_private_path_for_google_cloud_services" {
+  type        = bool
+  default     = false
+  description = "If true, will allow Google Cloud Services access over private IP."
+}
+
+variable "replica_enable_private_path_for_google_cloud_services" {
+  type        = bool
+  description = "This OVERRIDES var.enable_private_path_for_google_cloud_services for replicas (replicas use var.enable_private_path_for_google_cloud_services per default)."
+  default     = null
 }
