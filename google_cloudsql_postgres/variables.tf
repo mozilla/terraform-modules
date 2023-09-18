@@ -131,3 +131,28 @@ variable "replica_availability_type" {
   default     = "ZONAL"
   description = "Allow setting availability configuration of replica"
 }
+
+variable "custom_replica_name" {
+  default     = ""
+  description = "Custom database replica name."
+}
+
+variable "replica_db_cpu" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
+  default     = "2"
+}
+
+variable "replica_db_mem_gb" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
+  default     = "12"
+}
+
+variable "replica_tier_override" {
+  description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.replica_db_cpu and var.replica_db_mem_gb"
+  default     = null
+}
+
+variable "replica_region_override" {
+  description = "This OVERRIDES var.region for replicas (replicas use var.region per default)."
+  default     = null
+}

@@ -57,12 +57,14 @@ output "postgres_database" {
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | high availability (REGIONAL) or single zone (ZONAL) | `string` | `"REGIONAL"` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |
+| <a name="input_custom_replica_name"></a> [custom\_replica\_name](#input\_custom\_replica\_name) | Custom database replica name. | `string` | `""` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | A list of database flag maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list` | `[]` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | n/a | `string` | `"POSTGRES_13"` | no |
 | <a name="input_db_cpu"></a> [db\_cpu](#input\_db\_cpu) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
 | <a name="input_db_mem_gb"></a> [db\_mem\_gb](#input\_db\_mem\_gb) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether the instance is protected from deletion (TF) | `bool` | `true` | no |
 | <a name="input_deletion_protection_enabled"></a> [deletion\_protection\_enabled](#input\_deletion\_protection\_enabled) | Whether the instance is protected from deletion (API) | `bool` | `true` | no |
+| <a name="input_enable_insights_config_on_replica"></a> [enable\_insights\_config\_on\_replica](#input\_enable\_insights\_config\_on\_replica) | If true, will allow enable insights config on replica | `bool` | `false` | no |
 | <a name="input_enable_private_path_for_google_cloud_services"></a> [enable\_private\_path\_for\_google\_cloud\_services](#input\_enable\_private\_path\_for\_google\_cloud\_services) | If true, will allow Google Cloud Services access over private IP. | `bool` | `false` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
@@ -73,7 +75,12 @@ output "postgres_database" {
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |
+| <a name="input_replica_availability_type"></a> [replica\_availability\_type](#input\_replica\_availability\_type) | Allow setting availability configuration of replica | `string` | `"ZONAL"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | n/a | `number` | `0` | no |
+| <a name="input_replica_db_cpu"></a> [replica\_db\_cpu](#input\_replica\_db\_cpu) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
+| <a name="input_replica_db_mem_gb"></a> [replica\_db\_mem\_gb](#input\_replica\_db\_mem\_gb) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
+| <a name="input_replica_region_override"></a> [replica\_region\_override](#input\_replica\_region\_override) | This OVERRIDES var.region for replicas (replicas use var.region per default). | `any` | `null` | no |
+| <a name="input_replica_tier_override"></a> [replica\_tier\_override](#input\_replica\_tier\_override) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.replica\_db\_cpu and var.replica\_db\_mem\_gb | `any` | `null` | no |
 | <a name="input_tier_override"></a> [tier\_override](#input\_tier\_override) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.db\_cpu and var.db\_mem\_gb | `string` | `""` | no |
 
 ## Outputs
