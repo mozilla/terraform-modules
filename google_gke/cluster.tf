@@ -240,8 +240,8 @@ resource "google_container_node_pool" "pools" {
       for_each = length(local.node_pools_guest_accelerator[each.key]) != 0 ? [1] : []
 
       content {
-        type  = each.value.guest_accelerator.type
-        count = each.value.guest_accelerator.count
+        type  = local.node_pools_guest_accelerator[each.key].type
+        count = local.node_pools_guest_accelerator[each.key].count
       }
     }
 
