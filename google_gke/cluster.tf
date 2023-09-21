@@ -237,10 +237,11 @@ resource "google_container_node_pool" "pools" {
     labels       = local.node_pools_labels[each.key]
 
     dynamic "guest_accelerator" {
-      for_each = lookup(each.value, "guest_accelerator", null) != null ? [1] : []
+      for_each = length(local.node_pools_guest_accelerator[each.key]) != 0 ? [1] : []
+
       content {
-        type  = each.value.guest_accelerator
-        count = 1
+        type  = each.value.guest_accelerator.type
+        count = each.value.guest_accelerator.count
       }
     }
 

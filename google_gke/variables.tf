@@ -1,4 +1,4 @@
-#
+
 # Cluster Metadata
 #
 variable "description" {
@@ -220,6 +220,14 @@ variable "node_pools_taints" {
   type        = map(list(map(string)))
   default = {
     tf-default-node-pool = [{}]
+  }
+}
+
+variable "node_pools_guest_accelerator" {
+  description = "Map containing node pools guest accelerator. Each node pool's name is the key. See locals.tf for defaults."
+  type        = map(map(string))
+  default = {
+    tf-default-node-pool = {}
   }
 }
 
