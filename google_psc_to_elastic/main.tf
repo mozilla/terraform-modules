@@ -3,11 +3,6 @@ locals {
   name     = "${var.name}-${var.gcp_region}-psc-elastic-endpoint"
 }
 
-provider "ec" {
-  # Need to provide any api key to use the ec_gcp_private_service_connect_endpoint resource
-  apikey = "fake"
-}
-
 data "ec_gcp_private_service_connect_endpoint" "default" {
   region = var.gcp_region
 }
