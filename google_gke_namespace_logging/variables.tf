@@ -35,3 +35,9 @@ variable "log_destination" {
   description = "Destination for tenant application logs. Can be bucket or bigquery"
   default     = "bucket"
 }
+
+variable "log_analytics" {
+  type        = bool
+  description = "Enable log analytics for log bucket"
+  default     = false
+}

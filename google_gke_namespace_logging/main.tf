@@ -10,12 +10,13 @@ locals {
 }
 
 resource "google_logging_project_bucket_config" "namespace" {
-  count          = var.log_destination == "bucket" ? 1 : 0
-  project        = var.project
-  location       = var.location
-  bucket_id      = "gke-${local.tenant_namespace}-log-bucket"
-  description    = "Log bucket for ${local.tenant_namespace}"
-  retention_days = var.retention_days
+  count            = var.log_destination == "bucket" ? 1 : 0
+  project          = var.project
+  location         = var.location
+  bucket_id        = "gke-${local.tenant_namespace}-log-bucket"
+  description      = "Log bucket for ${local.tenant_namespace}"
+  retention_days   = var.retention_days
+  enable_analytics = var.log_analytics
 }
 
 resource "google_project_iam_member" "logging_bucket_writer" {
