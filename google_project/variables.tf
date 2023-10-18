@@ -99,6 +99,6 @@ variable "realm" {
 
 variable "log_analytics" {
   type        = bool
-  description = "Enable log analytics for log bucket"
+  description = "Enable log analytics for _Default log bucket"
   default     = false
 }
