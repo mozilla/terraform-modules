@@ -96,3 +96,9 @@ variable "realm" {
     error_message = "Valid values for realm: global, nonprod, prod."
   }
 }
+
+variable "log_analytics" {
+  type        = bool
+  description = "Enable log analytics for log bucket"
+  default     = false
+}
