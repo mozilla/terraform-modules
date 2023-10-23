@@ -60,3 +60,10 @@ AND NOT protoPayload.serviceName="iam.googleapis.com"
 AND NOT protoPayload.serviceName="sts.googleapis.com"
   EOT
 }
+
+resource "google_logging_project_bucket_config" "project" {
+  project          = local.project_id
+  location         = "global"
+  bucket_id        = "_Default"
+  enable_analytics = var.log_analytics
+}
