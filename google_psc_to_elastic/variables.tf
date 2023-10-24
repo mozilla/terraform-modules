@@ -15,7 +15,8 @@ variable "network_name" {
 
 variable "project_id_for_network" {
   description = "The project ID of the network"
-  type        = optional(string)
+  type        = string
+  default     = ""
 }
 
 variable "subnetwork_name" {
