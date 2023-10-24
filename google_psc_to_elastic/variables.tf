@@ -13,6 +13,12 @@ variable "network_name" {
   type        = string
 }
 
+variable "project_id_for_network" {
+  description = "The project ID of the network"
+  type        = string
+  default     = ""
+}
+
 variable "subnetwork_name" {
   description = "VPC subnetwork name"
   type        = string

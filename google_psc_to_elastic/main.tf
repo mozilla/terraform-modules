@@ -3,12 +3,16 @@ locals {
   name     = "${var.name}-${var.gcp_region}-psc-elastic-endpoint"
 }
 
+data "google_project" "project" {
+}
+
 data "ec_gcp_private_service_connect_endpoint" "default" {
   region = var.gcp_region
 }
 
 data "google_compute_network" "default" {
-  name = var.network_name
+  name    = var.network_name
+  project = var.project_id_for_network != "" ? var.project_id_for_network : data.google_project.project.project_id
 }
 
 data "google_compute_subnetwork" "default" {
