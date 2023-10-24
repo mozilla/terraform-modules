@@ -8,7 +8,8 @@ data "ec_gcp_private_service_connect_endpoint" "default" {
 }
 
 data "google_compute_network" "default" {
-  name = var.network_name
+  name    = var.network_name
+  project = try(var.project_id_for_network, null)
 }
 
 data "google_compute_subnetwork" "default" {
