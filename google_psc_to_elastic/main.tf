@@ -17,6 +17,7 @@ data "google_compute_network" "default" {
 
 data "google_compute_subnetwork" "default" {
   name = var.subnetwork_name
+  project = var.project_id_for_network != "" ? var.project_id_for_network : data.google_project.project.project_id
 }
 
 resource "google_compute_address" "default" {
