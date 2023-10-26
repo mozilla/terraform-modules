@@ -3,6 +3,12 @@ variable "gcp_region" {
   type        = string
 }
 
+variable "ip_address_purpose" {
+  description = "The purpose of the IP address"
+  type        = string
+  default     = "GCE_ENDPOINT"
+}
+
 variable "name" {
   description = "GCP project name"
   type        = string
