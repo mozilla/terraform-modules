@@ -31,6 +31,8 @@ resource "google_compute_address" "default" {
 resource "google_compute_forwarding_rule" "default" {
   name = local.name
 
+  project = var.project_id_for_network != "" ? var.project_id_for_network : data.google_project.project.project_id
+
   ip_address            = google_compute_address.default.id
   load_balancing_scheme = ""
   network               = data.google_compute_network.default.name
