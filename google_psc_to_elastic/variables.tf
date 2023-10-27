@@ -3,12 +3,6 @@ variable "gcp_region" {
   type        = string
 }
 
-variable "ip_address_purpose" {
-  description = "The purpose of the IP address"
-  type        = string
-  default     = "GCE_ENDPOINT"
-}
-
 variable "name" {
   description = "GCP project name"
   type        = string
@@ -20,7 +14,7 @@ variable "network_name" {
 }
 
 variable "project_id_for_network" {
-  description = "The project ID of the network"
+  description = "The project ID from which to retrieve the data of a network or subnet"
   type        = string
   default     = ""
 }

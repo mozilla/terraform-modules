@@ -24,7 +24,7 @@ resource "google_compute_address" "default" {
   name = local.name
 
   address_type = "INTERNAL"
-  purpose      = var.ip_address_purpose
+  purpose      = "GCE_ENDPOINT"
   subnetwork   = data.google_compute_subnetwork.default.id
 }
 
