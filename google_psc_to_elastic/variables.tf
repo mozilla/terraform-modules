@@ -14,7 +14,7 @@ variable "network_name" {
 }
 
 variable "project_id_for_network" {
-  description = "The project ID of the network"
+  description = "The project ID from which to retrieve the data of a network or subnet"
   type        = string
   default     = ""
 }
