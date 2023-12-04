@@ -156,3 +156,8 @@ variable "replica_region_override" {
   description = "This OVERRIDES var.region for replicas (replicas use var.region per default)."
   default     = null
 }
+
+variable "edition" {
+  description = "Sets the edition, default to ENTERPRISE"
+  default     = "ENTERPRISE"
+}

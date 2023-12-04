@@ -33,6 +33,7 @@ resource "google_sql_database_instance" "primary" {
     deletion_protection_enabled = var.deletion_protection_enabled
     tier                        = local.tier
     availability_type           = var.availability_type
+    edition                     = var.edition
 
     backup_configuration {
       enabled                        = true
@@ -112,6 +113,7 @@ resource "google_sql_database_instance" "replica" {
     deletion_protection_enabled = var.deletion_protection_enabled
     tier                        = local.replica_tier
     availability_type           = var.replica_availability_type
+    edition                     = var.edition
 
     dynamic "insights_config" {
       for_each = var.enable_insights_config_on_replica ? range(1) : []
