@@ -1,5 +1,5 @@
 module "workgroup" {
-  source = "github.com/mozilla/terraform-modules//google_workgroup?ref=main"
+  source = "../google_workgroup"
   ids                           = var.ids
   roles                         = {}
   workgroup_outputs             = ["members", "google_groups"]
