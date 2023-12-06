@@ -42,14 +42,14 @@ resource "google_folder_iam_binding" "developers_techsupport_editor" {
 # Give developers access to r/w secrets in nonprod
 resource "google_project_iam_member" "developers_secretmanager_secretAccessor" {
   //for_each = module.developers_workgroup.members
-  for_each = !var.admin_only && var.google_nonprod_id != "" ? toset(module.developers_workgroup.members) :toset([]) 
+  for_each = !var.admin_only && var.google_nonprod_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_nonprod_id
   role     = "roles/secretmanager.secretAccessor"
   member   = each.value
 }
 
 resource "google_project_iam_member" "developers_secretmanager_secretVersionAdder" {
-  for_each = !var.admin_only && var.google_nonprod_id != "" ? toset(module.developers_workgroup.members) :toset([]) 
+  for_each = !var.admin_only && var.google_nonprod_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_nonprod_id
   role     = "roles/secretmanager.secretVersionAdder"
   member   = each.value

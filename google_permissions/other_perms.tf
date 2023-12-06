@@ -13,9 +13,9 @@ resource "google_folder_iam_binding" "bq_job_user" {
   # 
   # NOTE: this uses bq_data_viewer as well as the next resource block so that those we grant data viewer
   # also have to execute jobs so paired with .dataViewer
-  count   = contains(var.other_permissions, "bq_data_viewer") && !var.admin_only ? 1 : 0
-  folder  = var.google_folder_id
-  role    = "roles/bigquery.jobUser"
+  count  = contains(var.other_permissions, "bq_data_viewer") && !var.admin_only ? 1 : 0
+  folder = var.google_folder_id
+  role   = "roles/bigquery.jobUser"
   members = setunion(
     module.viewers_workgroup.members,
     module.developers_workgroup.members
@@ -26,9 +26,9 @@ resource "google_folder_iam_binding" "bq_job_user" {
 // key: bq_data_viewer
 //
 resource "google_folder_iam_binding" "bq_data_viewer" {
-  count   = contains(var.other_permissions, "bq_data_viewer") && !var.admin_only ? 1 : 0
-  folder  = var.google_folder_id
-  role    = "roles/bigquery.dataViewer"
+  count  = contains(var.other_permissions, "bq_data_viewer") && !var.admin_only ? 1 : 0
+  folder = var.google_folder_id
+  role   = "roles/bigquery.dataViewer"
   members = setunion(
     module.viewers_workgroup.members,
     module.developers_workgroup.members
@@ -59,7 +59,7 @@ resource "google_project_iam_binding" "automl_editor_prod" {
 // key: cloudtranslate_editor_nonprod
 //
 resource "google_project_iam_member" "cloudtranslate_editor_prod" {
-  for_each = contains(var.other_permissions, "cloudtranslate_editor_prod") && !var.admin_only && var.google_prod_id != "" ? toset(module.developers_workgroup.members) :toset([]) 
+  for_each = contains(var.other_permissions, "cloudtranslate_editor_prod") && !var.admin_only && var.google_prod_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_prod_id
   role     = "roles/cloudtranslate.editor"
   member   = each.key
