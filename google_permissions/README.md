@@ -2,7 +2,8 @@
 
 This module provides an interface to adding permissions to your google projects and folders.
 
-<!-- BEGIN_TF_DOCS -->
+For information on how to add new roles to the modules, please see [this document](./ADDING_NEW_ROLE.md)
+
 ## Requirements
 
 | Name | Version |
@@ -51,16 +52,21 @@ This module provides an interface to adding permissions to your google projects 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_admin_members"></a> [admin\_members](#input\_admin\_members) | List of admin members to add to the project. | `list(string)` | `[]` | no |
-| <a name="input_admin_only"></a> [admin\_only](#input\_admin\_only) | Whether or not to create a project with admin-only permissions. | `bool` | `false` | no |
-| <a name="input_developer_members"></a> [developer\_members](#input\_developer\_members) | List of developer members to add to the project. | `list(string)` | `[]` | no |
+| <a name="input_admin_ids"></a> [admin\_ids](#input\_admin\_ids) | List of admin IDs to add to the project. | `list(string)` | `[]` | no |
+| <a name="input_admin_only"></a> [admin\_only](#input\_admin\_only) | Whether or not to create a project with admin-only role. | `bool` | `false` | no |
+| <a name="input_developer_ids"></a> [developer\_ids](#input\_developer\_ids) | List of developer IDs to add to the project. | `list(string)` | `[]` | no |
+| <a name="input_folder_roles"></a> [folder\_roles](#input\_folder\_roles) | List of roles to apply at the folder level. | `list(string)` | `[]` | no |
 | <a name="input_google_folder_id"></a> [google\_folder\_id](#input\_google\_folder\_id) | The ID of the folder to create the project in. | `string` | n/a | yes |
-| <a name="input_google_nonprod_id"></a> [google\_nonprod\_id](#input\_google\_nonprod\_id) | The ID of the nonprod project. | `string` | `""` | no |
-| <a name="input_google_prod_id"></a> [google\_prod\_id](#input\_google\_prod\_id) | The ID of the prod project. | `string` | `""` | no |
-| <a name="input_other_permissions"></a> [other\_permissions](#input\_other\_permissions) | List of other additional permissions beyond the core set to allow on the project. | `list(string)` | `[]` | no |
-| <a name="input_viewer_members"></a> [viewer\_members](#input\_viewer\_members) | List of viewer members to add to the project. | `list(string)` | `[]` | no |
+| <a name="input_google_nonprod_project_id"></a> [google\_nonprod\_project\_id](#input\_google\_nonprod\_project\_id) | The ID of the nonprod project. | `string` | `""` | no |
+| <a name="input_google_prod_project_id"></a> [google\_prod\_project\_id](#input\_google\_prod\_project\_id) | The ID of the prod project. | `string` | `""` | no |
+| <a name="input_nonprod_roles"></a> [nonprod\_roles](#input\_nonprod\_roles) | List of roles to apply to the nonprod project. | `list(string)` | `[]` | no |
+| <a name="input_prod_roles"></a> [prod\_roles](#input\_prod\_roles) | List of roles to apply to the prod project. | `list(string)` | `[]` | no |
+| <a name="input_viewer_ids"></a> [viewer\_ids](#input\_viewer\_ids) | List of viewer IDs to add to the project. | `list(string)` | `[]` | no |
 
 ## Outputs
 
-No outputs.
-<!-- END_TF_DOCS -->
+| Name | Description |
+|------|-------------|
+| <a name="output_validate_folder_roles"></a> [validate\_folder\_roles](#output\_validate\_folder\_roles) | n/a |
+| <a name="output_validate_nonprod_roles"></a> [validate\_nonprod\_roles](#output\_validate\_nonprod\_roles) | n/a |
+| <a name="output_validate_prod_roles"></a> [validate\_prod\_roles](#output\_validate\_prod\_roles) | n/a |
