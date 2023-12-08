@@ -1,4 +1,4 @@
-# if admin_only is true, we don't create these permissions at all
+// if admin_only is true, we don't create these permissions at all
 resource "google_folder_iam_binding" "owner" {
   count   = var.admin_only ? 0 : 1
   folder  = var.google_folder_id
@@ -13,11 +13,11 @@ resource "google_folder_iam_binding" "viewer" {
   members = module.developers_workgroup.members
 }
 
-#
-# additional permissions, folder level
-#
+//
+// additional permissions, folder level
+//
 
-# required to grant access to data logs
+// required to grant access to data logs
 resource "google_folder_iam_binding" "developers_logging_privateLogViewer" {
   count   = var.admin_only ? 0 : 1
   folder  = var.google_folder_id
@@ -35,22 +35,22 @@ resource "google_folder_iam_binding" "developers_techsupport_editor" {
   members = module.developers_workgroup.members
 }
 
-#
-# additional permissions, project level
-#
+//
+// additional permissions, project level
+//
 
-# Give developers access to r/w secrets in nonprod
+// Give developers access to r/w secrets in nonprod
 resource "google_project_iam_member" "developers_secretmanager_secretAccessor" {
   //for_each = module.developers_workgroup.members
-  for_each = !var.admin_only && var.google_nonprod_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_nonprod_id
+  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_nonprod_project_id
   role     = "roles/secretmanager.secretAccessor"
   member   = each.value
 }
 
 resource "google_project_iam_member" "developers_secretmanager_secretVersionAdder" {
-  for_each = !var.admin_only && var.google_nonprod_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_nonprod_id
+  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_nonprod_project_id
   role     = "roles/secretmanager.secretVersionAdder"
   member   = each.value
 }

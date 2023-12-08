@@ -1,14 +1,14 @@
 module "admins_workgroup" {
   source = "../mozilla_workgroup"
-  ids    = var.admin_members
+  ids    = var.admin_ids
 }
 
 module "developers_workgroup" {
   source = "../mozilla_workgroup"
-  ids    = var.developer_members
+  ids    = var.developer_ids
 }
 
 module "viewers_workgroup" {
   source = "../mozilla_workgroup"
-  ids    = var.viewer_members
+  ids    = var.viewer_ids
 }
