@@ -93,6 +93,7 @@ output "postgres_database" {
 | <a name="output_ip_addresses"></a> [ip\_addresses](#output\_ip\_addresses) | n/a |
 | <a name="output_private_ip_address"></a> [private\_ip\_address](#output\_private\_ip\_address) | n/a |
 | <a name="output_public_ip_address"></a> [public\_ip\_address](#output\_public\_ip\_address) | n/a |
+| <a name="output_replica_connection_names"></a> [replica\_connection\_names](#output\_replica\_connection\_names) | n/a |
 | <a name="output_replica_instance"></a> [replica\_instance](#output\_replica\_instance) | n/a |
 | <a name="output_replica_private_ip_address"></a> [replica\_private\_ip\_address](#output\_replica\_private\_ip\_address) | n/a |
 | <a name="output_replica_public_ip_address"></a> [replica\_public\_ip\_address](#output\_replica\_public\_ip\_address) | n/a |
