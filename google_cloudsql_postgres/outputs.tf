@@ -11,6 +11,10 @@ output "connection_name" {
   value = google_sql_database_instance.primary.connection_name
 }
 
+output "replica_connection_names" {
+  value = [for replica in google_sql_database_instance.replica : replica.connection_name]
+}
+
 output "service_account" {
   value = google_sql_database_instance.primary.service_account_email_address
 }
