@@ -20,46 +20,17 @@ variable "google_nonprod_project_id" {
   default     = ""
 }
 
-
 /*
 //
 // ADDITIONAL ROLES - these are roles added in addition to the core roles.
 //
 */
 
-
-locals {
-  // This is a list of all the roles that we support in this module
-  // IN ADDITION to the roles added via the core rules in main.tf
-  // and that already have have existing supporting resource definitions.
-  folder_additional_roles = [
-    "roles/bigquery.jobUser",
-  ]
-  project_additional_roles = [
-    "roles/automl.editor",
-    "roles/cloudtranslate.editor",
-    "roles/storage.objectAdmin",
-    "roles/translationhub.admin",
-    "roles/storage.admin",
-    "roles/cloudsql.admin"
-  ]
-}
-
 // roles that are folder-only in scope are in this list
 variable "folder_roles" {
   description = "List of roles to apply at the folder level."
   type        = list(string)
   default     = []
-}
-
-output "validate_folder_roles" {
-  value = null
-  precondition {
-    condition = alltrue([
-      for x in var.folder_roles : contains(local.folder_additional_roles, x)
-    ])
-    error_message = "You have specified an invalid folder role."
-  }
 }
 
 // roles that are intended for the production project are in this list
@@ -69,31 +40,12 @@ variable "prod_roles" {
   default     = []
 }
 
-output "validate_prod_roles" {
-  value = null
-  precondition {
-    condition = alltrue([
-      for x in var.prod_roles : contains(local.project_additional_roles, x)
-    ])
-    error_message = "You have specified an invalid prod role."
-  }
-}
 
 // roles that are intended for the non-production project are in this list
 variable "nonprod_roles" {
   description = "List of roles to apply to the nonprod project."
   type        = list(string)
   default     = []
-}
-
-output "validate_nonprod_roles" {
-  value = null
-  precondition {
-    condition = alltrue([
-      for x in var.nonprod_roles : contains(local.project_additional_roles, x)
-    ])
-    error_message = "You have specified an invalid nonprod role."
-  }
 }
 
 /*

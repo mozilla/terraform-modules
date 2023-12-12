@@ -7,10 +7,13 @@ resource "google_folder_iam_binding" "owner" {
 }
 
 resource "google_folder_iam_binding" "viewer" {
-  count   = var.admin_only ? 0 : 1
-  folder  = var.google_folder_id
-  role    = "roles/viewer"
-  members = module.developers_workgroup.members
+  count  = var.admin_only ? 0 : 1
+  folder = var.google_folder_id
+  role   = "roles/viewer"
+  members = setunion(
+    module.developers_workgroup.members,
+    module.viewers_workgroup.members
+  )
 }
 
 //
