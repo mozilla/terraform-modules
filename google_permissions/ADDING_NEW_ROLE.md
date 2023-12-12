@@ -6,21 +6,24 @@ For most things, it is assumed that you'll start with the [core resource set](./
 
 ### TL;DR
 
-- update local list `allowed_roles` in [variables.tf](./variables.tf)
+- update local list matching your role `folder_additional_roles` or `project_additional_roles` in [variables.tf](./variables.tf)
 - add appropriate resource block to [other_roles.tf](./other_roles.tf)
 
 ### Adding New Role
 
 You will work with two files in adding a resource: `variables.tf` and `other_roles.tf`.
 
-In [variables.tf](./variables.tf), you want to add your new role to the locals->allowed_roles variable
+In [variables.tf](./variables.tf), you want to add your new role to one of the locals->*_additional_roles variable depending on the role type itself (folder or project):
 
 ```hcl
 locals {
-  // This is a list of all the roles that we allow to be added to the projects
+  // This is a list of all the roles that we support in this module
+  // IN ADDITION to the roles added via the core rules in main.tf
   // and that already have have existing supporting resource definitions.
-  allowed_roles = [
+  folder_additional_roles = [
     "roles/bigquery.jobUser",
+  ]
+  project_additional_roles = [
     "roles/automl.editor",
     "roles/cloudtranslate.editor",
     "roles/storage.objectAdmin",
