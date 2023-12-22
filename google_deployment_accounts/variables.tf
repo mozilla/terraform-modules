@@ -20,6 +20,30 @@ variable "gha_environments" {
   default     = []
 }
 
+
+variable "circleci_attribute_specifiers" {
+  description = "(CircleCI only) Attribute specifiers to allow deploys from. If specified, this overrides the github_repository variable."
+  type        = set(string)
+  default     = []
+  validation {
+    condition = alltrue(
+      [for attribute_specifier in var.circleci_attribute_specifiers :
+        contains(
+          [
+            "subject",
+            "attribute.aud",
+            "attribute.vcs",
+            "attribute.project",
+            "attribute.vcs_origin",
+            "attribute.vcs_ref",
+            "attribute.context_id"
+        ], split("/", attribute_specifier)[0])
+      ]
+    )
+    error_message = "Attribute specifiers must contain a valid attribute prefix."
+  }
+}
+
 variable "project" {
   type    = string
   default = null
@@ -32,8 +56,12 @@ variable "wip_project_number" {
 
 variable "wip_name" {
   type        = string
-  description = "The name of the workload identity provider"
+  description = "The name of the workload identity provider. This value implicitly controls whether to provision access to github-actions or circleci"
   default     = "github-actions"
+  validation {
+    condition     = contains(["github-actions", "circleci"], var.wip_name)
+    error_message = "The value of wip_name must be either github-actions or circleci."
+  }
 }
 
 variable "github_repository" {
