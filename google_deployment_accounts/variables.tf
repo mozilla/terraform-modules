@@ -20,7 +20,31 @@ variable "gha_environments" {
   default     = []
 }
 
-
+# FIXME consider breaking this out into multiple variables
+# variable "circleci_subjects" {
+#   type = list(string)
+#   default = []
+# }
+# variable "circleci_audiences" {
+#   type = list(string)
+#   default = []
+# }
+# variable "circleci_projects" {
+#   type = list(string)
+#   default = []
+# }
+# variable "circleci_vcses" {
+#   type = list(string)
+#   default = []
+# }
+# variable "circleci_vcs_origins" {
+#   type = list(string)
+#   default = []
+# }
+# variable "circleci_context_ids" {
+#   type = list(string)
+#   default = []
+# }
 variable "circleci_attribute_specifiers" {
   description = "(CircleCI only) Attribute specifiers to allow deploys from. If specified, this overrides the github_repository variable."
   type        = set(string)
