@@ -144,10 +144,10 @@ resource "google_container_cluster" "primary" {
 
   # Gateway-api
   dynamic "gateway_api_config" {
-    for_each = var.gateway_api_config_channel != null ? [1] : []
+    for_each = var.gateway_api_enabled ? [1] : []
 
     content {
-      channel = var.gateway_api_config_channel
+      channel = "CHANNEL_STANDARD"
     }
   }
 
