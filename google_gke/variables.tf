@@ -307,6 +307,12 @@ variable "service_account_id" {
   type        = string
 }
 
+variable "gateway_api_config_channel" {
+  default     = null
+  description = "The config channel setting to use"
+  type        = string
+}
+
 variable "monitoring_config_enable_components" {
   default     = ["SYSTEM_COMPONENTS"]
   description = "Monitoring configuration for the cluster"
