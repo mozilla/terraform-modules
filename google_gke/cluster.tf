@@ -142,6 +142,15 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  # Gateway-api
+  dynamic "gateway_api_config" {
+    for_each = var.gateway_api_enabled ? [1] : []
+
+    content {
+      channel = "CHANNEL_STANDARD"
+    }
+  }
+
   # Google Groups for RBAC
   dynamic "authenticator_groups_config" {
     for_each = local.cluster_authenticator_security_group

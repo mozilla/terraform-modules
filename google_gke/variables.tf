@@ -307,6 +307,12 @@ variable "service_account_id" {
   type        = string
 }
 
+variable "gateway_api_enabled" {
+  default     = false
+  description = "Enabled Gateway in the GKE Cluster"
+  type        = bool
+}
+
 variable "monitoring_config_enable_components" {
   default     = ["SYSTEM_COMPONENTS"]
   description = "Monitoring configuration for the cluster"
