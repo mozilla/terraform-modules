@@ -31,7 +31,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | Name of the service account. Defaults to deploy-<env> | `string` | `null` | no |
-| <a name="input_circleci_attribute_specifiers"></a> [circleci\_attribute\_specifiers](#input\_circleci\_attribute\_specifiers) | (CircleCI only) Attribute specifiers to allow deploys from. If specified, this overrides the github\_repository variable and any other CircleCI-specific variables. | `set(string)` | `[]` | no |
+| <a name="input_circleci_attribute_specifiers"></a> [circleci\_attribute\_specifiers](#input\_circleci\_attribute\_specifiers) | (CircleCI only) Set of attribute specifiers to allow deploys from, in the form <attr>/<attr\_value>. If specified, this overrides the github\_repository variable and any other CircleCI-specific variables. | `set(string)` | `[]` | no |
 | <a name="input_circleci_branches"></a> [circleci\_branches](#input\_circleci\_branches) | (CircleCI only) Branches to allow deployments from. If unspecified, allow deployment from all branches. | `list(string)` | `[]` | no |
 | <a name="input_circleci_context_ids"></a> [circleci\_context\_ids](#input\_circleci\_context\_ids) | (CircleCI only) Contexts to allow deployments from. Not recommended when using merge queues since CircleCI Contexts are only accessible to members of your organization. | `list(string)` | `[]` | no |
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the service account. Default to "Deployment to the <env> environment" | `string` | `null` | no |

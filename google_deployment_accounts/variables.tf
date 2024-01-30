@@ -45,7 +45,7 @@ variable "circleci_context_ids" {
 }
 
 variable "circleci_attribute_specifiers" {
-  description = "(CircleCI only) Attribute specifiers to allow deploys from. If specified, this overrides the github_repository variable and any other CircleCI-specific variables."
+  description = "(CircleCI only) Set of attribute specifiers to allow deploys from, in the form <attr>/<attr_value>. If specified, this overrides the github_repository variable and any other CircleCI-specific variables."
   type        = set(string)
   default     = []
   validation {
