@@ -1,17 +1,17 @@
 variable "account_id" {
   type        = string
-  description = "Name of the service account. Defaults to deploy-<env>"
+  description = "Name of the service account. Defaults to deploy-ENV."
   default     = null
 }
 
 variable "display_name" {
   type        = string
-  description = "Display name for the service account. Default to \"Deployment to the <env> environment\""
+  description = "Display name for the service account. Defaults to \"Deployment to the ENV environment\"."
   default     = null
 }
 
 variable "environment" {
-  description = "Environment e.g., stage."
+  description = "Environment e.g., stage. Not used for OIDC configuration in CircleCI."
   type        = string
 }
 
@@ -34,18 +34,18 @@ variable "gha_environments" {
 # convenience variables.
 variable "circleci_branches" {
   description = "(CircleCI only) Branches to allow deployments from. If unspecified, allow deployment from all branches."
-  type        = list(string)
+  type        = set(string)
   default     = []
 }
 
 variable "circleci_context_ids" {
   description = "(CircleCI only) Contexts to allow deployments from. Not recommended when using merge queues since CircleCI Contexts are only accessible to members of your organization."
-  type        = list(string)
+  type        = set(string)
   default     = []
 }
 
 variable "circleci_attribute_specifiers" {
-  description = "(CircleCI only) Set of attribute specifiers to allow deploys from, in the form <attr>/<attr_value>. If specified, this overrides the github_repository variable and any other CircleCI-specific variables."
+  description = "(CircleCI only) Set of attribute specifiers to allow deploys from, in the form ATTR/ATTR_VALUE. If specified, this overrides the github_repository variable and any other CircleCI-specific variables."
   type        = set(string)
   default     = []
   validation {
@@ -74,12 +74,12 @@ variable "project" {
 
 variable "wip_project_number" {
   type        = number
-  description = "The project number of the project the workload identity provider lives in"
+  description = "The project number of the project the workload identity provider lives in."
 }
 
 variable "wip_name" {
   type        = string
-  description = "The name of the workload identity provider. This value implicitly controls whether to provision access to github-actions or circleci"
+  description = "The name of the workload identity provider. This value implicitly controls whether to provision access to github-actions or circleci."
   default     = "github-actions"
   validation {
     condition     = contains(["github-actions", "circleci"], var.wip_name)
@@ -89,7 +89,7 @@ variable "wip_name" {
 
 variable "github_repository" {
   type        = string
-  description = "The Github repository running the deployment workflows in the format org/repository"
+  description = "The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI."
   default     = null
 }
 
