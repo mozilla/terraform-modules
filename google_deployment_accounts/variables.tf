@@ -4,6 +4,12 @@ variable "account_id" {
   default     = null
 }
 
+variable "display_name" {
+  type        = string
+  description = "Display name for the service account. Default to \"Deployment to the <env> environment\""
+  default     = null
+}
+
 variable "environment" {
   description = "Environment e.g., stage."
   type        = string
@@ -20,33 +26,26 @@ variable "gha_environments" {
   default     = []
 }
 
-# FIXME consider breaking this out into multiple variables
-# variable "circleci_subjects" {
-#   type = list(string)
-#   default = []
-# }
-# variable "circleci_audiences" {
-#   type = list(string)
-#   default = []
-# }
-# variable "circleci_projects" {
-#   type = list(string)
-#   default = []
-# }
-# variable "circleci_vcses" {
-#   type = list(string)
-#   default = []
-# }
-# variable "circleci_vcs_origins" {
-#   type = list(string)
-#   default = []
-# }
-# variable "circleci_context_ids" {
-#   type = list(string)
-#   default = []
-# }
+# For CircleCI, the default options are to deploy from certain repositories
+# (any branch) or allow deploys via a CircleCI Context. You can also limit
+# CircleCI to deploy from specific branches. For more complex use
+# cases (such as CI access to a service account across multiple repositories)
+# you can specify those attribute specifiers explicitly instead of the
+# convenience variables.
+variable "circleci_branches" {
+  description = "(CircleCI only) Branches to allow deployments from. If unspecified, allow deployment from all branches."
+  type        = list(string)
+  default     = []
+}
+
+variable "circleci_context_ids" {
+  description = "(CircleCI only) Contexts to allow deployments from. Not recommended when using merge queues since CircleCI Contexts are only accessible to members of your organization."
+  type        = list(string)
+  default     = []
+}
+
 variable "circleci_attribute_specifiers" {
-  description = "(CircleCI only) Attribute specifiers to allow deploys from. If specified, this overrides the github_repository variable."
+  description = "(CircleCI only) Attribute specifiers to allow deploys from. If specified, this overrides the github_repository variable and any other CircleCI-specific variables."
   type        = set(string)
   default     = []
   validation {
