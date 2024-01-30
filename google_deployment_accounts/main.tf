@@ -10,7 +10,7 @@ locals {
 
 resource "google_service_account" "account" {
   account_id   = coalesce(var.account_id, "deploy-${var.environment}")
-  display_name = "Deployment to the ${var.environment} environment"
+  display_name = coalesce(var.display_name, "Deployment to the ${var.environment} environment")
   project      = var.project
 }
 
