@@ -43,6 +43,6 @@ variable "github_repository" {
 
 variable "github_repositories" {
   type        = list(string)
-  description = "The Github repositories running the deployment workflows in the format org/repository, overwriting the github_repository variable"
+  description = "The Github repositories running the deployment workflows in the format org/repository, will be used if github_repository is not defined"
   default     = []
 }

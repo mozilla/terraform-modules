@@ -1,5 +1,5 @@
 locals {
-  github_deploy_repositories = coalescelist(var.github_repositories, [var.github_repository])
+  github_deploy_repositories = var.github_repository != null ? [var.github_repository] : var.github_repositories
 
   environments = length(var.gha_environments) > 0 ? var.gha_environments : [var.environment]
 
