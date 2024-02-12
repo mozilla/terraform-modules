@@ -39,6 +39,7 @@ variable "wip_name" {
 variable "github_repository" {
   type        = string
   description = "The Github repository running the deployment workflows in the format org/repository"
+  default     = null
 }
 
 variable "github_repositories" {
