@@ -12,9 +12,5 @@ resource "google_service_account" "account" {
 resource "google_service_account_iam_binding" "github-actions-access" {
   service_account_id = google_service_account.account.name
   role               = "roles/iam.workloadIdentityUser"
-  members = (
-    length(var.gha_environments) > 0 ?
-    [for env in var.gha_environments : format("%s:%s", "principal://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/subject/repo:${var.github_repository}:environment", env)] :
-    ["principal://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/subject/repo:${var.github_repository}:environment:${var.environment}", ]
-  )
+  members            = local.github_deploy_members
 }

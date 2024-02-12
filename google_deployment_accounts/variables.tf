@@ -40,3 +40,9 @@ variable "github_repository" {
   type        = string
   description = "The Github repository running the deployment workflows in the format org/repository"
 }
+
+variable "github_repositories" {
+  type        = list(string)
+  description = "The Github repositories running the deployment workflows in the format org/repository, will be used if github_repository is not defined"
+  default     = []
+}
