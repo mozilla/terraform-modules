@@ -89,12 +89,12 @@ variable "wip_name" {
 
 variable "github_repository" {
   type        = string
-  description = "The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI."
+  description = "The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI or when github_repositories is specified."
   default     = null
 }
 
 variable "github_repositories" {
   type        = list(string)
-  description = "The Github repositories running the deployment workflows in the format org/repository, will be used if github_repository is not defined"
+  description = "The Github repositories running the deployment workflows in the format org/repository, will be used if github_repository is not defined."
   default     = []
 }

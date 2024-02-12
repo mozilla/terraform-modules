@@ -37,8 +37,8 @@ No modules.
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the service account. Defaults to "Deployment to the ENV environment". | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. Not used for OIDC configuration in CircleCI. | `string` | n/a | yes |
 | <a name="input_gha_environments"></a> [gha\_environments](#input\_gha\_environments) | Github environments from which to deploy. If specified, this overrides the environment variable. | `list(string)` | `[]` | no |
-| <a name="input_github_repositories"></a> [github\_repositories](#input\_github\_repositories) | The Github repositories running the deployment workflows in the format org/repository, will be used if github\_repository is not defined | `list(string)` | `[]` | no |
-| <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI. | `string` | `null` | no |
+| <a name="input_github_repositories"></a> [github\_repositories](#input\_github\_repositories) | The Github repositories running the deployment workflows in the format org/repository, will be used if github\_repository is not defined. | `list(string)` | `[]` | no |
+| <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI or when github\_repositories is specified. | `string` | `null` | no |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | `null` | no |
 | <a name="input_wip_name"></a> [wip\_name](#input\_wip\_name) | The name of the workload identity provider. This value implicitly controls whether to provision access to github-actions or circleci. | `string` | `"github-actions"` | no |
 | <a name="input_wip_project_number"></a> [wip\_project\_number](#input\_wip\_project\_number) | The project number of the project the workload identity provider lives in. | `number` | n/a | yes |
