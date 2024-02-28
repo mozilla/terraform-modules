@@ -12,10 +12,8 @@ resource "google_certificate_manager_certificate" "default" {
   name = each.key
 
   managed {
-    domains = each.value.add_wildcard == true ? [format("*.%s", each.value.hostname), each.value.hostname] : [each.value.hostname]
-    dns_authorizations = [for cert in var.certificates :
-      google_certificate_manager_dns_authorization.default[replace(cert.hostname, ".", "-")].id if cert.dns_authorization == true
-    ]
+    domains            = each.value.add_wildcard == true ? [format("*.%s", each.value.hostname), each.value.hostname] : [each.value.hostname]
+    dns_authorizations = each.value.dns_authorization == true ? [google_certificate_manager_dns_authorization.default[each.key].id] : []
   }
 }
 
