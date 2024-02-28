@@ -20,7 +20,7 @@ resource "google_certificate_manager_dns_authorization" "default" {
   for_each = { for domain in var.certificates : replace(domain.hostname, ".", "-") => domain }
 
   name   = each.key
-  domain = each.key
+  domain = each.value.hostname
 }
 
 resource "google_certificate_manager_certificate_map_entry" "default" {
