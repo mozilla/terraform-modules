@@ -33,7 +33,7 @@ jobs:
     steps:
     - id: terraform-checks
       name: Terraform Checks
-      uses: mozilla/tf-actions/ci@v0.0.2
+      uses: mozilla/tf-actions/ci@v0.0.3
       with:
         readme_check: "true"
         tfpath: ${{ matrix.directory }}
