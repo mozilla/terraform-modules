@@ -17,7 +17,7 @@ resource "google_certificate_manager_certificate" "default" {
 }
 
 resource "google_certificate_manager_dns_authorization" "default" {
-  for_each = { for domain in var.certificates : replace(domain.hostname, ".", "-") => domain }
+  for_each = { for domain in var.certificates : replace(domain.hostname, ".", "-") => domain if domain.dns_authorization == true }
 
   name   = each.key
   domain = each.value.hostname
