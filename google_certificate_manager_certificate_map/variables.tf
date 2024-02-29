@@ -2,7 +2,7 @@ variable "identifier" {
   type = string
 }
 
-variable "certificates" {
+variable "certificateMapEntries" {
   type = list(object({
     hostname          = string
     add_wildcard      = optional(bool, false)
