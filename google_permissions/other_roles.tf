@@ -92,16 +92,16 @@ resource "google_project_iam_binding" "nonprod_developer_db_admin" {
   members = module.developers_workgroup.members
 }
 
-resource "google_project_iam_binding" "prod_developer_monitoring_editor" {
-  count   = contains(var.prod_roles, "roles/monitoring.editor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+resource "google_project_iam_binding" "prod_developer_monitoring_uptimecheckconfigeditor" {
+  count   = contains(var.prod_roles, "roles/monitoring.uptimeCheckConfigEditor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
   project = var.google_prod_project_id
-  role    = "roles/monitoring.editor"
+  role    = "roles/monitoring.uptimeCheckConfigEditor"
   members = module.developers_workgroup.members
 }
 
-resource "google_project_iam_binding" "nonprod_developer_monitoring_editor" {
-  count   = contains(var.nonprod_roles, "roles/monitoring.editor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+resource "google_project_iam_binding" "nonprod_developer_monitoring_uptimecheckconfigeditor" {
+  count   = contains(var.nonprod_roles, "roles/monitoring.uptimeCheckConfigEditor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
   project = var.google_nonprod_project_id
-  role    = "roles/monitoring.editor"
+  role    = "roles/monitoring.uptimeCheckConfigEditor"
   members = module.developers_workgroup.members
 }

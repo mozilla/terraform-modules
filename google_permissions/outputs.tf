@@ -10,7 +10,7 @@ locals {
     "roles/automl.editor",
     "roles/cloudsql.admin",
     "roles/cloudtranslate.editor",
-    "roles/monitoring.editor",
+    "roles/monitoring.uptimeCheckConfigEditor",
     "roles/storage.admin",
     "roles/storage.objectAdmin",
     "roles/translationhub.admin",
