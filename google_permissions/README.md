@@ -2,20 +2,20 @@
 
 This module provides an interface to adding permissions to your google projects and folders.
 
-For information on how to add new roles to the modules, please see [this document](./ADDING_NEW_ROLE.md)
+For information on how to add new roles to the modules, please see [this document](./ADDING\_NEW\_ROLE.md)
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.2 |
 | <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.7.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 3.0 |
 
 ## Modules
 
@@ -40,8 +40,10 @@ For information on how to add new roles to the modules, please see [this documen
 | [google_project_iam_binding.bucket_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.editor_nonprod](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.nonprod_developer_db_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.nonprod_developer_monitoring_editor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.prod_bucket_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.prod_developer_db_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.prod_developer_monitoring_editor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.storage_objectadmin_prod](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.translationhub_admin_prod](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_member.cloudtranslate_editor_prod](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
