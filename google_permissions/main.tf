@@ -1,3 +1,11 @@
+/**
+ * # Google Permissions
+ * 
+ * This module provides an interface to adding permissions to your google projects and folders.
+ * 
+ * For information on how to add new roles to the modules, please see [this document](./ADDING_NEW_ROLE.md)
+ */
+
 // if admin_only is true, we don't create these permissions at all
 resource "google_folder_iam_binding" "owner" {
   count   = var.admin_only ? 0 : 1

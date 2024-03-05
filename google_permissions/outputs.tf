@@ -1,4 +1,3 @@
-
 locals {
   // This is a list of all the roles that we support in this module
   // IN ADDITION to the roles added via the core rules in main.tf
@@ -6,13 +5,15 @@ locals {
   folder_additional_roles = [
     "roles/bigquery.jobUser",
   ]
+
   project_additional_roles = [
     "roles/automl.editor",
+    "roles/cloudsql.admin",
     "roles/cloudtranslate.editor",
+    "roles/monitoring.editor",
+    "roles/storage.admin",
     "roles/storage.objectAdmin",
     "roles/translationhub.admin",
-    "roles/storage.admin",
-    "roles/cloudsql.admin"
   ]
 }
 

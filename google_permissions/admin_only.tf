@@ -1,4 +1,3 @@
-
 resource "google_folder_iam_binding" "folder" {
   count   = var.admin_only ? 1 : 0
   folder  = var.google_folder_id
