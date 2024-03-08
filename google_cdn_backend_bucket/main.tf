@@ -51,7 +51,7 @@ resource "google_compute_target_https_proxy" "default" {
 resource "google_compute_global_forwarding_rule" "http" {
   for_each = var.addresses
 
-  name       = format("%s-%s", local.name_prefix, each.key)
+  name       = format("%s-http-%s", local.name_prefix, each.key)
   port_range = "80"
   target     = google_compute_target_http_proxy.default.id
   ip_address = each.value
@@ -60,7 +60,7 @@ resource "google_compute_global_forwarding_rule" "http" {
 resource "google_compute_global_forwarding_rule" "https" {
   for_each = var.addresses
 
-  name       = format("%s-%s", local.name_prefix, each.key)
+  name       = format("%s-https-%s", local.name_prefix, each.key)
   port_range = "443"
   target     = google_compute_target_https_proxy.default.id
   ip_address = each.value
