@@ -231,6 +231,14 @@ variable "node_pools_guest_accelerator" {
   }
 }
 
+variable "node_pools_enable_gcfs" {
+  description = "Map containing node pools guest accelerator. Each node pool's name is the key. See locals.tf for defaults."
+  type        = map(bool)
+  default = {
+    tf-default-node-pool = false
+  }
+}
+
 #
 # Monitoring
 #

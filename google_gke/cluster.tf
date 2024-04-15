@@ -254,6 +254,14 @@ resource "google_container_node_pool" "pools" {
       }
     }
 
+    dynamic "gcfs_config" {
+      for_each = local.node_pools_enable_gcfs[each.key] == true ? [1] : []
+
+      content {
+        enabled = true
+      }
+    }
+
     dynamic "linux_node_config" {
       for_each = length(local.node_pools_sysctls[each.key]) != 0 ? [1] : []
 
