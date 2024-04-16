@@ -48,7 +48,6 @@ locals {
   node_pools_oauth_scopes      = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_oauth_scopes, node_pool.name, ["https://www.googleapis.com/auth/cloud-platform"]) }
   node_pools_sysctls           = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_sysctls, node_pool.name, {}) }
   node_pools_guest_accelerator = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_guest_accelerator, node_pool.name, {}) }
-  node_pools_enable_gcfs       = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_enable_gcfs, node_pool.name, false) }
 
   node_pools_tags   = { for node_pool in var.node_pools : node_pool.name => setunion(local.tags, lookup(var.node_pools_tags, node_pool.name, [])) }
   node_pools_taints = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_taints, node_pool.name, null) }

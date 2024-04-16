@@ -96,6 +96,12 @@ variable "enable_private_cluster" {
   type        = bool
 }
 
+variable "enable_gcfs" {
+  default     = true
+  description = "Enable Google Container File System (gcfs) image streaming."
+  type        = bool
+}
+
 variable "enable_public_cidrs_access" {
   default     = false
   description = "Whether the control plane is open to Google public IPs. Defaults to false."
@@ -228,14 +234,6 @@ variable "node_pools_guest_accelerator" {
   type        = map(map(string))
   default = {
     tf-default-node-pool = {}
-  }
-}
-
-variable "node_pools_enable_gcfs" {
-  description = "Map containing node pools guest accelerator. Each node pool's name is the key. See locals.tf for defaults."
-  type        = map(bool)
-  default = {
-    tf-default-node-pool = false
   }
 }
 

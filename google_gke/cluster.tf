@@ -190,6 +190,20 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  dynamic "node_pool_defaults" {
+    for_each = var.enable_gcfs ? [1] : []
+    content {
+      # TODO: If we end up needing to configure more parts of `node_pool_defaults`
+      # we will need to make this more dynamic
+      node_config_defaults {
+        gcfs_config {
+          enabled = true
+        }
+      }
+    }
+  }
+
+
   lifecycle {
     ignore_changes = [
       initial_node_count,
@@ -251,14 +265,6 @@ resource "google_container_node_pool" "pools" {
       content {
         type  = local.node_pools_guest_accelerator[each.key].type
         count = local.node_pools_guest_accelerator[each.key].count
-      }
-    }
-
-    dynamic "gcfs_config" {
-      for_each = local.node_pools_enable_gcfs[each.key] == true ? [1] : []
-
-      content {
-        enabled = true
       }
     }
 
