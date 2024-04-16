@@ -96,6 +96,12 @@ variable "enable_private_cluster" {
   type        = bool
 }
 
+variable "enable_gcfs" {
+  default     = true
+  description = "Enable Google Container File System (gcfs) image streaming."
+  type        = bool
+}
+
 variable "enable_public_cidrs_access" {
   default     = false
   description = "Whether the control plane is open to Google public IPs. Defaults to false."
