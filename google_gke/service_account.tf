@@ -34,3 +34,10 @@ resource "google_project_iam_member" "cluster_service_account-gcr" {
   project = each.key
   role    = "roles/storage.objectViewer"
 }
+
+resource "google_project_iam_member" "cluster_service_account-gcfs" {
+  count   = var.enable_gcfs ? 1 : 0
+  member  = "serviceAccount:${google_service_account.cluster_service_account.email}"
+  project = local.project_id
+  role    = "roles/serviceusage.serviceUsageConsumer"
+}
