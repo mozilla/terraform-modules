@@ -1,5 +1,5 @@
 resource "google_certificate_manager_certificate_map" "default" {
-  project     = substr(format("moz-fx-webservices-%s-%s", var.risk_level, var.realm), 0, 32)
+  project     = var.shared_infra_project_id
   name        = format("%s", local.name_prefix)
   description = "managed by terraform - code lives in tenant project"
 }
@@ -12,7 +12,7 @@ resource "google_certificate_manager_certificate_map_entry" "default" {
     }
   }
 
-  project     = substr(format("moz-fx-webservices-%s-%s", var.risk_level, var.realm), 0, 32)
+  project     = var.shared_infra_project_id
   name        = format("%s-%s", local.name_prefix, each.key)
   description = "managed by terraform - code lives in tenant project"
 

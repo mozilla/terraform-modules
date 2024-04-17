@@ -1,7 +1,7 @@
 resource "google_certificate_manager_dns_authorization" "default" {
   for_each = { for cert in var.certificates : replace(cert.hostname, ".", "-") => cert if cert.dns_authorization == true }
 
-  project     = substr(format("moz-fx-webservices-%s-%s", var.risk_level, var.realm), 0, 32)
+  project     = var.shared_infra_project_id
   name        = format("%s", each.key)
   description = "managed by terraform - code lives in tenant project"
 
@@ -11,7 +11,7 @@ resource "google_certificate_manager_dns_authorization" "default" {
 resource "google_certificate_manager_certificate" "default" {
   for_each = { for cert in var.certificates : replace(cert.hostname, ".", "-") => cert }
 
-  project     = substr(format("moz-fx-webservices-%s-%s", var.risk_level, var.realm), 0, 32)
+  project     = var.shared_infra_project_id
   name        = format("%s", each.key)
   description = "managed by terraform - code lives in tenant project"
 
