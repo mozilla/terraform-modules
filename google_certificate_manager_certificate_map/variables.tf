@@ -16,9 +16,9 @@ variable "environment" {
   type = string
 }
 
-variable "risk_level" {
-  type    = string
-  default = "low"
+variable "shared_infra_project_id" {
+  description = "id of shared infra project to create resources in"
+  type        = string
 }
 
 variable "certificates" {
