@@ -108,6 +108,12 @@ variable "enable_public_cidrs_access" {
   type        = bool
 }
 
+variable "enable_k8s_api_proxy_ip" {
+  default     = false
+  description = "Whether we reserve an internal private ip for the k8s_api_proxy. Defaults to false."
+  type        = bool
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
@@ -335,4 +341,17 @@ variable "enable_cost_allocation" {
   type        = bool
   description = "Enables Cost Allocation Feature and the cluster name and namespace of your GKE workloads appear in the labels field of the billing export to BigQuery"
   default     = false
+}
+
+variable "internal_lb_subnetworks" {
+  description = "Internal subnetworks associated with Shared VPC, segmented by region"
+  type = map(object({
+    ip_cidr_range = string
+    network       = string
+    region        = string
+    subnet_name   = string
+    subnetwork    = string
+    subnetwork_id = string
+  }))
+  default = null
 }
