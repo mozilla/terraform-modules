@@ -343,9 +343,9 @@ variable "enable_cost_allocation" {
   default     = false
 }
 
-variable "internal_lb_subnetworks" {
+variable "service_subnetworks" {
   default     = null
-  description = "Internal subnetworks associated with Shared VPC, segmented by region"
+  description = "Service subnetworks associated with Shared VPC, segmented by region"
   type = map(object({
     ip_cidr_range = string
     network       = string
