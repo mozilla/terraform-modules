@@ -7,6 +7,7 @@ resource "google_compute_address" "static_v4_k8s_api_proxy_ip" {
   name         = format("k8s-api-proxy-%s-%s-ip-v4-internal", var.name, var.region)
   description  = format("IPv4 Internal - k8s api proxy - name:%s region:%s", var.name, var.region)
   subnetwork   = var.service_subnetworks[var.region].subnetwork
+  region       = var.region
   address_type = "INTERNAL"
 
   labels = local.labels
