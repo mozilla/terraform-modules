@@ -3,5 +3,5 @@ output "logging_bucket_id" {
 }
 
 output "logging_dataset_id" {
-  value = var.log_destination == "bigquery" ? google_bigquery_dataset.namespace[0].id : null
+  value = var.log_destination == "bigquery" ? google_bigquery_dataset.namespace[0].dataset_id : null
 }
