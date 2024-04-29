@@ -12,3 +12,16 @@ resource "google_compute_address" "static_v4_k8s_api_proxy_ip" {
 
   labels = local.labels
 }
+
+resource "google_dns_record_set" "k8s_api_proxy_dns_name" {
+  count        = var.enable_k8s_api_proxy_ip ? 1 : 0
+  name         = "${local.k8s_api_proxy_name}.${var.project_outputs.zone_dns_name}"
+  managed_zone = var.project_outputs.zone_name
+
+  type = "A"
+  ttl  = 300
+
+  rrdatas = [
+    google_compute_address.static_v4_k8s_api_proxy_ip[0].address
+  ]
+}

@@ -5,6 +5,9 @@ data "google_project" "project" {
 locals {
   cluster_name        = "${var.name}-${var.realm}"
   cluster_network_tag = "gke-${local.cluster_name}"
+  cluster_type        = var.enable_private_cluster ? "private" : "public"
+
+  k8s_api_proxy_name = "api-proxy-${local.cluster_type}-${var.region}"
 
   labels_defaults = {
     "realm"     = var.realm

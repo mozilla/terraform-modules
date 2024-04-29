@@ -33,3 +33,8 @@ output "service_account" {
   description = "Cluster Service Account"
   value       = google_service_account.cluster_service_account.email
 }
+
+output "k8s_api_proxy_dns_name" {
+  description = "K8s api proxy dns record"
+  value       = google_dns_record_set.k8s_api_proxy_dns_name[0].name
+}

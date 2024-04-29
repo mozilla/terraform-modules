@@ -114,6 +114,18 @@ variable "enable_k8s_api_proxy_ip" {
   type        = bool
 }
 
+variable "project_outputs" {
+  default     = null
+  description = "Sets cluster-related variables based on a homegrown Project outputs data structure."
+  type = object({
+    id            = string
+    name          = string
+    number        = string
+    zone_dns_name = string
+    zone_name     = string
+  })
+}
+
 variable "shared_vpc_outputs" {
   default     = null
   description = "Sets networking-related variables based on a homegrown Shared VPC Terraform outputs data structure."
