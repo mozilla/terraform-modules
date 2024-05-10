@@ -30,10 +30,13 @@ resource "google_folder_iam_binding" "viewer" {
 
 // required to grant access to data logs
 resource "google_folder_iam_binding" "developers_logging_privateLogViewer" {
-  count   = var.admin_only ? 0 : 1
-  folder  = var.google_folder_id
-  role    = "roles/logging.privateLogViewer"
-  members = module.developers_workgroup.members
+  count  = var.admin_only ? 0 : 1
+  folder = var.google_folder_id
+  role   = "roles/logging.privateLogViewer"
+  members = setunion(
+    module.developers_workgroup.members,
+    module.viewers_workgroup.members
+  )
 }
 
 //
