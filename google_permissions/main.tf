@@ -33,7 +33,10 @@ resource "google_folder_iam_binding" "developers_logging_privateLogViewer" {
   count   = var.admin_only ? 0 : 1
   folder  = var.google_folder_id
   role    = "roles/logging.privateLogViewer"
-  members = module.developers_workgroup.members
+  members = setunion(
+    module.developers_workgroup.members,
+    module.viewers_workgroup.members
+  )
 }
 
 //
