@@ -114,6 +114,12 @@ variable "enable_k8s_api_proxy_ip" {
   type        = bool
 }
 
+variable "dns_cache" {
+  type        = bool
+  description = "The status of the NodeLocal DNSCache addon."
+  default     = true
+}
+
 variable "project_outputs" {
   default     = null
   description = "Sets cluster-related variables based on a homegrown Project outputs data structure."

@@ -140,6 +140,10 @@ resource "google_container_cluster" "primary" {
     gcs_fuse_csi_driver_config {
       enabled = var.fuse_csi_driver
     }
+
+    dns_cache_config {
+      enabled = var.dns_cache
+    }
   }
 
   # Gateway-api
