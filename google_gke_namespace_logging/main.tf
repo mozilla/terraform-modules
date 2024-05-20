@@ -49,3 +49,10 @@ resource "google_bigquery_dataset_iam_member" "logging_dataset_writer" {
   role       = "roles/bigquery.dataEditor"
   member     = var.logging_writer_service_account_member
 }
+
+resource "google_logging_linked_dataset" "namespace_linked_dataset" {
+  count       = var.log_analytics ? 1 : 0
+  link_id     = replace("gke-${local.tenant_namespace}-log-linked", "-", "_")
+  bucket      = google_logging_project_bucket_config.namespace[0].id
+  description = "Linked Dataset for GKE Namespace Logging ${local.tenant_namespace}"
+}
