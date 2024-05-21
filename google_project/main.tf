@@ -67,3 +67,10 @@ resource "google_logging_project_bucket_config" "project" {
   bucket_id        = "_Default"
   enable_analytics = var.log_analytics
 }
+
+resource "google_logging_linked_dataset" "default_linked_dataset" {
+  count       = var.log_analytics ? 1 : 0
+  link_id     = replace("${local.display_name}-default-log-linked", "-", "_")
+  bucket      = google_logging_project_bucket_config.project.id
+  description = "Linked Dataset for Project Logging"
+}
