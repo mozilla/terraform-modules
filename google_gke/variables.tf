@@ -344,7 +344,7 @@ variable "gateway_api_enabled" {
 }
 
 variable "monitoring_config_enable_components" {
-  default     = ["SYSTEM_COMPONENTS"]
+  default     = ["SYSTEM_COMPONENTS", "API_SERVER", "SCHEDULER", "CONTROLLER_MANAGER"]
   description = "Monitoring configuration for the cluster"
   type        = list(string)
 }
