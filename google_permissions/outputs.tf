@@ -15,6 +15,7 @@ locals {
     "roles/storage.admin",
     "roles/storage.objectAdmin",
     "roles/translationhub.admin",
+    "roles/pubsub.editor",
   ]
 }
 
