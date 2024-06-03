@@ -106,14 +106,14 @@ resource "google_project_iam_binding" "nonprod_developer_monitoring_uptimecheckc
   members = module.developers_workgroup.members
 }
 
-resource "google_project_iam_binding" "prod_developer_pubsub.editor" {
+resource "google_project_iam_binding" "prod_developer_pubsub_editor" {
   count   = contains(var.prod_roles, "roles/pubsub.editor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
   project = var.google_prod_project_id
   role    = "roles/pubsub.editor"
   members = module.developers_workgroup.members
 }
 
-resource "google_project_iam_binding" "nonprod_developer_pubsub.editor" {
+resource "google_project_iam_binding" "nonprod_developer_pubsub_editor" {
   count   = contains(var.nonprod_roles, "roles/pubsub.editor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
   project = var.google_nonprod_project_id
   role    = "roles/pubsub.editor"
