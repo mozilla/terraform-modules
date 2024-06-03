@@ -7,7 +7,7 @@
 */
 
 resource "google_folder_iam_binding" "bq_job_user" {
-  // 
+  //
   // NOTE: this uses bq_data_viewer as well as the next resource block so that those we grant data viewer
   // also have to execute jobs so paired with .dataViewer
   count  = contains(var.folder_roles, "roles/bigquery.jobUser") && !var.admin_only ? 1 : 0
@@ -103,5 +103,19 @@ resource "google_project_iam_binding" "nonprod_developer_monitoring_uptimecheckc
   count   = contains(var.nonprod_roles, "roles/monitoring.uptimeCheckConfigEditor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
   project = var.google_nonprod_project_id
   role    = "roles/monitoring.uptimeCheckConfigEditor"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_pubsub.editor" {
+  count   = contains(var.prod_roles, "roles/pubsub.editor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/pubsub.editor"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_pubsub.editor" {
+  count   = contains(var.nonprod_roles, "roles/pubsub.editor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/pubsub.editor"
   members = module.developers_workgroup.members
 }
