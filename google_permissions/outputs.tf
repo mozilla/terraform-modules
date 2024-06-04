@@ -16,6 +16,7 @@ locals {
     "roles/storage.objectAdmin",
     "roles/translationhub.admin",
     "roles/pubsub.editor",
+    "roles/aiplatform.colabEnterpriseUser",
   ]
 }
 
