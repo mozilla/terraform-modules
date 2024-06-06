@@ -6,14 +6,14 @@ this module builds a GCP Load Balancer with a backend bucket
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.4.6 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 5.19.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.3 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 5.32.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 5.19.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 5.32.0 |
 
 ## Modules
 
