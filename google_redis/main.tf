@@ -59,10 +59,5 @@ resource "google_redis_instance" "main" {
 
   lifecycle {
     prevent_destroy = true
-    ignore_changes = [
-      # We may be able remove this after the upstream module releases
-      # https://github.com/GoogleCloudPlatform/magic-modules/pull/8261
-      maintenance_schedule,
-    ]
   }
 }
