@@ -38,8 +38,8 @@ No modules.
 | <a name="input_parent_managed_zone"></a> [parent\_managed\_zone](#input\_parent\_managed\_zone) | GCP DNS managed zone to add the record. | `string` | n/a | yes |
 | <a name="input_parent_project_id"></a> [parent\_project\_id](#input\_parent\_project\_id) | GCP project\_id that contains DNS zones used for delegation | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP project\_id where the zone will be provisioned. | `string` | n/a | yes |
-| <a name="input_team_name"></a> [team\_name](#input\_team\_name) | Name of SRE team, which should correspond to the top-level folder name | `string` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm is a grouping of environments being one of: global, nonprod, prod | `string` | `""` | no |
+| <a name="input_team_name"></a> [team\_name](#input\_team\_name) | Name of SRE team, which should correspond to the top-level folder name | `string` | n/a | yes |
 
 ## Outputs
 
