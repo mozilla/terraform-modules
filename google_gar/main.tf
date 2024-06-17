@@ -13,7 +13,7 @@ resource "google_project_service" "gar" {
 resource "google_artifact_registry_repository" "repository" {
   provider      = google-beta
   depends_on    = [google_project_service.gar]
-  repository_id = coalesce(var.repository_id, "${var.application}-${var.realm}")
+  repository_id = local.repository_id
   format        = var.format
   location      = var.location
   description   = var.description
