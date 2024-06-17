@@ -18,10 +18,6 @@ resource "google_project" "project" {
   auto_create_network = false
 
   labels = local.all_project_labels
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "google_project_service" "project" {
