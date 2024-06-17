@@ -11,7 +11,7 @@ data "terraform_remote_state" "wip_project" {
 }
 
 locals {
-  allowed_repos = formatlist("attribute.vcs/github.com/org/%s:/refs/heads/main", ["repo1", "repo2"])
+  allowed_repos = formatlist("attribute.vcs/github.com/org/%s:refs/heads/main", ["repo1", "repo2"])
   allowed_contexts = formatlist("attribute.context_id/%s",
     one(values({ "fake-context" = "6e1515f7-40f0-4063-a74a-d77d22ee9f7e" }
   )))
