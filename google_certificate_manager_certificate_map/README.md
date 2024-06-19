@@ -36,8 +36,10 @@ No modules.
 | <a name="input_custom_name_prefix"></a> [custom\_name\_prefix](#input\_custom\_name\_prefix) | use this to set a custom name\_prefix for resource names | `string` | `""` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | n/a | `string` | n/a | yes |
-| <a name="input_shared_infra_project_id"></a> [shared\_infra\_project\_id](#input\_shared\_infra\_project\_id) | id of shared infra project to create resources in | `string` | n/a | yes |
+| <a name="input_shared_infra_project_id"></a> [shared\_infra\_project\_id](#input\_shared\_infra\_project\_id) | id of shared infra project to create resources in | `string` | `""` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_certificate_map_id"></a> [certificate\_map\_id](#output\_certificate\_map\_id) | n/a |
