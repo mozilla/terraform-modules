@@ -245,11 +245,6 @@ resource "google_container_node_pool" "pools" {
     max_node_count = each.value.max_count
   }
 
-  management {
-    auto_repair  = true
-    auto_upgrade = true
-  }
-
   dynamic "network_config" {
     for_each = try({ (each.value.pod_range) = { enable_private_nodes = each.value.enable_private_nodes } }, {})
 
