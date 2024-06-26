@@ -21,7 +21,7 @@ locals {
     "roles/secretmanager.admin",
     "roles/secretmanager.secretVersionAdder",
     "roles/cloudsql.viewer",
-    ""roles/storage.objectUser"
+    "roles/storage.objectUser"
   ]
 }
 
