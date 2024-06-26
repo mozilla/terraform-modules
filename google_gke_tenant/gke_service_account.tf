@@ -15,6 +15,17 @@ module "workload-identity-for-tenant-sa" {
   gcp_sa_name         = google_service_account.gke-account.email
 }
 
+module "workload-identity-for-generic-tenant-sa" {
+  source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=main"
+
+  name                = "${var.application}"
+  namespace           = "${var.application}-${var.environment}"
+  project_id          = var.cluster_project_id
+  use_existing_k8s_sa = true
+  use_existing_gcp_sa = true
+  gcp_sa_name         = google_service_account.gke-account.email
+}
+
 module "workload-identity-for-tenant-external-secrets-sa" {
   source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=main"
 
