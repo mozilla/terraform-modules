@@ -284,7 +284,15 @@ resource "google_container_node_pool" "pools" {
     workload_metadata_config {
       mode = "GKE_METADATA"
     }
-    taint = local.node_pools_taints[each.key]
+    dynamic "taint" {
+      for_each = local.node_pools_taints[each.key]
+
+      content {
+        key    = each.value.key
+        value  = each.value.value
+        effect = each.value.effect
+      }
+    }
   }
 
   upgrade_settings {
