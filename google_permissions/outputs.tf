@@ -17,6 +17,11 @@ locals {
     "roles/translationhub.admin",
     "roles/pubsub.editor",
     "roles/aiplatform.colabEnterpriseUser",
+    "roles/secretmanager.secretAccessor",
+    "roles/secretmanager.admin",
+    "roles/secretmanager.secretVersionAdder",
+    "roles/cloudsql.viewer",
+    ""roles/storage.objectUser"
   ]
 }
 
