@@ -344,7 +344,25 @@ variable "gateway_api_enabled" {
 }
 
 variable "monitoring_config_enable_components" {
-  default     = ["SYSTEM_COMPONENTS", "APISERVER", "SCHEDULER", "CONTROLLER_MANAGER"]
+  default = [
+    # kube control plane metrics
+    # https://cloud.google.com/kubernetes-engine/docs/how-to/control-plane-metrics
+    "SYSTEM_COMPONENTS",
+    "APISERVER",
+    "SCHEDULER",
+    "CONTROLLER_MANAGER",
+    # kube state metrics
+    # https://cloud.google.com/kubernetes-engine/docs/how-to/kube-state-metrics#gcloud
+    "STORAGE",
+    "HPA",
+    "POD",
+    "DAEMONSET",
+    "DEPLOYMENT",
+    "STATEFULSET"
+    # TODO: Available in 1.29.3
+    # "KUBELET",
+    # "CADVISOR"
+  ]
   description = "Monitoring configuration for the cluster"
   type        = list(string)
 }
