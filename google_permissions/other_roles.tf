@@ -133,3 +133,52 @@ resource "google_project_iam_binding" "nonprod_developer_colabEnterpriseUser" {
   role    = "roles/aiplatform.colabEnterpriseUser"
   members = module.developers_workgroup.members
 }
+
+resource "google_project_iam_binding" "prod_developer_cloudsql_viewer" {
+  count   = contains(var.prod_roles, "roles/cloudsql.viewer") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/cloudsql.viewer"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_cloudsql_viewer" {
+  count   = contains(var.nonprod_roles, "roles/cloudsql.viewer") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/cloudsql.viewer"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_objectUser" {
+  count   = contains(var.prod_roles, "roles/storage.objectUser") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/storage.objectUser"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_objectUser" {
+  count   = contains(var.nonprod_roles, "roles/storage.objectUser") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/storage.objectUser"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_secretmanager_admin" {
+  count   = contains(var.nonprod_roles, "roles/secretmanager.admin") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/secretmanager.admin"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_secretmanager_secretAccessor" {
+  count   = contains(var.prod_roles, "roles/secretmanager.secretAccessor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/secretmanager.secretAccessor"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_secretmanager_secretVersionAdder" {
+  count   = contains(var.prod_roles, "roles/secretmanager.secretVersionAdder") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/secretmanager.secretVersionAdder"
+  members = module.developers_workgroup.members
+}
