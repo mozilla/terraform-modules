@@ -32,6 +32,12 @@ variable "deletion_protection_enabled" {
   description = "Whether the instance is protected from deletion (API)"
 }
 
+variable "edition" {
+  type        = string
+  default     = "ENTERPRISE"
+  description = "The edition of the instance, can be `ENTERPRISE` or `ENTERPRISE_PLUS`."
+}
+
 variable "replica_count" {
   default     = 0
   description = "Number of replicas to create"

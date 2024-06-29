@@ -35,6 +35,9 @@ resource "google_sql_database_instance" "primary" {
     deletion_protection_enabled = var.deletion_protection_enabled
 
     disk_type = "PD_SSD"
+
+    edition = var.edition
+
     dynamic "database_flags" {
       for_each = var.database_flags
       content {
@@ -53,6 +56,10 @@ resource "google_sql_database_instance" "primary" {
         retained_backups = 30
         retention_unit   = "COUNT"
       }
+    }
+
+    data_cache_config {
+      data_cache_enabled = var.edition == "ENTERPRISE_PLUS"
     }
 
     ip_configuration {
