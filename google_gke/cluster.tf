@@ -245,11 +245,6 @@ resource "google_container_node_pool" "pools" {
     max_node_count = each.value.max_count
   }
 
-  management {
-    auto_repair  = true
-    auto_upgrade = true
-  }
-
   dynamic "network_config" {
     for_each = try({ (each.value.pod_range) = { enable_private_nodes = each.value.enable_private_nodes } }, {})
 
@@ -289,7 +284,15 @@ resource "google_container_node_pool" "pools" {
     workload_metadata_config {
       mode = "GKE_METADATA"
     }
-    taint = local.node_pools_taints[each.key]
+    dynamic "taint" {
+      for_each = local.node_pools_taints[each.key]
+
+      content {
+        key    = each.value.key
+        value  = each.value.value
+        effect = each.value.effect
+      }
+    }
   }
 
   upgrade_settings {
