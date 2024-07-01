@@ -21,6 +21,12 @@ variable "environment" {
   description = "Environment e.g., stage."
 }
 
+variable "edition" {
+  type        = string
+  default     = "ENTERPRISE"
+  description = "The edition of the instance, can be `ENTERPRISE` or `ENTERPRISE_PLUS`."
+}
+
 variable "component" {
   description = "A logical component of an application"
   default     = "db"

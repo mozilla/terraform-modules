@@ -33,6 +33,7 @@ resource "google_sql_database_instance" "primary" {
     deletion_protection_enabled = var.deletion_protection_enabled
     tier                        = local.tier
     availability_type           = var.availability_type
+    edition                     = var.edition
 
     backup_configuration {
       enabled                        = true
@@ -43,6 +44,10 @@ resource "google_sql_database_instance" "primary" {
         retained_backups = 30
         retention_unit   = "COUNT"
       }
+    }
+
+    data_cache_config {
+      data_cache_enabled = var.edition == "ENTERPRISE_PLUS"
     }
 
     insights_config {
