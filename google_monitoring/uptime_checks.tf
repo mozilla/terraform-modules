@@ -7,10 +7,23 @@ resource "google_monitoring_uptime_check_config" "https" {
   user_labels  = each.value.user_labels
 
   http_check {
-    path         = each.value.path
-    port         = 443
-    use_ssl      = true
-    validate_ssl = true
+    path                = each.value.path
+    port                = 443
+    request_method      = each.value.request_method
+    use_ssl             = true
+    validate_ssl        = true
+    content_type        = lookup(each.value, "content_type", null)
+    custom_content_type = lookup(each.value, "custom_content_type", null)
+    body                = lookup(each.value, "body", null)
+  }
+
+  dynamic "content_matchers" {
+    for_each = each.value.content_matchers
+
+    content {
+      content = content_matchers.value.content
+      matcher = content_matchers.value.matcher
+    }
   }
 
   monitored_resource {
