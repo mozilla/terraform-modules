@@ -45,5 +45,8 @@ variable "cdn_policy" {
     max_ttl           = optional(number, 86400)
     negative_caching  = optional(bool, true)
     serve_while_stale = optional(number, 86400)
+    bypass_cache_on_request_headers = optional(object({
+      header_name = optional(string, "Cache-Control")
+    }), null)
   })
 }

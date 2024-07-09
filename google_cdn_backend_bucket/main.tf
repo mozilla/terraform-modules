@@ -18,6 +18,12 @@ resource "google_compute_backend_bucket" "default" {
     max_ttl           = var.cdn_policy.max_ttl
     negative_caching  = var.cdn_policy.negative_caching
     serve_while_stale = var.cdn_policy.serve_while_stale
+    dynamic "bypass_cache_on_request_headers" {
+      for_each = var.cdn_policy.bypass_cache_on_request_headers != null ? [var.cdn_policy.bypass_cache_on_request_headers] : []
+      content {
+        header_name = bypass_cache_on_request_headers.value.header_name
+      }
+    }
   }
 }
 
