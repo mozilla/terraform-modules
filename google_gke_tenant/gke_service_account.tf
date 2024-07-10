@@ -57,7 +57,17 @@ resource "google_project_iam_member" "sa-role-token-creator" {
 #}
 
 resource "google_project_iam_member" "sa-role-secret-accessor" {
+  count = length(var.gke_sa_secret_ids) > 0 ? 0 : 1
+
   project = var.project_id
   role    = "roles/secretmanager.secretAccessor"
   member  = "serviceAccount:${google_service_account.gke-account.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "sa-role-secret-accessor" {
+  for_each = toset(var.gke_sa_secret_ids)
+
+  secret_id = each.key
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.gke-account.email}"
 }

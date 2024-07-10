@@ -22,3 +22,8 @@ variable "application" {
   type        = string
 }
 
+variable "gke_sa_secret_ids" {
+  description = "list of secret ids gke service account needs to have access to"
+  type        = list(string)
+  default     = []
+}
