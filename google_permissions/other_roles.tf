@@ -169,16 +169,16 @@ resource "google_project_iam_binding" "nonprod_developer_secretmanager_admin" {
   members = module.developers_workgroup.members
 }
 
-resource "google_project_iam_binding" "prod_developer_secretmanager_secretAccessor" {
-  count   = contains(var.prod_roles, "roles/secretmanager.secretAccessor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
-  project = var.google_prod_project_id
-  role    = "roles/secretmanager.secretAccessor"
-  members = module.developers_workgroup.members
+resource "google_project_iam_member" "prod_developer_secretmanager_secretAccessor" {
+  for_each = contains(var.prod_roles, "roles/secretmanager.secretAccessor") && !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_prod_project_id
+  role     = "roles/secretmanager.secretAccessor"
+  member   = each.value
 }
 
-resource "google_project_iam_binding" "prod_developer_secretmanager_secretVersionAdder" {
-  count   = contains(var.prod_roles, "roles/secretmanager.secretVersionAdder") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
-  project = var.google_prod_project_id
-  role    = "roles/secretmanager.secretVersionAdder"
-  members = module.developers_workgroup.members
+resource "google_project_iam_member" "prod_developer_secretmanager_secretVersionAdder" {
+  for_each = contains(var.prod_roles, "roles/secretmanager.secretVersionAdder") && !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_prod_project_id
+  role     = "roles/secretmanager.secretVersionAdder"
+  member   = each.value
 }
