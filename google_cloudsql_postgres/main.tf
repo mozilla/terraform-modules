@@ -46,8 +46,12 @@ resource "google_sql_database_instance" "primary" {
       }
     }
 
-    data_cache_config {
-      data_cache_enabled = var.edition == "ENTERPRISE_PLUS"
+    dynamic "data_cache_config" {
+      for_each = var.edition == "ENTERPRISE_PLUS" ? [1] : []
+
+      content {
+        data_cache_enabled = var.data_cache_enabled
+      }
     }
 
     insights_config {

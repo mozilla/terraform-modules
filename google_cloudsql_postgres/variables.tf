@@ -17,6 +17,12 @@ variable "application" {
   description = "Application e.g., bouncer."
 }
 
+variable "data_cache_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether data cache is enabled for the instance. Only available for `ENTERPRISE_PLUS` edition instances."
+}
+
 variable "environment" {
   description = "Environment e.g., stage."
 }

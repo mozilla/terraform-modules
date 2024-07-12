@@ -20,6 +20,12 @@ variable "custom_replica_name" {
   description = "Custom database replica name."
 }
 
+variable "data_cache_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether data cache is enabled for the instance. Only available for `ENTERPRISE_PLUS` edition instances."
+}
+
 variable "deletion_protection" {
   default     = true
   type        = bool
