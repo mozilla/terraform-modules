@@ -3,7 +3,7 @@ resource "google_certificate_manager_dns_authorization" "default" {
 
   project     = var.shared_infra_project_id
   name        = format("%s", each.key)
-  description = "managed by terraform - code lives in tenant project"
+  description = "managed by terraform"
 
   domain = each.value.hostname
 }
@@ -13,7 +13,7 @@ resource "google_certificate_manager_certificate" "default" {
 
   project     = var.shared_infra_project_id
   name        = format("%s", each.key)
-  description = "managed by terraform - code lives in tenant project"
+  description = "managed by terraform"
 
   managed {
     domains            = concat([each.value.hostname], each.value.additional_domains)

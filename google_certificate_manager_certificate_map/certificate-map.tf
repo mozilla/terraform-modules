@@ -10,7 +10,7 @@ locals {
 resource "google_certificate_manager_certificate_map" "default" {
   project     = var.shared_infra_project_id
   name        = format("%s", local.name_prefix)
-  description = "managed by terraform - code lives in tenant project"
+  description = "managed by terraform"
 }
 
 resource "random_id" "certificate_map_entry_id" {
@@ -29,7 +29,7 @@ resource "google_certificate_manager_certificate_map_entry" "default" {
 
   project     = var.shared_infra_project_id
   name        = format("%s-%s", local.name_prefix, random_id.certificate_map_entry_id[each.key].hex)
-  description = "managed by terraform - code lives in tenant project"
+  description = "managed by terraform"
 
   map      = google_certificate_manager_certificate_map.default.name
   hostname = each.value.domain
