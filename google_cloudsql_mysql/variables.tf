@@ -173,7 +173,7 @@ variable "maintenance_window_update_track" {
 variable "query_insights_enabled" {
   description = "Enable / disable Query Insights (See: https://cloud.google.com/sql/docs/mysql/using-query-insights)"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "query_plans_per_minute" {
