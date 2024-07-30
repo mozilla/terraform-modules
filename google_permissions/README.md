@@ -31,7 +31,11 @@ For information on how to add new roles to the modules, please see [this documen
 |------|------|
 | [google_folder_iam_binding.bq_data_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
 | [google_folder_iam_binding.bq_job_user](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
+| [google_folder_iam_binding.developers_logging_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
 | [google_folder_iam_binding.developers_logging_privateLogViewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
+| [google_folder_iam_binding.developers_monitoring_alertPolicyEditor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
+| [google_folder_iam_binding.developers_monitoring_notificationChannelEditor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
+| [google_folder_iam_binding.developers_redis_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
 | [google_folder_iam_binding.developers_techsupport_editor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
 | [google_folder_iam_binding.folder](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
 | [google_folder_iam_binding.owner](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_binding) | resource |
@@ -44,6 +48,7 @@ For information on how to add new roles to the modules, please see [this documen
 | [google_project_iam_binding.nonprod_developer_db_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.nonprod_developer_monitoring_uptimecheckconfigeditor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.nonprod_developer_objectUser](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.nonprod_developer_oath_config_editor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.nonprod_developer_pubsub_editor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.nonprod_developer_secretmanager_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.prod_bucket_admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |

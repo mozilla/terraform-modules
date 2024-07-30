@@ -29,6 +29,46 @@ resource "google_folder_iam_binding" "bq_data_viewer" {
   )
 }
 
+# roles/redis.admin as folder_role
+
+resource "google_folder_iam_binding" "developers_redis_admin" {
+  count   = contains(var.folder_roles, "roles/redis.admin") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/redis.admin"
+  members = module.developers_workgroup.members
+
+}
+
+# roles/logging.admin as folder_role
+
+resource "google_folder_iam_binding" "developers_logging_admin" {
+  count   = contains(var.folder_roles, "roles/logging.admin") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/logging.admin"
+  members = module.developers_workgroup.members
+
+}
+
+# roles/monitoring.alertPolicyEditor as folder_role
+
+resource "google_folder_iam_binding" "developers_monitoring_alertPolicyEditor" {
+  count   = contains(var.folder_roles, "roles/monitoring.alertPolicyEditor") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/monitoring.alertPolicyEditor"
+  members = module.developers_workgroup.members
+
+}
+
+# roles/monitoring.notificationChannelEditor in as folder_role
+
+resource "google_folder_iam_binding" "developers_monitoring_notificationChannelEditor" {
+  count   = contains(var.folder_roles, "roles/monitoring.notificationChannelEditor") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/monitoring.notificationChannelEditor"
+  members = module.developers_workgroup.members
+
+}
+
 resource "google_project_iam_binding" "editor_nonprod" {
   count   = contains(var.nonprod_roles, "roles/editor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
   project = var.google_nonprod_project_id
@@ -181,4 +221,11 @@ resource "google_project_iam_member" "prod_developer_secretmanager_secretVersion
   project  = var.google_prod_project_id
   role     = "roles/secretmanager.secretVersionAdder"
   member   = each.value
+}
+
+resource "google_project_iam_binding" "nonprod_developer_oath_config_editor" {
+  count   = contains(var.nonprod_roles, "roles/oauthconfig.editor") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/oauthconfig.editor"
+  members = module.developers_workgroup.members
 }
