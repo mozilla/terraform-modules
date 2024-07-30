@@ -4,6 +4,10 @@ locals {
   // and that already have have existing supporting resource definitions.
   folder_additional_roles = [
     "roles/bigquery.jobUser",
+    "roles/redis.admin",
+    "roles/logging.admin",
+    "roles/monitoring.alertPolicyEditor",
+    "roles/monitoring.notificationChannelEditor",
   ]
 
   project_additional_roles = [
@@ -21,7 +25,8 @@ locals {
     "roles/secretmanager.admin",
     "roles/secretmanager.secretVersionAdder",
     "roles/cloudsql.viewer",
-    "roles/storage.objectUser"
+    "roles/storage.objectUser",
+    "roles/oauthconfig.editor"
   ]
 }
 
