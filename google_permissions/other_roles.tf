@@ -31,7 +31,7 @@ resource "google_folder_iam_binding" "bq_data_viewer" {
 
 # roles/redis.admin as folder_role
 
-resource "google_folder_iam_binding" "redis_admin" {
+resource "google_folder_iam_binding" "developers_redis_admin" {
   count   = contains(var.folder_roles, "roles/redis.admin") && !var.admin_only ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/redis.admin"
@@ -41,7 +41,7 @@ resource "google_folder_iam_binding" "redis_admin" {
 
 # roles/logging.admin as folder_role
 
-resource "google_folder_iam_binding" "logging_admin" {
+resource "google_folder_iam_binding" "developers_logging_admin" {
   count   = contains(var.folder_roles, "roles/logging.admin") && !var.admin_only ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/logging.admin"
@@ -51,7 +51,7 @@ resource "google_folder_iam_binding" "logging_admin" {
 
 # roles/monitoring.alertPolicyEditor as folder_role
 
-resource "google_folder_iam_binding" "monitoring.alertPolicyEditor" {
+resource "google_folder_iam_binding" "developers_monitoring.alertPolicyEditor" {
   count   = contains(var.folder_roles, "roles/monitoring.alertPolicyEditor") && !var.admin_only ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/monitoring.alertPolicyEditor"
@@ -61,7 +61,7 @@ resource "google_folder_iam_binding" "monitoring.alertPolicyEditor" {
 
 # roles/monitoring.notificationChannelEditor in as folder_role
 
-resource "google_folder_iam_binding" "monitoring.notificationChannelEditor" {
+resource "google_folder_iam_binding" "developers_monitoring.notificationChannelEditor" {
   count   = contains(var.folder_roles, "roles/monitoring.notificationChannelEditor") && !var.admin_only ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/monitoring.notificationChannelEditor"
