@@ -34,6 +34,8 @@ resource "google_sql_database_instance" "primary" {
 
     deletion_protection_enabled = var.deletion_protection_enabled
 
+    disk_size = var.disk_size
+
     disk_type = "PD_SSD"
 
     edition = var.edition

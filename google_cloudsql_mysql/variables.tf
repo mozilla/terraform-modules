@@ -211,3 +211,9 @@ variable "replica_enable_private_path_for_google_cloud_services" {
   description = "This OVERRIDES var.enable_private_path_for_google_cloud_services for replicas (replicas use var.enable_private_path_for_google_cloud_services per default)."
   default     = null
 }
+
+variable "disk_size" {
+  type        = string
+  description = "The size of the data disk, in GB."
+  default     = null
+}
