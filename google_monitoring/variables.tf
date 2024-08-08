@@ -14,6 +14,15 @@ variable "uptime_checks" {
     timeout             = optional(string, "60s")
     period              = optional(string, "300s")
     user_labels         = optional(map(string), {})
+
+    accepted_response_status_codes = optional(list(object({
+      status_value = number
+    })), [])
+
+    accepted_response_status_classes = optional(list(object({
+      status_class = string
+    })), [])
+
     content_matchers = optional(list(object({
       content = optional(string)
       matcher = optional(string)
