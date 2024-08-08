@@ -15,6 +15,22 @@ resource "google_monitoring_uptime_check_config" "https" {
     content_type        = lookup(each.value, "content_type", null)
     custom_content_type = lookup(each.value, "custom_content_type", null)
     body                = lookup(each.value, "body", null)
+
+    dynamic "accepted_response_status_codes" {
+      for_each = each.value.accepted_response_status_codes
+
+      content {
+        status_value = accepted_response_status_codes.value.status_value
+      }
+    }
+
+    dynamic "accepted_response_status_codes" {
+      for_each = each.value.accepted_response_status_classes
+
+      content {
+        status_class = accepted_response_status_codes.value.status_class
+      }
+    }
   }
 
   dynamic "content_matchers" {
