@@ -159,9 +159,12 @@ variable "authorized_networks" {
   default     = []
 }
 
-variable "ip_configuration_require_ssl" {
-  default     = true
-  description = "Enforces SSL connections over IP"
+variable "ip_configuration_ssl_mode" {
+  default = "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
+  validation {
+    condition     = contains(["ALLOW_UNENCRYPTED_AND_ENCRYPTED", "ENCRYPTED_ONLY", "TRUSTED_CLIENT_CERTIFICATE_REQUIRED"], var.ip_configuration_ssl_mode)
+    error_message = "The ip_configuration_ssl_mode value must be one of ALLOW_UNENCRYPTED_AND_ENCRYPTED, ENCRYPTED_ONLY, or TRUSTED_CLIENT_CERTIFICATE_REQUIRED. Also ensure that ip_configuration_require_ssl value matches this variable."
+  }
 }
 
 variable "maintenance_window_day" {

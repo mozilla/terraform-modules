@@ -129,7 +129,7 @@ output "mysql_database" {
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
 | <a name="input_force_ha"></a> [force\_ha](#input\_force\_ha) | If set to true, create a mysql replica for HA. Currently the availability\_type works only for postgres | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
-| <a name="input_ip_configuration_require_ssl"></a> [ip\_configuration\_require\_ssl](#input\_ip\_configuration\_require\_ssl) | Enforces SSL connections over IP | `bool` | `true` | no |
+| <a name="input_ip_configuration_ssl_mode"></a> [ip\_configuration\_ssl\_mode](#input\_ip\_configuration\_ssl\_mode) | n/a | `string` | `"ALLOW_UNENCRYPTED_AND_ENCRYPTED"` | no |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | Maintenance window day | `number` | `2` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | Maintenance window hour | `number` | `16` | no |
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | Receive updates earlier (canary) or later (stable) | `string` | `"stable"` | no |
