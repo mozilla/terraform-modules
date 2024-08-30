@@ -45,15 +45,13 @@ resource "google_project_iam_audit_config" "data_access_high" {
 
 resource "google_logging_project_exclusion" "data_access_exclusions" {
   name        = "exclude-data-access-log-sink"
-  description = "Exclude data access logs except BigQuery, secrets manager, and IAM for this project"
+  description = "Exclude data access logs except BigQuery, IAM, Secret Manager, and STS for this project. Additional services can be included with var.additional_data_access_logs"
   project     = local.project_id
 
   filter = <<EOT
 log_id("cloudaudit.googleapis.com/data_access")
 AND NOT protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
-AND NOT protoPayload.serviceName="secretmanager.googleapis.com"
-AND NOT protoPayload.serviceName="iam.googleapis.com"
-AND NOT protoPayload.serviceName="sts.googleapis.com"
+${local.data_access_logs_filter}
   EOT
 }
 

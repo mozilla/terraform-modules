@@ -26,6 +26,19 @@ variable "display_name" {
   type        = string
 }
 
+variable "additional_data_access_logs" {
+  default     = []
+  description = "Additional services that data access logs should be included for. Google Cloud services with audit logs: https://cloud.google.com/logging/docs/audit/services ."
+  type        = list(string)
+
+  validation {
+    condition = alltrue([
+      for v in var.additional_data_access_logs : endswith(v, ".googleapis.com")
+    ])
+    error_message = "The Google Cloud service must end with .googleapis.com . Google Cloud services with audit logs: https://cloud.google.com/logging/docs/audit/services ."
+  }
+}
+
 variable "parent_id" {
   description = "Parent folder (with GCP)."
   type        = string
