@@ -32,6 +32,8 @@ resource "google_sql_database_instance" "primary" {
 
     availability_type = var.availability_type
 
+    connector_enforcement = var.connector_enforcement
+
     deletion_protection_enabled = var.deletion_protection_enabled
 
     disk_type = "PD_SSD"

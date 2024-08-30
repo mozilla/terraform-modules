@@ -10,6 +10,17 @@ variable "project_id" {
   description = "GCP Project ID"
 }
 
+variable "connector_enforcement" {
+  type        = string
+  default     = null
+  description = "Enables the enforcement of Cloud SQL Auth Proxy or Cloud SQL connectors for all the connections. If enabled, all the direct connections are rejected."
+
+  validation {
+    condition     = var.connector_enforcement == null || contains(["NOT_REQUIRED", "REQUIRED"], var.connector_enforcement)
+    error_message = "Valid values for connector_enforcement: NOT_REQUIRED, REQUIRED"
+  }
+}
+
 variable "custom_database_name" {
   default     = ""
   description = "Use this field for custom database name."
