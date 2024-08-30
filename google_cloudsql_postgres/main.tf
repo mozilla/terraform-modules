@@ -33,6 +33,7 @@ resource "google_sql_database_instance" "primary" {
     deletion_protection_enabled = var.deletion_protection_enabled
     tier                        = local.tier
     availability_type           = var.availability_type
+    connector_enforcement       = var.connector_enforcement
     edition                     = var.edition
 
     backup_configuration {
