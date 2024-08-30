@@ -64,7 +64,6 @@ resource "google_sql_database_instance" "primary" {
 
     ip_configuration {
       ipv4_enabled                                  = var.enable_public_ip
-      require_ssl                                   = var.ip_configuration_require_ssl
       ssl_mode                                      = var.ip_configuration_ssl_mode
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
       dynamic "authorized_networks" {
@@ -150,7 +149,7 @@ resource "google_sql_database_instance" "replica" {
     ip_configuration {
       ipv4_enabled                                  = var.enable_public_ip
       private_network                               = var.network
-      require_ssl                                   = var.ip_configuration_require_ssl
+      ssl_mode                                      = var.ip_configuration_ssl_mode
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
       dynamic "authorized_networks" {
         for_each = var.authorized_networks

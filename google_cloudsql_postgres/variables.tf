@@ -113,12 +113,8 @@ variable "enable_public_ip" {
   description = "If true, will assign a public IP to database instance."
 }
 
-variable "ip_configuration_require_ssl" {
-  default = true
-}
-
 variable "ip_configuration_ssl_mode" {
-  default = "ENCRYPTED_ONLY"
+  default = "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
   validation {
     condition     = contains(["ALLOW_UNENCRYPTED_AND_ENCRYPTED", "ENCRYPTED_ONLY", "TRUSTED_CLIENT_CERTIFICATE_REQUIRED"], var.ip_configuration_ssl_mode)
     error_message = "The ip_configuration_ssl_mode value must be one of ALLOW_UNENCRYPTED_AND_ENCRYPTED, ENCRYPTED_ONLY, or TRUSTED_CLIENT_CERTIFICATE_REQUIRED. Also ensure that ip_configuration_require_ssl value matches this variable."

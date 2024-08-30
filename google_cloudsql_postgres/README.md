@@ -71,8 +71,7 @@ output "postgres_database" {
 | <a name="input_enable_private_path_for_google_cloud_services"></a> [enable\_private\_path\_for\_google\_cloud\_services](#input\_enable\_private\_path\_for\_google\_cloud\_services) | If true, will allow Google Cloud Services access over private IP. | `bool` | `false` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
-| <a name="input_ip_configuration_require_ssl"></a> [ip\_configuration\_require\_ssl](#input\_ip\_configuration\_require\_ssl) | n/a | `bool` | `true` | no |
-| <a name="input_ip_configuration_ssl_mode"></a> [ip\_configuration\_ssl\_mode](#input\_ip\_configuration\_ssl\_mode) | n/a | `string` | `"ENCRYPTED_ONLY"` | no |
+| <a name="input_ip_configuration_ssl_mode"></a> [ip\_configuration\_ssl\_mode](#input\_ip\_configuration\_ssl\_mode) | n/a | `string` | `"ALLOW_UNENCRYPTED_AND_ENCRYPTED"` | no |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | n/a | `number` | `1` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | n/a | `number` | `17` | no |
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | n/a | `string` | `"stable"` | no |
