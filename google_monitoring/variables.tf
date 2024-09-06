@@ -14,6 +14,7 @@ variable "uptime_checks" {
     timeout             = optional(string, "60s")
     period              = optional(string, "300s")
     user_labels         = optional(map(string), {})
+    selected_regions    = optional(list(string), ["EUROPE", "USA_OREGON", "USA_VIRGINIA"])
 
     accepted_response_status_codes = optional(list(object({
       status_value = number
