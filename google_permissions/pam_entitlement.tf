@@ -28,7 +28,23 @@ locals {
   resource_type = "cloudresourcemanager.googleapis.com/" + local.entitlement_parent_capitalized
 }
 
+// ENTITLEMENTS
+
+// can't enable API at folder level so have to enable it for each project in folder :(
+resource "google_project_service" "pam_prod" {
+  count = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0  ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_prod_project_id
+  service = "cloudresourcemanager.googleapis.com"
+}
+
+resource "google_project_service" "pam_nonprod" {
+  count = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0  ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_nonprod_project_id
+  service = "cloudresourcemanager.googleapis.com"
+}
+
 resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
+    count = var.use_entitlements && !var.admin_only ? 1 : 0 // check the flag and only create the module if it is true
     entitlement_id = var.entitlement_name
     location = "global"
     max_request_duration = "${local.effective_request_duration}s"
@@ -72,4 +88,20 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
         }
       }
     }
+}
+
+
+// we want to set the roles for the users that aren't based on the entitlement, but are their baseline roles - var.user_base_additional_roles
+
+// Iterate over user_base_additional_roles and create google_folder_iam_binding for each role
+resource "google_folder_iam_binding" "user_base_roles" {
+  for_each = !var.admin_only ? toset(var.user_base_additional_roles) : toset([])
+  folder   = var.google_folder_id
+  role     = each.value
+  // apply this to ALL admins, developers, and viewers
+  members = setunion(setunion(
+
+    module.developers_workgroup.members,
+    module.viewers_workgroup.members
+    ), module.admins_workgroup.members)
 }

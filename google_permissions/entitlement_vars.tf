@@ -10,21 +10,29 @@ locals {
   ]
 }
 
-variable "entitlement_name" {
-  description = "The name of the entitlement."
-  type        = string
-  default     = "admin-entitlement-01"
-}
-
 variable "entitlement_role_list" {
   default     = []
   description = "List of roles to apply to the admin entitlement in addition to the local default_admin_role_list values."
   type        = list(string)
 
   validation {
-    condition     = alltrue([for role in var.entitlement_role_list : contains(local.allowed_admin_roles_list, role)])
+    condition = alltrue([
+      for role in var.entitlement_role_list : contains([
+        "roles/compute.admin",
+        "roles/dns.admin",
+        "roles/storage.admin",
+        "roles/spanner.admin",
+        "roles/cloudsql.admin",
+      ], role)
+    ])
     error_message = "Each role in entitlement_role_list must exist in the local allowed_admin_roles_list."
   }
+}
+
+variable "entitlement_name" {
+  description = "The name of the entitlement."
+  type        = string
+  default     = "admin-entitlement-01"
 }
 
 variable "entitlement_users" {
