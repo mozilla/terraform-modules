@@ -44,6 +44,7 @@ resource "google_project_service" "pam_nonprod" {
 }
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
+    provider = google-beta
     count = var.use_entitlements && !var.admin_only ? 1 : 0 // check the flag and only create the module if it is true
     entitlement_id = var.entitlement_name
     location = "global"
