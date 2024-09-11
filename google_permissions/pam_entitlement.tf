@@ -25,7 +25,7 @@ locals {
   entitlement_parent_capitalized = upper(substr(local.entitlement_parent_prefix, 0, 1)) + substr(local.entitlement_parent_prefix, 1, length(local.entitlement_parent_prefix) - 1)
 
   // Concatenate with the base string
-  resource_type = "cloudresourcemanager.googleapis.com/" + local.entitlement_parent_capitalized
+  resource_type = "cloudresourcemanager.googleapis.com/${local.entitlement_parent_capitalized}"
 }
 
 // ENTITLEMENTS
