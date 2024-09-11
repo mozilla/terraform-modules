@@ -60,7 +60,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
     privileged_access{
         gcp_iam_access{
             dynamic "role_bindings" {
-              for_each = setunion(var.entitlement_role_list, default_admin_role_list)
+              for_each = setunion(var.entitlement_role_list, local.default_admin_role_list)
               content {
                 role = role_bindings.value
               }
