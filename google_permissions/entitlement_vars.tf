@@ -18,11 +18,11 @@ variable "entitlement_role_list" {
   validation {
     condition = alltrue([
       for role in var.entitlement_role_list : contains([
-        "roles/compute.admin",
-        "roles/dns.admin",
+        "roles/redis.admin",
+        "roles/logging.admin",
         "roles/storage.admin",
-        "roles/spanner.admin",
-        "roles/cloudsql.admin",
+        "roles/secretmanager.admin",
+        "roles/run.admin"
       ], role)
     ])
     error_message = "Each role in entitlement_role_list must exist in the local allowed_admin_roles_list."
