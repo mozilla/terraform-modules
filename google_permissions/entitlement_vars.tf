@@ -71,10 +71,10 @@ variable "entitlement_parent" {
   type        = string
   default     = ""  
 
-  validation {
-    condition = can(regex("^(projects|folders|organizations)/.*$", var.entitlement_parent))
-    error_message = "The entitlement parent must be a project, folder, or organization."
-  }
+  //validation {
+  //  condition = can(regex("^(projects|folders|organizations)/.*$", var.entitlement_parent))
+  //  error_message = "The entitlement parent must be a project, folder, or organization."
+  //}
 }
 
 variable "max_request_duration" {
