@@ -1,15 +1,3 @@
-locals {
-  // allowed admin roles for the entitlement -- we check this against the roles passed in to apply to the entitlement
-  // we don't want to allow roles that are not in this list -- this is a security measure
-  allowed_admin_roles_list = [
-    "roles/redis.admin",
-    "roles/logging.admin",
-    "roles/storage.admin",
-    "roles/secretmanager.admin",
-    "roles/run.admin"
-  ]
-}
-
 variable "entitlement_role_list" {
   default     = []
   description = "List of roles to apply to the admin entitlement in addition to the local default_admin_role_list values."
