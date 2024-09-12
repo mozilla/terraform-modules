@@ -31,34 +31,36 @@ locals {
 // ENTITLEMENTS
 
 // remove these two -- iam.googleapis.com prod and nonprod. borked test. don't need in prod
-// resource "google_project_service" "pam_prod" {
-//   count   = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-//   project = var.google_prod_project_id
-//   service = "iam.googleapis.com"
-//   disable_on_destroy = false
-// }
-// 
-// resource "google_project_service" "pam_nonprod" {
-//   count   = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-//   project = var.google_nonprod_project_id
-//   service = "iam.googleapis.com"
-//   disable_on_destroy = false
-// }
-// // ^^^^^^ remove these two -- iam.googleapis.com prod and nonprod. borked test. don't need in prod
-// 
-// resource "google_project_service" "pam_prod2" {
-//   count   = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-//   project = var.google_prod_project_id
-//   service = "privilegedaccessmanager.googleapis.com"
-//   disable_on_destroy = false
-// }
-// 
-// resource "google_project_service" "pam_nonprod2" {
-//   count   = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-//   project = var.google_nonprod_project_id
-//   service = "privilegedaccessmanager.googleapis.com"
-//   disable_on_destroy = false
-// }
+resource "google_project_service" "pam_prod" {
+  count   = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_prod_project_id
+  service = "iam.googleapis.com"
+  disable_on_destroy = false
+  disable_dependent_services=true
+}
+
+resource "google_project_service" "pam_nonprod" {
+  count   = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_nonprod_project_id
+  service = "iam.googleapis.com"
+  disable_on_destroy = false
+  disable_dependent_services=true
+}
+// ^^^^^^ remove these two -- iam.googleapis.com prod and nonprod. borked test. don't need in prod
+
+resource "google_project_service" "pam_prod2" {
+  count   = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_prod_project_id
+  service = "privilegedaccessmanager.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "pam_nonprod2" {
+  count   = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_nonprod_project_id
+  service = "privilegedaccessmanager.googleapis.com"
+  disable_on_destroy = false
+}
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
   provider             = google-beta
