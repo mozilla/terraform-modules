@@ -29,19 +29,29 @@ locals {
 }
 
 // ENTITLEMENTS
+variable "gcp_service_list_ent" {
+  description ="The list of apis necessary for the project"
+  type = list(string)
+  default = [
+    "iam.googleapis.com",
+    "privilegedaccessmanager.googleapis.com"
+  ]
+}
 
-// can't enable API at folder level so have to enable it for each project in folder :(
-resource "google_project_service" "pam_prod" {
-  count   = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+resource "google_project_service" "gcp_services_prod" {
+  // check the flag and only create the module if it is true
+  for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(var.gcp_service_list_ent):[]
   project = var.google_prod_project_id
-  service = "privilegedaccessmanager.googleapis.com"
+  service = each.key
 }
 
-resource "google_project_service" "pam_nonprod" {
-  count   = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+resource "google_project_service" "gcp_services_nonprod" {
+  // check the flag and only create the module if it is true
+  for_each = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? toset(var.gcp_service_list_ent):[]
   project = var.google_nonprod_project_id
-  service = "privilegedaccessmanager.googleapis.com"
+  service = each.key
 }
+
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
   provider             = google-beta
