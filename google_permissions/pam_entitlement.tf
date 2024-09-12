@@ -30,7 +30,7 @@ locals {
 
 
 // REALLY doesn't want this to work -- wants to nuke it regardless of the disable_on_destroy flag
-resource "google_project_service" "gcp_services_nonprod_hardcode" {
+resource "google_project_service" "gcp_services_nonprod" {
        disable_on_destroy = true
        project            = "moz-fx-testapp4-nonprod"
        service            = "iam.googleapis.com"
@@ -55,7 +55,7 @@ resource "google_project_service" "gcp_services_prod" {
   //disable_dependent_services=true
 }
 
-resource "google_project_service" "gcp_services_nonprod" {
+resource "google_project_service" "gcp_services_nonprod2" {
   for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(var.gcp_service_list) : []
   project = var.google_nonprod_project_id
   service = each.key
