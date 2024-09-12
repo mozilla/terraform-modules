@@ -28,12 +28,20 @@ locals {
   resource_type = "cloudresourcemanager.googleapis.com/${local.entitlement_parent_capitalized}"
 }
 
+
+// REALLY doesn't want this to work -- wants to nuke it regardless of the disable_on_destroy flag
+resource "google_project_service" "gcp_services_nonprod_hardcode" {
+       disable_on_destroy = true
+       project            = "moz-fx-testapp4-nonprod"
+       service            = "iam.googleapis.com"
+}
+
 // ENTITLEMENTS
 variable "gcp_service_list" {
   description ="The list of apis necessary for the project"
   type = list(string)
   default = [
-    "iam.googleapis.com",
+    //"iam.googleapis.com",
     //"container.googleapis.com",
     "privilegedaccessmanager.googleapis.com"
   ]
@@ -54,7 +62,6 @@ resource "google_project_service" "gcp_services_nonprod" {
   disable_on_destroy = false
   //disable_dependent_services=true
 }
-
 
 
 // remove these two -- iam.googleapis.com prod and nonprod. borked test. don't need in prod
