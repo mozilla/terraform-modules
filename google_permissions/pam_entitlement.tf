@@ -34,13 +34,13 @@ locals {
 resource "google_project_service" "pam_prod" {
   count   = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   project = var.google_prod_project_id
-  service = "iam.googleapis.com"
+  service = "privilegedaccessmanager.googleapis.com"
 }
 
 resource "google_project_service" "pam_nonprod" {
   count   = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   project = var.google_nonprod_project_id
-  service = "iam.googleapis.com"
+  service = "privilegedaccessmanager.googleapis.com"
 }
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement" {
