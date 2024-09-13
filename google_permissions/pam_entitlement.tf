@@ -112,7 +112,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
-  parent               = var.google_nonprod_project_id
+  parent               = "projects/${var.google_nonprod_project_id}"
   depends_on = [ google_project_service.nonprod_svc_enable ]
 
   requester_justification_config {
