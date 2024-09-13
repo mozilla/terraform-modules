@@ -43,13 +43,13 @@ resource "google_project_service" "prod_svc_enable" {
   disable_on_destroy = false
 }
 
-resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod" {
+resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonprod" {
   provider             = google-beta
   count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
-  parent               = var.google_prod_project_id
+  parent               = "projects/${var.google_prod_project_id}"
   depends_on = [ google_project_service.prod_svc_enable ]
 
   requester_justification_config {
@@ -67,8 +67,8 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/${var.entitlement_parent}"
-      resource_type = local.resource_type
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.google_prod_project_id}"
+      resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
   additional_notification_targets {
@@ -130,8 +130,8 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/${var.entitlement_parent}"
-      resource_type = local.resource_type
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.google_nonprod_project_id}"
+      resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
   additional_notification_targets {
