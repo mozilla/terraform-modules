@@ -41,7 +41,7 @@ resource "google_project_service" "pam_prod" {
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod" {
   provider             = google-beta
-  count                = var.use_entitlements && !var.admin_only ? 1 : 0 // check the flag and only create the module if it is true
+  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
@@ -101,7 +101,7 @@ resource "google_project_service" "pam_nonprod" {
  
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonprod" {
   provider             = google-beta
-  count                = var.use_entitlements && !var.admin_only ? 1 : 0 // check the flag and only create the module if it is true
+  count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
