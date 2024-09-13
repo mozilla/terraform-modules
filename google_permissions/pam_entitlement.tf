@@ -30,6 +30,19 @@ locals {
 
 // ENTITLEMENTS -- we assume entitlement API is enabled
 
+resource "google_project_service" "prod_svc_enable" {
+  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_prod_project_id
+  service = "privilegedaccessmanager.googleapis.com"
+
+  timeouts {
+    create = "2m"
+    update = "3m"
+  }
+
+  disable_on_destroy = false
+}
+
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod" {
   provider             = google-beta
   count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
@@ -37,6 +50,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
   parent               = var.google_prod_project_id
+  depends_on = [ google_project_service.prod_svc_enable ]
 
   requester_justification_config {
     unstructured {}
@@ -79,6 +93,19 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
   }
 }
 
+resource "google_project_service" "nonprod_svc_enable" {
+  count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project = var.google_nonprod_project_id
+  service = "privilegedaccessmanager.googleapis.com"
+
+  timeouts {
+    create = "2m"
+    update = "3m"
+  }
+
+  disable_on_destroy = false
+}
+
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonprod" {
   provider             = google-beta
   count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
@@ -86,6 +113,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
   parent               = var.google_nonprod_project_id
+  depends_on = [ google_project_service.nonprod_svc_enable ]
 
   requester_justification_config {
     unstructured {}
