@@ -156,55 +156,55 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
   }
 }
 
-resource "google_privileged_access_manager_entitlement" "admin_entitlement_folder" {
-  provider             = google-beta
-  count                = var.use_entitlements && !var.admin_only && length(var.google_folder_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  entitlement_id       = var.entitlement_name
-  location             = "global"
-  max_request_duration = "${local.effective_request_duration}s"
-  parent               = var.google_folder_id
-
-  requester_justification_config {
-    unstructured {}
-  }
-
-  eligible_users {
-    principals = var.entitlement_users
-  }
-  privileged_access {
-    gcp_iam_access {
-      dynamic "role_bindings" {
-        for_each = setunion(var.entitlement_role_list, local.default_admin_role_list)
-        content {
-          role = role_bindings.value
-        }
-      }
-      resource      = "//cloudresourcemanager.googleapis.com/${var.entitlement_parent}"
-      resource_type = local.resource_type
-    }
-  }
-  additional_notification_targets {
-    admin_email_recipients     = var.admin_email_recipients
-    requester_email_recipients = var.requester_email_recipients
-  }
-
-  dynamic "approval_workflow" { //optional block
-    for_each = var.number_of_approvals > 0 ? [1] : []
-    content {
-      manual_approvals {
-        require_approver_justification = var.require_approver_justification
-        steps {
-          approvals_needed          = var.number_of_approvals
-          approver_email_recipients = var.admin_email_recipients
-          approvers {
-            principals = var.approver_principals
-          }
-        }
-      }
-    }
-  }
-}
-
+// resource "google_privileged_access_manager_entitlement" "admin_entitlement_folder" {
+//   provider             = google-beta
+//   count                = var.use_entitlements && !var.admin_only && length(var.google_folder_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+//   entitlement_id       = var.entitlement_name
+//   location             = "global"
+//   max_request_duration = "${local.effective_request_duration}s"
+//   parent               = var.google_folder_id
+// 
+//   requester_justification_config {
+//     unstructured {}
+//   }
+// 
+//   eligible_users {
+//     principals = var.entitlement_users
+//   }
+//   privileged_access {
+//     gcp_iam_access {
+//       dynamic "role_bindings" {
+//         for_each = setunion(var.entitlement_role_list, local.default_admin_role_list)
+//         content {
+//           role = role_bindings.value
+//         }
+//       }
+//       resource      = "//cloudresourcemanager.googleapis.com/${var.entitlement_parent}"
+//       resource_type = local.resource_type
+//     }
+//   }
+//   additional_notification_targets {
+//     admin_email_recipients     = var.admin_email_recipients
+//     requester_email_recipients = var.requester_email_recipients
+//   }
+// 
+//   dynamic "approval_workflow" { //optional block
+//     for_each = var.number_of_approvals > 0 ? [1] : []
+//     content {
+//       manual_approvals {
+//         require_approver_justification = var.require_approver_justification
+//         steps {
+//           approvals_needed          = var.number_of_approvals
+//           approver_email_recipients = var.admin_email_recipients
+//           approvers {
+//             principals = var.approver_principals
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+// 
 // we want to set the roles for the users that aren't based on the entitlement, but are their baseline roles - var.user_base_additional_roles
 
 // Iterate over user_base_additional_roles and create google_folder_iam_binding for each role
