@@ -45,7 +45,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
-  parent               = google_project_service.pam_prod.id
+  parent               = google_project_service.pam_prod[0].id
   depends_on = [ google_project_service.pam_prod ]
 
   requester_justification_config {
@@ -105,7 +105,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
-  parent               = google_project_service.pam_nonprod.id
+  parent               = google_project_service.pam_nonprod[0].id
   depends_on = [ google_project_service.pam_nonprod ]
 
   requester_justification_config {
