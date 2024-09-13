@@ -43,7 +43,7 @@ resource "google_project_service" "prod_svc_enable" {
   disable_on_destroy = false
 }
 
-resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonprod" {
+resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod" {
   provider             = google-beta
   count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   entitlement_id       = var.entitlement_name
