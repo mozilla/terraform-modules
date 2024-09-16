@@ -28,9 +28,9 @@ locals {
   resource_type = "cloudresourcemanager.googleapis.com/${local.entitlement_parent_capitalized}"
 
   ent_service_account_perms = [
-    "resourcemanager.projects.getIamPolicy", 
-    "resourcemanager.projects.setIamPolicy",
-    "resourcemanager.projects.get"
+    "roles/resourcemanager.projects.getIamPolicy", 
+    "roles/resourcemanager.projects.setIamPolicy",
+    "roles/resourcemanager.projects.get"
   ]
 }
 
