@@ -45,7 +45,7 @@ resource "google_project_iam_binding" "entitlement_prod_service_account" {
   for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
   project = var.google_prod_project_id
   role    = each.value
-  members = ["serviceAccount:service-org-${data.google_project.prod_project.number}@gcp-sa-pam.iam.gserviceaccount.com"]
+  members = ["serviceAccount:service-org-${data.google_project.prod_project[0].number}@gcp-sa-pam.iam.gserviceaccount.com"]
 }
 
 data "google_project" "nonprod_project" {
@@ -57,7 +57,7 @@ resource "google_project_iam_binding" "entitlement_nonprod_service_account" {
   for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
   project = var.google_nonprod_project_id
   role    = each.value
-  members = ["serviceAccount:service-org-${data.google_project.nonprod_project.number}@gcp-sa-pam.iam.gserviceaccount.com"]
+  members = ["serviceAccount:service-org-${data.google_project.nonprod_project[0].number}@gcp-sa-pam.iam.gserviceaccount.com"]
 }
 
 
