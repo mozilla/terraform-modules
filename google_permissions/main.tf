@@ -71,5 +71,12 @@ resource "google_folder_iam_binding" "owner" {
   folder  = var.google_folder_id
   role    = "roles/owner"
   // this is a hack to add my user temporarily -- will remove once we get the entire tf setup in testapp4
-  members = [module.admins_workgroup.members, "user:jfrancis@firefox.gcp.mozilla.com"]
+  members = module.admins_workgroup.members
+}
+
+resource "google_folder_iam_binding" "owner_jfrancis" {
+  folder  = var.google_folder_id
+  role    = "roles/owner"
+  // this is a hack to add my user temporarily -- will remove once we get the entire tf setup in testapp4
+  members = ["user:jfrancis@firefox.gcp.mozilla.com"]
 }
