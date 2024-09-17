@@ -29,23 +29,23 @@ locals {
 
   ent_service_account_perms = [
     "roles/resourcemanager.projectIamAdmin",
-    " roles/privilegedaccessmanager.admin" 
+    "roles/privilegedaccessmanager.admin" 
   ]
 }
 
-
 // enable all of the resources in ent_service_account_perms for the service account 
 // the service account has the format service-org-442341870013@gcp-sa-pam.iam.gserviceaccount.com
-data "google_project" "prod_project" {
-  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  project_id = var.google_prod_project_id
-}
-resource "google_project_iam_binding" "entitlement_prod_service_account" {
-  for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
-  project = var.google_prod_project_id
-  role    = each.value
-  members = ["serviceAccount:service-org-${data.google_project.prod_project[0].number}@gcp-sa-pam.iam.gserviceaccount.com"]
-}
+//data "google_project" "prod_project" {
+//  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+//  project_id = var.google_prod_project_id
+//}
+//resource "google_project_iam_binding" "entitlement_prod_service_account" {
+//  for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
+//  project = var.google_prod_project_id
+//  role    = each.value
+//  members = ["serviceAccount:service-org-${data.google_project.prod_project[0].number}@gcp-sa-pam.iam.gserviceaccount.com"]
+//}
+//
 
 data "google_project" "nonprod_project" {
   count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
@@ -56,7 +56,7 @@ resource "google_project_iam_binding" "entitlement_nonprod_service_account" {
   for_each = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
   project = var.google_nonprod_project_id
   role    = each.value
-  members = ["serviceAccount:service-org-${data.google_project.nonprod_project[0].number}@gcp-sa-pam.iam.gserviceaccount.com"]
+  members = ["serviceAccount:service-org-442341870013@gcp-sa-pam.iam.gserviceaccount.com"]
 }
 
 
