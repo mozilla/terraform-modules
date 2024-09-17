@@ -169,7 +169,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
   }
 
   eligible_users {
-    principals = var.entitlement_users
+    principals = module.developers_workgroup.members
   }
   privileged_access {
     gcp_iam_access {
