@@ -23,12 +23,6 @@ variable "entitlement_name" {
   default     = "admin-entitlement-01"
 }
 
-variable "entitlement_users" {
-  description = "List of users to add to the entitlement. Requires 'user:' or 'group:' prefix."
-  type        = list(string)
-  default     = []
-}
-
 variable "admin_email_recipients" {
   description = "List of email addresses to be notified when a principal(requester) is granted access to send admin notifications to. Optional."
   type        = list(string)
@@ -70,11 +64,6 @@ variable "entitlement_parent" {
   description = "The parent resource of the entitlement."
   type        = string
   default     = ""  
-
-  //validation {
-  //  condition = can(regex("^(projects|folders|organizations)/.*$", var.entitlement_parent))
-  //  error_message = "The entitlement parent must be a project, folder, or organization."
-  //}
 }
 
 variable "max_request_duration" {

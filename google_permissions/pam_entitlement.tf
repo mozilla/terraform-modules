@@ -27,25 +27,24 @@ locals {
   // Concatenate with the base string
   resource_type = "cloudresourcemanager.googleapis.com/${local.entitlement_parent_capitalized}"
 
+  // we need to set these perms on the service account to use the entitlements API
   ent_service_account_perms = [
     "roles/resourcemanager.projectIamAdmin",
     "roles/privilegedaccessmanager.admin" 
   ]
 }
 
-// enable all of the resources in ent_service_account_perms for the service account 
-// the service account has the format service-org-442341870013@gcp-sa-pam.iam.gserviceaccount.com
-//data "google_project" "prod_project" {
-//  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-//  project_id = var.google_prod_project_id
-//}
-//resource "google_project_iam_binding" "entitlement_prod_service_account" {
-//  for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
-//  project = var.google_prod_project_id
-//  role    = each.value
-//  members = ["serviceAccount:service-org-${data.google_project.prod_project[0].number}@gcp-sa-pam.iam.gserviceaccount.com"]
-//}
-//
+// set the perms for the service account to use the entitlements API 
+data "google_project" "prod_project" {
+  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
+  project_id = var.google_prod_project_id
+}
+resource "google_project_iam_binding" "entitlement_prod_service_account" {
+  for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
+  project = var.google_prod_project_id
+  role    = each.value
+  members = ["serviceAccount:service-org-442341870013@gcp-sa-pam.iam.gserviceaccount.com"]
+}
 
 data "google_project" "nonprod_project" {
   count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
@@ -58,10 +57,6 @@ resource "google_project_iam_binding" "entitlement_nonprod_service_account" {
   role    = each.value
   members = ["serviceAccount:service-org-442341870013@gcp-sa-pam.iam.gserviceaccount.com"]
 }
-
-
-
-// ENTITLEMENTS -- we assume entitlement API is enabled
 
 resource "google_project_service" "prod_svc_enable" {
   count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
@@ -90,7 +85,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
   }
 
   eligible_users {
-    principals = var.entitlement_users
+    principals = module.developers_workgroup.members
   }
   privileged_access {
     gcp_iam_access {
@@ -206,55 +201,6 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
 }
 
 
-// resource "google_privileged_access_manager_entitlement" "admin_entitlement_folder" {
-//   provider             = google-beta
-//   count                = var.use_entitlements && !var.admin_only && length(var.google_folder_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-//   entitlement_id       = var.entitlement_name
-//   location             = "global"
-//   max_request_duration = "${local.effective_request_duration}s"
-//   parent               = var.google_folder_id
-// 
-//   requester_justification_config {
-//     unstructured {}
-//   }
-// 
-//   eligible_users {
-//     principals = var.entitlement_users
-//   }
-//   privileged_access {
-//     gcp_iam_access {
-//       dynamic "role_bindings" {
-//         for_each = setunion(var.entitlement_role_list, local.default_admin_role_list)
-//         content {
-//           role = role_bindings.value
-//         }
-//       }
-//       resource      = "//cloudresourcemanager.googleapis.com/${var.entitlement_parent}"
-//       resource_type = local.resource_type
-//     }
-//   }
-//   additional_notification_targets {
-//     admin_email_recipients     = var.admin_email_recipients
-//     requester_email_recipients = var.requester_email_recipients
-//   }
-// 
-//   dynamic "approval_workflow" { //optional block
-//     for_each = var.number_of_approvals > 0 ? [1] : []
-//     content {
-//       manual_approvals {
-//         require_approver_justification = var.require_approver_justification
-//         steps {
-//           approvals_needed          = var.number_of_approvals
-//           approver_email_recipients = var.admin_email_recipients
-//           approvers {
-//             principals = var.approver_principals
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-// 
 // we want to set the roles for the users that aren't based on the entitlement, but are their baseline roles - var.user_base_additional_roles
 
 // Iterate over user_base_additional_roles and create google_folder_iam_binding for each role
