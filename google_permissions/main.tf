@@ -1,15 +1,15 @@
 /**
  * # Google Permissions
- * 
+ *
  * This module provides an interface to adding permissions to your google projects and folders.
- * 
+ *
  * For information on how to add new roles to the modules, please see [this document](./ADDING_NEW_ROLE.md)
  */
 
 // ROLES
 
 resource "google_folder_iam_binding" "viewer" {
-  count   = var.admin_only ? 0 : 1
+  count  = var.admin_only ? 0 : 1
   folder = var.google_folder_id
   role   = "roles/viewer"
   members = setunion(
@@ -24,7 +24,7 @@ resource "google_folder_iam_binding" "viewer" {
 
 // required to grant access to data logs
 resource "google_folder_iam_binding" "developers_logging_privateLogViewer" {
-  count   = var.admin_only ? 0 : 1
+  count  = var.admin_only ? 0 : 1
   folder = var.google_folder_id
   role   = "roles/logging.privateLogViewer"
   members = setunion(
@@ -67,9 +67,9 @@ resource "google_project_iam_member" "developers_secretmanager_secretVersionAdde
 
 // if admin_only is true OR var.use_entitlements is true, we don't create these permissions at all
 resource "google_folder_iam_binding" "owner" {
-  count   = var.admin_only || var.use_entitlements ? 0 : 1
-  folder  = var.google_folder_id
-  role    = "roles/owner"
+  count  = var.admin_only || var.use_entitlements ? 0 : 1
+  folder = var.google_folder_id
+  role   = "roles/owner"
   // this is a hack to add my user temporarily -- will remove once we get the entire tf setup in testapp4
   members = module.admins_workgroup.members
 }
