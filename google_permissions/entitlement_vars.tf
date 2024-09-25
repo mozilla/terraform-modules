@@ -63,11 +63,11 @@ variable "approval_email_recipients" {
 variable "entitlement_parent" {
   description = "The parent resource of the entitlement."
   type        = string
-  default     = ""  
+  default     = ""
 }
 
 variable "max_request_duration" {
   description = "The maximum request duration for the entitlement in seconds."
-  type        = number 
+  type        = number
   default     = 14400
 }

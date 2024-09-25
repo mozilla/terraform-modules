@@ -38,7 +38,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
   parent               = "projects/${var.google_prod_project_id}"
-  depends_on = [ google_project_service.prod_svc_enable ]
+  depends_on           = [google_project_service.prod_svc_enable]
 
   requester_justification_config {
     unstructured {}
@@ -88,7 +88,7 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonpr
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
   parent               = "projects/${var.google_nonprod_project_id}"
-  depends_on = [ google_project_service.nonprod_svc_enable ]
+  depends_on           = [google_project_service.nonprod_svc_enable]
 
   requester_justification_config {
     unstructured {}
