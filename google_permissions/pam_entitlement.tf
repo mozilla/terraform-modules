@@ -27,49 +27,9 @@ locals {
   // Concatenate with the base string
   resource_type = "cloudresourcemanager.googleapis.com/${local.entitlement_parent_capitalized}"
 
-  // we need to set these perms on the service account to use the entitlements API
-  ent_service_account_perms = [
-    "roles/resourcemanager.projectIamAdmin",
-    "roles/privilegedaccessmanager.admin" 
-  ]
 }
 
-// set the perms for the service account to use the entitlements API 
-data "google_project" "prod_project" {
-  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  project_id = var.google_prod_project_id
-}
-resource "google_project_iam_binding" "entitlement_prod_service_account" {
-  for_each = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
-  project = var.google_prod_project_id
-  role    = each.value
-  members = ["serviceAccount:service-org-${var.google_organization_id}@gcp-sa-pam.iam.gserviceaccount.com"]
-}
-
-data "google_project" "nonprod_project" {
-  count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  project_id = var.google_nonprod_project_id
-}
-
-resource "google_project_iam_binding" "entitlement_nonprod_service_account" {
-  for_each = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? toset(local.ent_service_account_perms) : toset([]) 
-  project = var.google_nonprod_project_id
-  role    = each.value
-  members = ["serviceAccount:service-org-${var.google_organization_id}@gcp-sa-pam.iam.gserviceaccount.com"]
-}
-
-resource "google_project_service" "prod_svc_enable" {
-  count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  project = var.google_prod_project_id
-  service = "privilegedaccessmanager.googleapis.com"
-
-  timeouts {
-    create = "2m"
-    update = "3m"
-  }
-
-  disable_on_destroy = false
-}
+// we assume that PAM is enabled for the project
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod" {
   provider             = google-beta
@@ -120,35 +80,6 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
     }
   }
 }
-
-resource "google_project_service" "nonprod_svc_enable_cr" {
-  count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  project = var.google_nonprod_project_id
-  service = "cloudresourcemanager.googleapis.com"
-
-  timeouts {
-    create = "2m"
-    update = "3m"
-  }
-
-  disable_on_destroy = false
-}
-
-
-
-resource "google_project_service" "nonprod_svc_enable" {
-  count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
-  project = var.google_nonprod_project_id
-  service = "privilegedaccessmanager.googleapis.com"
-
-  timeouts {
-    create = "2m"
-    update = "3m"
-  }
-
-  disable_on_destroy = false
-}
-
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonprod" {
   provider             = google-beta
