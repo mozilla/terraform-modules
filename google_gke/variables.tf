@@ -379,6 +379,12 @@ variable "enable_cost_allocation" {
   default     = false
 }
 
+variable "enable_vertical_pod_autoscaling" {
+  type        = bool
+  description = "Enables Vertical Pod Autoscaling in the cluster"
+  default     = false
+}
+
 variable "service_subnetworks" {
   default     = null
   description = "Service subnetworks associated with Shared VPC, segmented by region"
