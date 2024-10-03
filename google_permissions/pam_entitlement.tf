@@ -32,7 +32,6 @@ locals {
 // we assume that PAM is enabled for the project
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod" {
-  provider             = google-beta
   count                = var.use_entitlements && !var.admin_only && length(var.google_prod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   entitlement_id       = var.entitlement_name
   location             = "global"
@@ -81,7 +80,6 @@ resource "google_privileged_access_manager_entitlement" "admin_entitlement_prod"
 }
 
 resource "google_privileged_access_manager_entitlement" "admin_entitlement_nonprod" {
-  provider             = google-beta
   count                = var.use_entitlements && !var.admin_only && length(var.google_nonprod_project_id) > 0 ? 1 : 0 // check the flag and only create the module if it is true
   entitlement_id       = var.entitlement_name
   location             = "global"
