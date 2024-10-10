@@ -314,6 +314,7 @@ resource "google_container_node_pool" "pools" {
     ignore_changes = [
       node_config[0].oauth_scopes,
       node_config[0].metadata,
+      initial_node_count
     ]
   }
 }
