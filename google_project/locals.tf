@@ -30,6 +30,7 @@ locals {
     "servicehealth.googleapis.com",
     "servicenetworking.googleapis.com",
     "stackdriver.googleapis.com",
+    "privilegedaccessmanager.googleapis.com"
   ]
   all_project_services = setunion(local.default_project_services, var.project_services)
 
