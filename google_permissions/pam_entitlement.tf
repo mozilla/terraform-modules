@@ -147,7 +147,7 @@ resource "google_folder_iam_binding" "user_base_roles" {
 
 resource "google_project_iam_member" "approver_project_iam_member" {
   for_each = {
-    for val in setproduct(local.approvers_group_permissions, var.var.approver_principals): "${val[0]}-${val[1]}" => val
+    for val in setproduct(local.approvers_group_permissions, var.approver_principals): "${val[0]}-${val[1]}" => val
   }
 
   project = var.google_prod_project_id
@@ -157,7 +157,7 @@ resource "google_project_iam_member" "approver_project_iam_member" {
 
 resource "google_project_iam_member" "approver_project_iam_member_nonprod" {
   for_each = {
-    for val in setproduct(local.approvers_group_permissions, var.var.approver_principals): "${val[0]}-${val[1]}" => val
+    for val in setproduct(local.approvers_group_permissions, var.approver_principals): "${val[0]}-${val[1]}" => val
   }
 
   project = var.google_nonprod_project_id
