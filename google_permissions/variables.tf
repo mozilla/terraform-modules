@@ -49,7 +49,7 @@ variable "nonprod_roles" {
 }
 
 /*
-// Optional - this sets a special flag that sets  the role on a project as admin only. It is mutually 
+// Optional - this sets a special flag that sets  the role on a project as admin only. It is mutually
 // exclusive with the other roles variables and with the core set of roles.
 */
 variable "admin_only" {
