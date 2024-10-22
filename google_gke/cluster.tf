@@ -284,6 +284,9 @@ resource "google_container_node_pool" "pools" {
         sysctls = local.node_pools_sysctls[each.key]
       }
     }
+
+    spot = local.node_pools_spot_enabled[each.key]
+
     machine_type    = each.value.machine_type
     oauth_scopes    = local.node_pools_oauth_scopes[each.key]
     service_account = google_service_account.cluster_service_account.email
