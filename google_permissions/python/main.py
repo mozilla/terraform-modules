@@ -26,7 +26,6 @@ def _pad_string(s, length):
     return s + " " * (length - len(s))
 
 def send_slack_msg(msg, extra_dict, webhook_url, type="info"):
-    #url = "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
     webhook = WebhookClient(webhook_url)
 
     padlen = 20 # arbitrary based on current keys
