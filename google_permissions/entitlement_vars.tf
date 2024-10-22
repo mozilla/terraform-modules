@@ -17,6 +17,12 @@ variable "entitlement_role_list" {
   }
 }
 
+variable "entitlement_project_list" {
+  default     = []
+  description = "List of projects to apply the entitlement to."
+  type        = list(string)
+}
+
 variable "entitlement_name" {
   description = "The name of the entitlement."
   type        = string
