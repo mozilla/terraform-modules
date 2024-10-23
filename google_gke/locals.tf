@@ -53,6 +53,7 @@ locals {
   node_pools_guest_accelerator = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_guest_accelerator, node_pool.name, {}) }
   node_pools_tags              = { for node_pool in var.node_pools : node_pool.name => setunion(local.tags, lookup(var.node_pools_tags, node_pool.name, [])) }
   node_pools_taints            = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_taints, node_pool.name, []) }
+  node_pools_spot_enabled      = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_spot_enabled, node_pool.name, false) }
 
   # Google Group for RBAC
   cluster_authenticator_security_group = var.google_group_name == null ? [] : [{

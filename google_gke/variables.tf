@@ -261,6 +261,14 @@ variable "node_pools_guest_accelerator" {
   }
 }
 
+variable "node_pools_spot_enabled" {
+  description = "Map containing node pools spot enabled. Each node pool's name is the key. See locals.tf for defaults."
+  type        = map(bool)
+  default = {
+    tf-default-node-pool = false
+  }
+}
+
 #
 # Monitoring
 #
