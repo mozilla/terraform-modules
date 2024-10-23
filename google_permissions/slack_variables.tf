@@ -1,7 +1,7 @@
 variable "feed_id" {
   description = "The ID of the feed to be created"
   type        = string
-  default    = "grant_feed"
+  default     = "grant_feed"
 }
 
 variable "pubsub_topic" {

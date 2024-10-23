@@ -20,7 +20,7 @@ locals {
 
 // we assume that PAM is enabled for the project
 resource "google_privileged_access_manager_entitlement" "entitlements" {
-  for_each = var.use_entitlements && !var.admin_only ? var.entitlement_project_list : []
+  for_each             = var.use_entitlements && !var.admin_only ? var.entitlement_project_list : []
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
