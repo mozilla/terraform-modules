@@ -20,11 +20,11 @@ locals {
 
 // we assume that PAM is enabled for the project
 resource "google_privileged_access_manager_entitlement" "entitlements" {
-  for_each             = var.use_entitlements && !var.admin_only ? var.entitlement_project_list : []
+  for_each             = var.use_entitlements && !var.admin_only ? set(var.entitlement_project_list) : set([])
   entitlement_id       = var.entitlement_name
   location             = "global"
   max_request_duration = "${local.effective_request_duration}s"
-  parent               = "projects/${foreach.value}"
+  parent               = "projects/${each.key}"
 
   requester_justification_config {
     unstructured {}
@@ -41,7 +41,7 @@ resource "google_privileged_access_manager_entitlement" "entitlements" {
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${foreach.value}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${each.key}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }

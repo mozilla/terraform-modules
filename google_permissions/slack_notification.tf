@@ -8,13 +8,13 @@ resource "google_service_account" "account" {
   for_each     = var.slack_project_map
   account_id   = "slack-send-pam-sa"
   display_name = "Slack sender function service account"
-  project      = foreach.key
+  project      = each.key
 }
 
 # Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
   for_each     = var.slack_project_map
-  project      = foreach.key
+  project      = each.key
   feed_id      = var.feed_id
   content_type = "RESOURCE"
 
@@ -34,7 +34,7 @@ resource "google_cloud_asset_project_feed" "project_feed" {
 # The topic where the resource change notifications will be sent.
 resource "google_pubsub_topic" "feed_output" {
   for_each                   = var.slack_project_map
-  project                    = foreach.key
+  project                    = each.key
   name                       = var.pubsub_topic
   message_retention_duration = "86400s"
 }
@@ -42,7 +42,7 @@ resource "google_pubsub_topic" "feed_output" {
 
 resource "google_pubsub_topic_iam_binding" "binding" {
   for_each = var.slack_project_map
-  project  = foreach.key
+  project  = each.key
   topic    = google_pubsub_topic.feed_output.id
   role     = "roles/pubsub.admin"
   members  = ["serviceAccount:${google_service_account.account.email}"]
@@ -75,7 +75,7 @@ resource "google_storage_bucket_object" "object" {
 
 resource "google_cloudfunctions2_function_iam_member" "serviceagent-eventarc" {
   for_each       = var.slack_project_map
-  project        = foreach.key
+  project        = each.key
   location       = google_cloudfunctions2_function.function.location
   cloud_function = google_cloudfunctions2_function.function.name
   role           = "roles/eventarc.serviceAgent"
@@ -84,7 +84,7 @@ resource "google_cloudfunctions2_function_iam_member" "serviceagent-eventarc" {
 
 resource "google_cloudfunctions2_function_iam_member" "serviceagent-cloudfunc" {
   for_each       = var.slack_project_map
-  project        = foreach.key
+  project        = each.key
   location       = google_cloudfunctions2_function.function.location
   cloud_function = google_cloudfunctions2_function.function.name
   role           = "roles/cloudfunctions.serviceAgent"
@@ -94,7 +94,7 @@ resource "google_cloudfunctions2_function_iam_member" "serviceagent-cloudfunc" {
 
 resource "google_cloudfunctions2_function_iam_member" "invoker" {
   for_each       = var.slack_project_map
-  project        = foreach.key
+  project        = each.key
   location       = google_cloudfunctions2_function.function.location
   cloud_function = google_cloudfunctions2_function.function.name
   role           = "roles/cloudfunctions.invoker"
@@ -115,7 +115,7 @@ resource "google_cloudfunctions2_function" "function" {
   provider = google-beta
   name     = var.function_name
   location = var.function_region
-  project  = foreach.key
+  project  = each.key
 
   build_config {
     entry_point = "cloudevent_handler"
@@ -136,7 +136,7 @@ resource "google_cloudfunctions2_function" "function" {
     available_cpu      = "2"
     timeout_seconds    = 540 # 9 minutes - max for event-driven functions
     environment_variables = {
-      "SLACK_WEBHOOK_URL" = foreach.value
+      "SLACK_WEBHOOK_URL" = each.value
     }
     service_account_email = google_service_account.account.email
   }
