@@ -25,6 +25,7 @@ variable "function_archive_name" {
 variable "slack_webhook_url" {
   description = "The URL of the Slack webhook"
   type        = string
+  default     = ""
 }
 
 variable "function_region" {

@@ -24,7 +24,7 @@ resource "google_cloud_asset_project_feed" "project_feed" {
 
   feed_output_config {
     pubsub_destination {
-      topic = google_pubsub_topic.feed_output.id
+      topic = google_pubsub_topic.feed_output[each.key].id
     }
   }
 
@@ -43,9 +43,9 @@ resource "google_pubsub_topic" "feed_output" {
 resource "google_pubsub_topic_iam_binding" "binding" {
   for_each = var.slack_project_map
   project  = each.key
-  topic    = google_pubsub_topic.feed_output.id
+  topic    = google_pubsub_topic.feed_output[each.key].id
   role     = "roles/pubsub.admin"
-  members  = ["serviceAccount:${google_service_account.account.email}"]
+  members  = ["serviceAccount:${google_service_account.account[each.key].email}"]
 }
 
 resource "google_storage_bucket" "bucket" {
@@ -55,9 +55,10 @@ resource "google_storage_bucket" "bucket" {
 }
 
 resource "google_storage_bucket_iam_member" "write_bucket_iam_member" {
+  for_each   = var.slack_project_map
   bucket     = google_storage_bucket.bucket.name
   role       = "roles/storage.objectAdmin"
-  member     = "serviceAccount:${google_service_account.account.email}"
+  member     = "serviceAccount:${google_service_account.account[each.key].email}"
   depends_on = [google_storage_bucket.bucket]
 }
 
@@ -76,29 +77,29 @@ resource "google_storage_bucket_object" "object" {
 resource "google_cloudfunctions2_function_iam_member" "serviceagent-eventarc" {
   for_each       = var.slack_project_map
   project        = each.key
-  location       = google_cloudfunctions2_function.function.location
-  cloud_function = google_cloudfunctions2_function.function.name
+  location       = google_cloudfunctions2_function.function[each.key].location
+  cloud_function = google_cloudfunctions2_function.function[each.key].name
+  member         = "serviceAccount:${google_service_account.account[each.key].email}"
   role           = "roles/eventarc.serviceAgent"
-  member         = "serviceAccount:${google_service_account.account.email}"
 }
 
 resource "google_cloudfunctions2_function_iam_member" "serviceagent-cloudfunc" {
   for_each       = var.slack_project_map
   project        = each.key
-  location       = google_cloudfunctions2_function.function.location
-  cloud_function = google_cloudfunctions2_function.function.name
+  location       = google_cloudfunctions2_function.function[each.key].location
+  cloud_function = google_cloudfunctions2_function.function[each.key].name
+  member         = "serviceAccount:${google_service_account.account[each.key].email}"
   role           = "roles/cloudfunctions.serviceAgent"
-  member         = "serviceAccount:${google_service_account.account.email}"
 }
 
 
 resource "google_cloudfunctions2_function_iam_member" "invoker" {
   for_each       = var.slack_project_map
   project        = each.key
-  location       = google_cloudfunctions2_function.function.location
-  cloud_function = google_cloudfunctions2_function.function.name
+  location       = google_cloudfunctions2_function.function[each.key].location
+  cloud_function = google_cloudfunctions2_function.function[each.key].name
+  member         = "serviceAccount:${google_service_account.account[each.key].email}"
   role           = "roles/cloudfunctions.invoker"
-  member         = "serviceAccount:${google_service_account.account.email}"
 }
 
 # resource "google_cloud_run_service_iam_member" "cloud_run_invoker" {
@@ -138,7 +139,7 @@ resource "google_cloudfunctions2_function" "function" {
     environment_variables = {
       "SLACK_WEBHOOK_URL" = each.value
     }
-    service_account_email = google_service_account.account.email
+    service_account_email = google_service_account.account[each.key].email
   }
 
   event_trigger {
@@ -146,6 +147,6 @@ resource "google_cloudfunctions2_function" "function" {
     event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
     #service_account_email = google_service_account.account.email
     retry_policy = "RETRY_POLICY_RETRY"
-    pubsub_topic = google_pubsub_topic.feed_output.id
+    pubsub_topic = google_pubsub_topic.feed_output[each.key].id
   }
 }
