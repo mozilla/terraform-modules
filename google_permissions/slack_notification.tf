@@ -180,7 +180,7 @@ resource "google_cloudfunctions2_function" "function" {
   event_trigger {
     trigger_region        = var.function_region
     event_type            = "google.cloud.pubsub.topic.v1.messagePublished"
-    service_account_email = google_service_account.account.email
+    service_account_email = google_service_account.account[each.key].email
     retry_policy          = "RETRY_POLICY_RETRY"
     pubsub_topic          = google_pubsub_topic.feed_output[each.key].id
   }
