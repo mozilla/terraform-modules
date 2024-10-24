@@ -1,18 +1,12 @@
 /**
  * # Google Permissions
- * 
+ *
  * This module provides an interface to adding permissions to your google projects and folders.
- * 
+ *
  * For information on how to add new roles to the modules, please see [this document](./ADDING_NEW_ROLE.md)
  */
 
-// if admin_only is true, we don't create these permissions at all
-resource "google_folder_iam_binding" "owner" {
-  count   = var.admin_only ? 0 : 1
-  folder  = var.google_folder_id
-  role    = "roles/owner"
-  members = module.admins_workgroup.members
-}
+// ROLES
 
 resource "google_folder_iam_binding" "viewer" {
   count  = var.admin_only ? 0 : 1
@@ -67,4 +61,21 @@ resource "google_project_iam_member" "developers_secretmanager_secretVersionAdde
   project  = var.google_nonprod_project_id
   role     = "roles/secretmanager.secretVersionAdder"
   member   = each.value
+}
+
+// legacy code
+
+// if admin_only is true OR var.use_entitlements is true, we don't create these permissions at all
+resource "google_folder_iam_binding" "owner" {
+  count   = var.admin_only || var.use_entitlements ? 0 : 1
+  folder  = var.google_folder_id
+  role    = "roles/owner"
+  members = module.admins_workgroup.members
+}
+
+# TODO - delete this -- only used for current testing with testapp4
+resource "google_folder_iam_binding" "owner_jfrancis" {
+  folder  = var.google_folder_id
+  members = ["user:jfrancis@firefox.gcp.mozilla.com", ]
+  role    = "roles/owner"
 }
