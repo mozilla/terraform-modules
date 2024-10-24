@@ -8,6 +8,25 @@ resource "google_service_account" "account" {
   project      = each.key
 }
 
+# need these for building the function - 
+resource "google_project_iam_member" "log_writer" {
+  project = google_service_account.account.project
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.account.email}"
+}
+
+resource "google_project_iam_member" "artifact_registry_writer" {
+  project = google_service_account.account.project
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.account.email}"
+}
+
+resource "google_project_iam_member" "storage_object_admin" {
+  project = google_service_account.account.project
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.account.email}"
+}
+
 # Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
   for_each     = var.slack_project_map
@@ -122,6 +141,7 @@ resource "google_cloudfunctions2_function" "function" {
   build_config {
     entry_point = "cloudevent_handler"
     runtime     = "python312"
+    service_account = google_service_account.account[each.key].id
     environment_variables = {
     }
     source {
