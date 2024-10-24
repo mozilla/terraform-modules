@@ -18,16 +18,16 @@ resource "google_project_iam_member" "log_writer" {
 
 resource "google_project_iam_member" "artifact_registry_writer" {
   for_each = var.slack_project_map
-  project = google_service_account.account[each.key].project
-  role    = "roles/artifactregistry.writer"
-  member  = "serviceAccount:${google_service_account.account[each.key].email}"
+  project  = google_service_account.account[each.key].project
+  role     = "roles/artifactregistry.writer"
+  member   = "serviceAccount:${google_service_account.account[each.key].email}"
 }
 
 resource "google_project_iam_member" "storage_object_admin" {
   for_each = var.slack_project_map
-  project = google_service_account.account[each.key].project
-  role    = "roles/storage.objectAdmin"
-  member  = "serviceAccount:${google_service_account.account[each.key].email}"
+  project  = google_service_account.account[each.key].project
+  role     = "roles/storage.objectAdmin"
+  member   = "serviceAccount:${google_service_account.account[each.key].email}"
 }
 
 # Create a feed that sends notifications about network resource updates.
@@ -125,15 +125,17 @@ resource "google_cloudfunctions2_function_iam_member" "invoker" {
   role           = "roles/cloudfunctions.invoker"
 }
 
-# resource "google_cloud_run_service_iam_member" "cloud_run_invoker" {
-#   provider = google-beta
-#   project  = google_cloudfunctions2_function.function.project
-#   location = google_cloudfunctions2_function.function.location
-#   service  = google_cloudfunctions2_function.function.name
-#   role     = "roles/run.invoker"
-#   member   = "serviceAccount:${google_service_account.account.email}"
-# }
-# 
+resource "google_cloud_run_v2_service_iam_binding" "binding" {
+  for_each = var.slack_project_map
+  project  = each.key
+  location = google_cloudfunctions2_function.function[each.key].location
+  name     = google_cloudfunctions2_function.function[each.key].name
+  role     = "roles/run.invoker"
+  members = [
+    "serviceAccount:${google_service_account.account[each.key].email}"
+  ]
+}
+
 resource "google_cloudfunctions2_function" "function" {
   for_each = var.slack_project_map
   provider = google-beta
