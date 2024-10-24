@@ -48,7 +48,8 @@ resource "google_pubsub_topic_iam_binding" "binding" {
 // we want to share the bucket among all the projects related to this module instance
 resource "google_storage_bucket" "bucket" {
   // TODO - sort out how to make this unique across all the projects
-  name                        = "${keys(var.slack_project_map)[0]}-gcf-source" # Every bucket name must be globally unique
+  // this is some FOO right here
+  name                        = "${replace(replace(keys(var.slack_project_map)[0], "-prod", ""), "-nonprod", "")}-gcf-source" # Every bucket name must be globally unique
   location                    = "US"
   uniform_bucket_level_access = true
 }
