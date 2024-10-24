@@ -136,12 +136,12 @@ resource "google_cloud_run_v2_service_iam_binding" "binding" {
   ]
 }
 
-resource "google_cloudfunctions2_function_iam_member" "pubsub_subscriber" {
+resource "google_cloud_run_v2_service_iam_binding" "pubsub" {
   for_each       = var.slack_project_map
   project        = each.key
   location       = google_cloudfunctions2_function.function[each.key].location
-  cloud_function = google_cloudfunctions2_function.function[each.key].name
-  member         = "serviceAccount:${google_service_account.account[each.key].email}"
+  name     = google_cloudfunctions2_function.function[each.key].name
+  members        = ["serviceAccount:${google_service_account.account[each.key].email}"]
   role           = "roles/pubsub.subscriber"
 }
 
