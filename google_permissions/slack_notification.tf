@@ -69,6 +69,7 @@ resource "google_pubsub_topic_iam_binding" "binding" {
 
 // we want to share the bucket among all the projects related to this module instance
 resource "google_storage_bucket" "bucket" {
+  count = length(var.slack_project_map) > 0 ? 1 : 0 
   // TODO - sort out how to make this unique across all the projects
   // this is some FOO right here
   name                        = "${replace(var.google_nonprod_project_id, "-nonprod", "")}-gcf-source" # Every bucket name must be globally unique
@@ -86,12 +87,14 @@ resource "google_storage_bucket_iam_member" "write_bucket_iam_member" {
 }
 
 data "archive_file" "cloud_function_code" {
+  count = length(var.slack_project_map) > 0 ? 1 : 0 
   type        = "zip"
   source_dir  = "${path.module}/python"
   output_path = var.function_archive_name
 }
 
 resource "google_storage_bucket_object" "object" {
+  count = length(var.slack_project_map) > 0 ? 1 : 0 
   name   = var.function_archive_name
   bucket = google_storage_bucket.bucket.name
   source = var.function_archive_name # Add path to the zipped function source code
