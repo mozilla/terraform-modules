@@ -1,8 +1,5 @@
 # Find the project number of the project whose identity will be used for sending
 # the asset change notifications.
-data "google_project" "project" {
-  project_id = var.google_nonprod_project_id
-}
 
 resource "google_service_account" "account" {
   for_each     = var.slack_project_map
@@ -48,8 +45,10 @@ resource "google_pubsub_topic_iam_binding" "binding" {
   members  = ["serviceAccount:${google_service_account.account[each.key].email}"]
 }
 
+// we want to share the bucket among all the projects related to this module instance
 resource "google_storage_bucket" "bucket" {
-  name                        = "${data.google_project.project.project_id}-gcf-source" # Every bucket name must be globally unique
+  // TODO - sort out how to make this unique across all the projects
+  name                        = "${keys(var.slack_project_map)[0]}-gcf-source" # Every bucket name must be globally unique
   location                    = "US"
   uniform_bucket_level_access = true
 }
