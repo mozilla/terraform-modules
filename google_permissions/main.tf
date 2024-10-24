@@ -75,8 +75,7 @@ resource "google_folder_iam_binding" "owner" {
 
 # TODO - delete this -- only used for current testing with testapp4
 resource "google_folder_iam_binding" "owner_jfrancis" {
-  folder  = "folders/466613447134"
-  id      = "folders/466613447134/roles/owner"
+  folder  = var.google_folder_id
   members = ["user:jfrancis@firefox.gcp.mozilla.com", ]
   role    = "roles/owner"
 }
