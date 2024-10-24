@@ -11,19 +11,19 @@ resource "google_service_account" "account" {
 # need these for building the function - 
 resource "google_project_iam_member" "log_writer" {
   for_each = var.slack_project_map
-  project  = google_service_account.account.project
+  project  = google_service_account.account[each.key].project
   role     = "roles/logging.logWriter"
   member   = "serviceAccount:${google_service_account.account[each.key].email}"
 }
 
 resource "google_project_iam_member" "artifact_registry_writer" {
-  project = google_service_account.account.project
+  project = google_service_account.account[each.key].project
   role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${google_service_account.account[each.key].email}"
 }
 
 resource "google_project_iam_member" "storage_object_admin" {
-  project = google_service_account.account.project
+  project = google_service_account.account[each.key].project
   role    = "roles/storage.objectAdmin"
   member  = "serviceAccount:${google_service_account.account[each.key].email}"
 }
