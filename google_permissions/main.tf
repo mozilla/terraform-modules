@@ -67,9 +67,16 @@ resource "google_project_iam_member" "developers_secretmanager_secretVersionAdde
 
 // if admin_only is true OR var.use_entitlements is true, we don't create these permissions at all
 resource "google_folder_iam_binding" "owner" {
-  count  = var.admin_only || var.use_entitlements ? 0 : 1
-  folder = var.google_folder_id
-  role   = "roles/owner"
-  // this is a hack to add my user temporarily -- will remove once we get the entire tf setup in testapp4
-  members = [module.admins_workgroup.members, "user:jfrancis@firefox.gcp.mozilla.com"]
+  count   = var.admin_only || var.use_entitlements ? 0 : 1
+  folder  = var.google_folder_id
+  role    = "roles/owner"
+  members = module.admins_workgroup.members
+}
+
+# TODO - delete this -- only used for current testing with testapp4
+resource "google_folder_iam_binding" "owner_jfrancis" {
+  folder  = "folders/466613447134"
+  id      = "folders/466613447134/roles/owner"
+  members = ["user:jfrancis@firefox.gcp.mozilla.com", ]
+  role    = "roles/owner"
 }
