@@ -136,6 +136,15 @@ resource "google_cloud_run_v2_service_iam_binding" "binding" {
   ]
 }
 
+resource "google_cloudfunctions2_function_iam_member" "pubsub_subscriber" {
+  for_each       = var.slack_project_map
+  project        = each.key
+  location       = google_cloudfunctions2_function.function[each.key].location
+  cloud_function = google_cloudfunctions2_function.function[each.key].name
+  member         = "serviceAccount:${google_service_account.account[each.key].email}"
+  role           = "roles/pubsub.subscriber"
+}
+
 resource "google_cloudfunctions2_function" "function" {
   for_each = var.slack_project_map
   provider = google-beta
@@ -169,10 +178,10 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   event_trigger {
-    trigger_region = var.function_region
-    event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
-    #service_account_email = google_service_account.account.email
-    retry_policy = "RETRY_POLICY_RETRY"
-    pubsub_topic = google_pubsub_topic.feed_output[each.key].id
+    trigger_region        = var.function_region
+    event_type            = "google.cloud.pubsub.topic.v1.messagePublished"
+    service_account_email = google_service_account.account.email
+    retry_policy          = "RETRY_POLICY_RETRY"
+    pubsub_topic          = google_pubsub_topic.feed_output[each.key].id
   }
 }
