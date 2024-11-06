@@ -21,13 +21,13 @@ variable "roles" {
 variable "terraform_remote_state_bucket" {
   type        = string
   description = "The GCS bucket used for terraform state that contains the expected workgroups output"
-  default = "moz-fx-platform-mgmt-global-tf"
+  default     = "moz-fx-platform-mgmt-global-tf"
 }
 
 variable "terraform_remote_state_prefix" {
   type        = string
   description = "The path prefix where the terraform state file is located"
-  default = "projects/google-workspace-management"
+  default     = "projects/google-workspace-management"
 }
 
 variable "workgroup_outputs" {

@@ -1,5 +1,5 @@
 module "workgroup" {
-  source                        = "../google_workgroup"
+  source                        = "../mozilla_workgroup"
   ids                           = var.ids
   roles                         = {}
   workgroup_outputs             = ["members", "google_groups"]
