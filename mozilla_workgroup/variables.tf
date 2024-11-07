@@ -8,14 +8,19 @@ variable "ids" {
   }
 }
 
-variable "roles" {
-  type        = map(string)
-  description = "List of roles to generate bigquery acls for"
-  default = {
+/* roles can be BigQuery roles and/or basic  roles for dataset"
+  https://cloud.google.com/bigquery/docs/access-control-basic-roles
+  https://cloud.google.com/bigquery/docs/access-control#bigquery
+  example
     metadata_viewer = "roles/bigquery.metadataViewer"
     read            = "READER"
     write           = "WRITER"
-  }
+  */
+
+variable "roles" {
+  type        = map(string)
+  description = "List of roles to generate bigquery acls for"
+  default     = {}
 }
 
 variable "terraform_remote_state_bucket" {
