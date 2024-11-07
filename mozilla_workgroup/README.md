@@ -1,4 +1,4 @@
-# workgroup
+# Mozilla workgroup
 Retrieve workgroup ACL lists associated with data and gcp access workgroups.
 
 Workgroup identifiers should be of the form:
