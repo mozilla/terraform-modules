@@ -2,11 +2,12 @@ data "terraform_remote_state" "platform_shared" {
   backend = "gcs"
 
   config = {
-    bucket                      = "moz-fx-platform-terraform-state-global"
     prefix                      = "projects/platform-shared/global"
-    impersonate_service_account = "tf-platform@moz-fx-websvc-terraform-admin.iam.gserviceaccount.com"
+    bucket                      = "moz-fx-platform-terraform-state-global"
+    impersonate_service_account = "tf-platform@moz-fx-platfrm-terraform-admin.iam.gserviceaccount.com"
   }
 }
+
 locals {
   // this is the list of roles that we want all of the entitlements to have by default
   default_admin_role_list = [
@@ -19,18 +20,18 @@ locals {
 
   // this is the single set of entitlement data for the current appcode
   tenant_entitlement = data.terraform_remote_state.platform_shared.outputs.tenant_entitlements[var.appcode]
-  entitlement_data = try(local.tenant_entitlement.entitlement_data.entitlements, {})
+  entitlement_data   = try(local.tenant_entitlement.entitlements, {})
 
 
   additional_entitlements = flatten([
-      for environment in ["nonprod", "prod"] : [
-        for entitlement in try(local.entitlement_data.additional_entitlements, []) : {
-          key = "${var.appcode}/${environment}/${entitlement.name}"
-          tenant = var.appcode
-          project_id = local.entitlement_data.entitlements[environment]
-          entitlement = entitlement
-        } if local.entitlement_data[environment] != ""
-      ]
+    for environment in ["nonprod", "prod"] : [
+      for entitlement in try(local.entitlement_data.entitlements.additional_entitlements, []) : {
+        key         = "${var.appcode}/${environment}/${entitlement.name}"
+        tenant      = var.appcode
+        project_id  = local.entitlement_data[environment]
+        entitlement = entitlement
+      } if local.tenant_entitlement[environment] != ""
+    ]
   ])
 
   // The maximum allowed request duration is 4 hours no matter what the user specifiesa
@@ -42,7 +43,7 @@ locals {
 
   default_admin_entitlement_name = "admin-entitlement-01"
 
-    # Extract distinct principals from additional entitlements
+  # Extract distinct principals from additional entitlements
   distinct_principals = distinct(flatten([
     for entitlement in try(local.entitlement_data.additional_entitlements, []) : entitlement.principals
   ]))
@@ -53,7 +54,7 @@ locals {
       "default" : ["workgroup:${var.appcode}/developers"] # this the default value for the default system entitlement
     },
     {
-    for name, entitlement in try(local.entitlement_data.additional_entitlements, []) : entitlement.name => entitlement.principals
+      for name, entitlement in try(local.entitlement_data.additional_entitlements, []) : entitlement.name => entitlement.principals
     }
   )
 
@@ -61,18 +62,18 @@ locals {
   # approvals on default currently NYI
   approver_wg_map = merge(
     {
-      for entitlement in local.additional_entitlements : entitlement.key => entitlement.approval_workflow.principals
+      for entitlement in try(local.additional_entitlements, []) : entitlement.key => entitlement.approval_workflow.principals
     }
-  ) 
+  )
 }
 
 
 # TODO -- HOW TO DEAL WITH APPROVAL WORKGROUPS AND LOOKUP????
 
 module "workgroup" {
-  source = "../mozilla_workgroup"
+  source   = "../mozilla_workgroup"
   for_each = local.entitlement_wg_map
-  ids = each.value
+  ids      = each.value
 }
 
 locals {
@@ -82,9 +83,9 @@ locals {
 }
 
 module "approvals_workgroup" {
-  source = "../mozilla_workgroup"
+  source   = "../mozilla_workgroup"
   for_each = local.approver_wg_map
-  ids = each.value
+  ids      = each.value
 }
 
 locals {
@@ -96,11 +97,12 @@ locals {
 
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
-resource "google_privileged_access_manager_entitlement"  "default_prod_entitlement" {
-  entitlement_id = local.default_admin_entitlement_name
-  location = "global"
+resource "google_privileged_access_manager_entitlement" "default_prod_entitlement" {
+  count                = (local.tenant_entitlement.prod != "") ? 1 : 0
+  entitlement_id       = local.default_admin_entitlement_name
+  location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
-  parent               = "projects/${local.entitlement_data.prod}"
+  parent               = "projects/${local.tenant_entitlement.prod}"
 
   requester_justification_config {
     unstructured {}
@@ -112,47 +114,48 @@ resource "google_privileged_access_manager_entitlement"  "default_prod_entitleme
   privileged_access {
     gcp_iam_access {
       dynamic "role_bindings" {
-        for_each = setunion(try(local.entitlement_data.additional_roles, []), local.default_admin_role_list)
+        for_each = setunion(try(local.entitlement_data.entitlements.additional_roles, []), local.default_admin_role_list)
         content {
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${local.entitlement_data.prod}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${local.tenant_entitlement.prod}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
 
-# NYI for defaults
-#
-#  additional_notification_targets { # leave this empty for now
-#    admin_email_recipients     = []
-#    requester_email_recipients = []
-#  }
-#
-#  dynamic "approval_workflow" { //optional block
-#    for_each = var.number_of_approvals > 0 ? [1] : []
-#    content {
-#      manual_approvals {
-#        require_approver_justification =  each.value.prod.entitlement. # leave this false for now
-#        steps {
-#          approvals_needed          = 1 # this is all that's supported by google ATM
-#          approver_email_recipients = []
-#          approvers {
-#            principals = 
-#          }
-#        }
-#      }
-#    }
-#  }
+  # NYI for defaults
+  #
+  #  additional_notification_targets { # leave this empty for now
+  #    admin_email_recipients     = []
+  #    requester_email_recipients = []
+  #  }
+  #
+  #  dynamic "approval_workflow" { //optional block
+  #    for_each = var.number_of_approvals > 0 ? [1] : []
+  #    content {
+  #      manual_approvals {
+  #        require_approver_justification =  each.value.prod.entitlement. # leave this false for now
+  #        steps {
+  #          approvals_needed          = 1 # this is all that's supported by google ATM
+  #          approver_email_recipients = []
+  #          approvers {
+  #            principals = 
+  #          }
+  #        }
+  #      }
+  #    }
+  #  }
 }
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 # now we handle the additional entitlements - these need to be created for BOTH environments
-resource "google_privileged_access_manager_entitlement"  "default_nonprod_entitlement" {
-  entitlement_id = local.default_admin_entitlement_name
-  location = "global"
+resource "google_privileged_access_manager_entitlement" "default_nonprod_entitlement" {
+  count                = (local.tenant_entitlement.nonprod != "") ? 1 : 0
+  entitlement_id       = local.default_admin_entitlement_name
+  location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
-  parent               = "projects/${local.entitlement_data.nonprod}"
+  parent               = "projects/${local.tenant_entitlement.nonprod}"
 
   requester_justification_config {
     unstructured {}
@@ -169,32 +172,32 @@ resource "google_privileged_access_manager_entitlement"  "default_nonprod_entitl
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${local.entitlement_data.nonprod}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${local.tenant_entitlement.nonprod}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
-# NYI for defaults
-#
-#  additional_notification_targets { # leave this empty for now
-#    admin_email_recipients     = []
-#    requester_email_recipients = []
-#  }
-#
-#  dynamic "approval_workflow" { //optional block
-#    for_each = var.number_of_approvals > 0 ? [1] : []
-#    content {
-#      manual_approvals {
-#        require_approver_justification =  each.value.nonprod.entitlement. # leave this false for now
-#        steps {
-#          approvals_needed          = 1 # this is all that's supported by google ATM
-#          approver_email_recipients = []
-#          approvers {
-#            principals = 
-#          }
-#        }
-#      }
-#    }
-#  }
+  # NYI for defaults
+  #
+  #  additional_notification_targets { # leave this empty for now
+  #    admin_email_recipients     = []
+  #    requester_email_recipients = []
+  #  }
+  #
+  #  dynamic "approval_workflow" { //optional block
+  #    for_each = var.number_of_approvals > 0 ? [1] : []
+  #    content {
+  #      manual_approvals {
+  #        require_approver_justification =  each.value.nonprod.entitlement. # leave this false for now
+  #        steps {
+  #          approvals_needed          = 1 # this is all that's supported by google ATM
+  #          approver_email_recipients = []
+  #          approvers {
+  #            principals = 
+  #          }
+  #        }
+  #      }
+  #    }
+  #  }
 }
 
 resource "google_privileged_access_manager_entitlement" "additional_entitlements" {
