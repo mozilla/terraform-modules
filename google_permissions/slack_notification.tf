@@ -80,7 +80,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_iam_member" "write_bucket_iam_member" {
   for_each   = var.slack_project_map
-  bucket     = google_storage_bucket.bucket.name
+  bucket     = google_storage_bucket.bucket[0].name
   role       = "roles/storage.objectAdmin"
   member     = "serviceAccount:${google_service_account.account[each.key].email}"
   depends_on = [google_storage_bucket.bucket]
@@ -96,7 +96,7 @@ data "archive_file" "cloud_function_code" {
 resource "google_storage_bucket_object" "object" {
   count  = length(var.slack_project_map) > 0 ? 1 : 0
   name   = var.function_archive_name
-  bucket = google_storage_bucket.bucket.name
+  bucket = google_storage_bucket.bucket[0].name
   source = var.function_archive_name # Add path to the zipped function source code
 }
 
@@ -154,7 +154,7 @@ resource "google_cloudfunctions2_function" "function" {
     }
     source {
       storage_source {
-        bucket = google_storage_bucket.bucket.name
+        bucket = google_storage_bucket.bucket[0].name
         object = var.function_archive_name
       }
     }
