@@ -1,3 +1,8 @@
+variable "appcode" {
+  description = "The application code or tenant name for this set of permissions."
+  type        = string
+}
+
 variable "google_folder_id" {
   description = "The ID of the folder to create the project in."
   type        = string
