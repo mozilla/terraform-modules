@@ -25,10 +25,10 @@ locals {
 
   additional_entitlements = flatten([
     for environment in ["nonprod", "prod"] : [
-      for entitlement in try(local.entitlement_data.entitlements.additional_entitlements, []) : {
+      for entitlement in try(local.entitlement_data.additional_entitlements, []) : {
         key         = "${var.appcode}/${environment}/${entitlement.name}"
         tenant      = var.appcode
-        project_id  = local.entitlement_data[environment]
+        project_id  = local.tenant_entitlement[environment]
         entitlement = entitlement
       } if local.tenant_entitlement[environment] != ""
     ]
@@ -43,28 +43,23 @@ locals {
 
   default_admin_entitlement_name = "admin-entitlement-01"
 
-  # Extract distinct principals from additional entitlements
-  distinct_principals = distinct(flatten([
-    for entitlement in try(local.entitlement_data.additional_entitlements, []) : entitlement.principals
-  ]))
-
   # Create the map with the hard-coded value and append the distinct principals
   entitlement_wg_map = merge(
     {
       "default" : ["workgroup:${var.appcode}/developers"] # this the default value for the default system entitlement
     },
     {
-      for name, entitlement in try(local.entitlement_data.additional_entitlements, []) : entitlement.name => entitlement.principals
+      for name, add_entitlement in try(local.additional_entitlements, []) : add_entitlement.key => add_entitlement.entitlement.principals
     }
   )
 
   # prep the module workgroup lookup list for the approval workflow
   # approvals on default currently NYI
-  approver_wg_map = merge(
-    {
-      for entitlement in try(local.additional_entitlements, []) : entitlement.key => entitlement.approval_workflow.principals
-    }
-  )
+  approver_wg_map = {
+    for e in try(local.additional_entitlements, []) :
+    e.key => e.entitlement.approval_workflow.principals
+    if can(e.entitlement.approval_workflow)
+  }
 }
 
 
@@ -109,7 +104,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
   }
 
   eligible_users {
-    principals = local.module_outputs["default"]
+    principals = local.module_outputs["default"].members
   }
   privileged_access {
     gcp_iam_access {
@@ -214,7 +209,7 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
   }
 
   eligible_users {
-    principals = local.module_outputs[each.value.key]
+    principals = local.module_outputs[each.key]
   }
   privileged_access {
     gcp_iam_access {
@@ -237,7 +232,7 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
           approvals_needed          = 1 # this is all that's supported by google ATM
           approver_email_recipients = []
           approvers {
-            principals = local.approvals_module_outputs[each.value.key]
+            principals = local.approvals_module_outputs[each.key]
           }
         }
       }
