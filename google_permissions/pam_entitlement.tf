@@ -121,7 +121,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
     }
   }
 
-  # NYI for defaults
+  # NYI for defaults - need to add to the schema.json file
   #
   #  additional_notification_targets { # leave this empty for now
   #    admin_email_recipients     = []
@@ -173,7 +173,7 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
-  # NYI for defaults
+  # NYI for defaults - need to add to the schema.json file
   #
   #  additional_notification_targets { # leave this empty for now
   #    admin_email_recipients     = []
@@ -278,14 +278,6 @@ resource "google_pubsub_topic" "feed_output" {
   message_retention_duration = "86400s"
 }
 
-
-resource "google_pubsub_topic_iam_binding" "binding" {
-  for_each = var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  project  = local.tenant_entitlement[each.key]
-  topic    = google_pubsub_topic.feed_output[each.key].id
-  role     = "roles/pubsub.publisher"
-  members  = ["serviceAccount:${google_service_account.account[each.key].email}"]
-}
 
 
 
