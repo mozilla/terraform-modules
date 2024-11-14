@@ -3,6 +3,18 @@ variable "appcode" {
   type        = string
 }
 
+variable "entitlement_slack_topic" {
+  description = "The name of the pubsub topic to use for slack notifications."
+  type        = string
+  default     = ""
+}
+
+variable "feed_id" {
+  description = "The ID of the feed to be created"
+  type        = string
+  default     = "grant_feed"
+}
+
 variable "google_folder_id" {
   description = "The ID of the folder to create the project in."
   type        = string

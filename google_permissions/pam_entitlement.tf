@@ -22,15 +22,20 @@ locals {
   tenant_entitlement = data.terraform_remote_state.platform_shared.outputs.tenant_entitlements[var.appcode]
   entitlement_data   = try(local.tenant_entitlement.entitlements, {})
 
+  // Populate the environments list dynamically
+  environments = [
+    for environment in ["nonprod", "prod"] : environment
+    if local.tenant_entitlement[environment] != ""
+  ]
 
   additional_entitlements = flatten([
-    for environment in ["nonprod", "prod"] : [
+    for environment in local.environments : [
       for entitlement in try(local.entitlement_data.additional_entitlements, []) : {
         key         = "${var.appcode}/${environment}/${entitlement.name}"
         tenant      = var.appcode
         project_id  = local.tenant_entitlement[environment]
         entitlement = entitlement
-      } if local.tenant_entitlement[environment] != ""
+      }
     ]
   ])
 
@@ -61,9 +66,6 @@ locals {
     if can(e.entitlement.approval_workflow)
   }
 }
-
-
-# TODO -- HOW TO DEAL WITH APPROVAL WORKGROUPS AND LOOKUP????
 
 module "workgroup" {
   source   = "../mozilla_workgroup"
@@ -240,6 +242,50 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
   }
 }
 
+resource "google_service_account" "account" {
+  for_each     = var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  account_id   = "slack-send-pam-sa"
+  display_name = "Slack sender function service account"
+  project      = local.tenant_entitlement[each.key]
+}
+
+
+# Create a feed that sends notifications about network resource updates.
+resource "google_cloud_asset_project_feed" "project_feed" {
+  for_each     = var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  project      = local.tenant_entitlement[each.key]
+  feed_id      = var.feed_id
+  content_type = "RESOURCE"
+
+  asset_types = [
+    "privilegedaccessmanager.googleapis.com/Grant",
+  ]
+
+  feed_output_config {
+    pubsub_destination {
+      topic = google_pubsub_topic.feed_output[each.key].id
+    }
+  }
+
+  # start with no condition to see what we get in the feed
+}
+
+# The topic where the resource change notifications will be sent.
+resource "google_pubsub_topic" "feed_output" {
+  for_each                   = var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  project                    = local.tenant_entitlement[each.key]
+  name                       = var.entitlement_slack_topic
+  message_retention_duration = "86400s"
+}
+
+
+resource "google_pubsub_topic_iam_binding" "binding" {
+  for_each = var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  project  = local.tenant_entitlement[each.key]
+  topic    = google_pubsub_topic.feed_output[each.key].id
+  role     = "roles/pubsub.publisher"
+  members  = ["serviceAccount:${google_service_account.account[each.key].email}"]
+}
 
 
 
