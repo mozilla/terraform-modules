@@ -83,23 +83,3 @@ variable "viewer_ids" {
   description = "List of viewer IDs to add to the project."
   type        = list(string)
 }
-
-// entitlement related variables
-
-variable "use_entitlements" {
-  default     = false
-  description = "Whether or not to create an entitlement."
-  type        = bool
-}
-
-variable "entitlement_additional_roles" {
-  default     = []
-  description = "List of additional roles to apply to the entitlement."
-  type        = list(string)
-}
-
-variable "user_base_additional_roles" {
-  default     = []
-  description = "List of roles for users in their non-entitlement state."
-  type        = list(string)
-}
