@@ -42,10 +42,10 @@ jobs:
             exit 2
           fi
       - name: Get changed files
-        uses: Ana06/get-changed-files@v2.3.0
+        uses: tj-actions/changed-files@v45
         id: raw-files
         with:
-          format: 'json'
+          json: "true"
       - name: Condense to directory list
         uses: actions/github-script@v4
         id: condense
