@@ -166,7 +166,7 @@ jobs:
 
           ```hcl
           module "my_${{ matrix.directory }}" {
-            source = "github.com/mozilla/terraform-modules//${{ matrix.directory }}?ref=${{ matrix.directory }}-0.0.1"
+            source = "git@github.com:mozilla/terraform-modules.git//${{ matrix.directory }}?ref=${{ matrix.directory }}-0.0.1"
 
             # also any inputs for the module (see below)
           }
@@ -176,7 +176,7 @@ jobs:
 
       - name: Install terraform docs
         run: |
-          wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.15.0/terraform-docs-v0.15.0-linux-amd64.tar.gz \
+          wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.19.0/terraform-docs-v0.19.0-linux-amd64.tar.gz \
             --output-document - \
             --progress dot:mega \
           | tar -xvz

@@ -19,7 +19,7 @@ jobs:
             const { sha, releases } = JSON.parse(process.env.CLIENT_PAYLOAD);
 
             for (const release of releases) {
-              const tagName = `rel/${release.module}/${release.newVersion}`;
+              const tagName = `${release.module}-${release.newVersion}`;
 
               const ref = `refs/tags/${tagName}`;
               console.log('Tagging', tagName, 'as', sha);
