@@ -26,7 +26,7 @@ jobs:
       - name: Check PR labels
         id: check_pr_label
         env:
-          PR_URL: ${{github.event.pull_request.html_url}} #TODO: check if needed (we don't checkout the code..)
+          PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           LABELS=$(gh pr view $PR_URL --json labels  --jq '.labels[]| select((.name=="minor") or (.name=="major") or (.name=="patch") or (.name=="no-release")) |.name')

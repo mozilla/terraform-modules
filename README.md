@@ -20,7 +20,7 @@ This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run sta
 
 ### Versioning and Releases
 
-Versioning is automated based on [Semantic Versioning](https://semver.org/) with per-module versions utilizing [`PR labels`](https://medium.com/forto-tech-blog/automated-versioning-of-terraform-modules-with-github-actions-semver-style-800f91ed5037). Apply the appropriate major/minor/patch label to your PR, and Github Actions will handle the rest.
+Versioning is automated based on [Semantic Versioning](https://semver.org/) with per-module versions utilizing [`PR labels`](https://medium.com/forto-tech-blog/automated-versioning-of-terraform-modules-with-github-actions-semver-style-800f91ed5037). Apply the appropriate major/minor/patch/no-release label to your PR, and Github Actions will handle the rest.
 Release changelogs are automatically generated using the contents of the PR description.
 
 ## Creating modules
