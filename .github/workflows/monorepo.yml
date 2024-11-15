@@ -46,6 +46,7 @@ jobs:
         id: raw-files
         with:
           json: "true"
+          escape_json: "false"
       - name: Condense to directory list
         uses: actions/github-script@v7
         id: condense
