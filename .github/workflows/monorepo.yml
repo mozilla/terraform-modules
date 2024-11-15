@@ -33,7 +33,7 @@ jobs:
           NUMBER_OF_LABELS=$(echo "$LABELS" |wc -w)
           if [ "$NUMBER_OF_LABELS" -eq "1" ] ; then
             echo "Found: $LABELS"
-            echo "::set-output name=release-type::$LABELS"
+            echo "{name}={value}" >> $GITHUB_OUTPUT
           elif [ "$NUMBER_OF_LABELS" -gt "1" ] ; then
             echo "::error ::Too many release type labels: $( echo $LABELS | tr '\n' ' ' )"
             exit 1
@@ -91,7 +91,7 @@ jobs:
               }
             }`;
             const result = await github.graphql(query, { owner, repo,
-              refPrefix: `refs/tags/rel/${process.env.PACKAGE_NAME}/`,
+              refPrefix: `refs/tags/${process.env.PACKAGE_NAME}/`,
             });
             const prevNode = result.repository.refs.edges[0];
             const prevVer = prevNode ? prevNode.node.name : '0.0.0';
