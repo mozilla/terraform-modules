@@ -42,7 +42,7 @@ jobs:
             exit 2
           fi
       - name: Get changed files
-        uses: Ana06/get-changed-files@v1.2
+        uses: Ana06/get-changed-files@v2.3.0
         id: raw-files
         with:
           format: 'json'
