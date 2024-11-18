@@ -65,23 +65,23 @@ Alternatively, `pre-commit install` on this repository to automatically format t
 
 Some examples on using modules in this repository follow.
 
-**Recommended**: Using the (imaginary) `google_gke-cluster` module based on a specific automatically created git tag:
+**Recommended**: Using the `google_gke` module based on automatically created git tag:
 ```terraform
  module "gke" {
-  source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=google_gke-cluster_v1.0.1"
+  source      = "git@github.com:mozilla/terraform-modules.git//google_gke?ref=google_gke-0.0.1"
 }
 ```
 
-Using the (imaginary) `google_gke-cluster` module with always the latest version (e.g. following main branch):
+Using the `google_gke` module with always the latest version (e.g. following main branch):
 ```terraform
  module "gke" {
-  source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=main"
+  source      = "git@github.com:mozilla/terraform-modules.git//google_gke?ref=main"
 }
 ```
 
-Using the (imaginary) `google_gke-cluster` module based on a specific (imaginary) git commit:
+Using the `google_gke` module based on a specific (imaginary) git commit:
 ```terraform
  module "gke" {
-  source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=69ad17030bfa4ea46f68f8cc449102d446658851"
+  source      = "git@github.com:mozilla/terraform-modules.git//google_gke?ref=69ad17030bfa4ea46f68f8cc449102d446658851"
 }
 ```
