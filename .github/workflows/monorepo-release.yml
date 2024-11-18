@@ -10,7 +10,7 @@ jobs:
     name: 'Tag Releases'
     steps:
 
-      - uses: actions/github-script@v2
+      - uses: actions/github-script@v7
         env:
           CLIENT_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
         with:
