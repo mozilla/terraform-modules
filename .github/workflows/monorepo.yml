@@ -9,6 +9,9 @@ on:
   pull_request_target:
     types: [closed]
 
+permissions:
+  pull-requests: read
+
 jobs:
   detect:
     runs-on: ubuntu-latest
@@ -29,11 +32,11 @@ jobs:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          LABELS=$(gh pr view $PR_URL --json labels  --jq '.labels[]| select((.name=="minor") or (.name=="major") or (.name=="patch") or (.name=="no-release")) |.name')
-          NUMBER_OF_LABELS=$(echo "$LABELS" |wc -w)
+          LABELS=$(gh pr view $PR_URL --json labels --jq '.labels[] | select((.name=="minor") or (.name=="major") or (.name=="patch") or (.name=="no-release")) |.name')
+          NUMBER_OF_LABELS=$(echo "$LABELS" | wc -w)
           if [ "$NUMBER_OF_LABELS" -eq "1" ] ; then
             echo "Found: $LABELS"
-            echo "{name}={value}" >> $GITHUB_OUTPUT
+            echo "release-type=$LABELS" >> "$GITHUB_OUTPUT"
           elif [ "$NUMBER_OF_LABELS" -gt "1" ] ; then
             echo "::error ::Too many release type labels: $( echo $LABELS | tr '\n' ' ' )"
             exit 1
@@ -69,42 +72,51 @@ jobs:
     needs: detect
     if: ${{ needs.detect.outputs.directories != '{}' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     strategy:
       matrix: "${{ fromJson(needs.detect.outputs.directories) }}"
       fail-fast: false
     name: 'Module: ${{ matrix.directory }}'
     steps:
-
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
       - name: Detect previous version number
-        uses: actions/github-script@v7
         id: prev-version
         env:
           PACKAGE_NAME: '${{ matrix.directory }}'
-        with:
-          script: |
-            const { owner, repo } = context.repo;
-            const query = `query($owner: String!, $repo: String!, $refPrefix: String!) {
-              repository(owner: $owner, name: $repo) {
-                refs(refPrefix: $refPrefix, first: 1, orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {
-                  edges { node { name } }
-                }
-              }
-            }`;
-            const result = await github.graphql(query, { owner, repo,
-              refPrefix: `refs/tags/${process.env.PACKAGE_NAME}/`,
-            });
-            const prevNode = result.repository.refs.edges[0];
-            const prevVer = prevNode ? prevNode.node.name : '0.0.0';
-            console.log('Found previous version', prevVer);
-            return prevVer;
-          result-encoding: string
+        run: |
+          git fetch --tags
+          TAG=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" "refs/tags/$PACKAGE_NAME-[0-9].[0-9].[0-9]")
+
+          if [ -z "$TAG" ] ; then
+            echo "No git tag found for $PACKAGE_NAME, using 0.0.0 as previous version"
+            echo "result=0.0.0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          TAG_VERSION="${TAG#*-}"
+          echo "TAG_VERSION = $TAG_VERSION"
+          SEMVER_REGEX="^[0-9].[0-9].[0-9]$"
+          if [[ $TAG_VERSION =~ $SEMVER_REGEX ]] ; then
+            echo "$TAG is valid semver, using it"
+            echo "result=${TAG_VERSION}" >> "$GITHUB_OUTPUT"
+            exit 0
+          else
+            echo "Error: $TAG does not end in a valid semver"
+            exit 1
+          fi
 
       - name: Determine new version number
         uses: actions/github-script@v7
         id: new-version
         env:
-          PREV_VERSION: '${{ steps.prev-version.outputs.result }}'
-          RELEASE_TYPE: '${{ needs.detect.outputs.release-type }}'
+          PREV_VERSION: ${{ steps.prev-version.outputs.result }}
+          RELEASE_TYPE: ${{ needs.detect.outputs.release-type }}
         with:
           script: |
             const { PREV_VERSION, RELEASE_TYPE } = process.env;
@@ -163,12 +175,11 @@ jobs:
         run: |
           cat > output/documentation.md <<'EOF'
           # Module Location
-          To use this module in your Terraform, use the below source value.
+          To use this module in your Terraform, use the below source value (substitute in a real version for the X's).
 
           ```hcl
           module "my_${{ matrix.directory }}" {
-            source = "git@github.com:mozilla/terraform-modules.git//${{ matrix.directory }}?ref=${{ matrix.directory }}-0.0.1"
-
+            source = "git@github.com:mozilla/terraform-modules.git//${{ matrix.directory }}?ref=${{ matrix.directory }}-X.X.X"
             # also any inputs for the module (see below)
           }
           ```
@@ -177,12 +188,12 @@ jobs:
 
       - name: Install terraform docs
         run: |
-          wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.19.0/terraform-docs-v0.19.0-linux-amd64.tar.gz \
+          wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz \
             --output-document - \
             --progress dot:mega \
           | tar -xvz
       - name: Clone repository for analysis
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           path: src
@@ -193,6 +204,12 @@ jobs:
             --output-file "$(pwd)"/output/documentation.md \
             --sort-by required \
             'src/${{ matrix.directory }}'
+      - name: Upload result artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: '${{ matrix.directory }}'
+          path: output
+          retention-days: 5
 
 
   comment:
@@ -200,8 +217,11 @@ jobs:
     if: needs.detect.outputs.is-merge-event == 'false'
     runs-on: ubuntu-latest
     name: 'Comment on PR'
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
-      - uses: actions/download-artifact@v4.1.7
+      - uses: actions/download-artifact@v4.1.8
         with:
           path: outputs
       - name: Display structure of downloaded files
@@ -238,7 +258,7 @@ jobs:
 
             const finalBody = [lines.join('\n'), ...sections].join('\n\n');
 
-            const {data: allComments} = await github.issues.listComments({ issue_number, owner, repo });
+            const {data: allComments} = await github.rest.issues.listComments({ issue_number, owner, repo });
             const ourComments = allComments
               .filter(comment => comment.user.login === 'github-actions[bot]')
               .filter(comment => comment.body.startsWith(lines[0]+'\n'));
@@ -249,13 +269,13 @@ jobs:
               return;
             }
 
-            const {data: newComment} = await github.issues.createComment({ issue_number, owner, repo, body: finalBody });
+            const {data: newComment} = await github.rest.issues.createComment({ issue_number, owner, repo, body: finalBody });
             console.log('Posted comment', newComment.id, '@', newComment.html_url);
             // Delete all our previous comments
             for (const comment of ourComments) {
               if (comment.id === newComment.id) continue;
               console.log('Deleting previous PR comment from', comment.created_at);
-              await github.issues.deleteComment({ comment_id: comment.id, owner, repo });
+              await github.rest.issues.deleteComment({ comment_id: comment.id, owner, repo });
             }
 
 
@@ -264,8 +284,11 @@ jobs:
     if: needs.detect.outputs.is-merge-event == 'true'
     runs-on: ubuntu-latest
     name: 'Dispatch release event'
+    permissions:
+      actions: write
+      contents: write
     steps:
-      - uses: actions/download-artifact@v4.1.7
+      - uses: actions/download-artifact@v4.1.8
         with:
           path: outputs
 
@@ -292,7 +315,6 @@ jobs:
         env:
           RELEASE_LIST: '${{ steps.extract-releases.outputs.result }}'
         with:
-          github-token: ${{ secrets.GH_PAT_FREIGHTBOT }}
           script: |
             const payload = {
               run_id: "${{ github.run_id }}",
@@ -302,7 +324,7 @@ jobs:
             console.log('Event payload:', JSON.stringify(payload, null, 2));
 
             const { owner, repo } = context.repo;
-            await github.repos.createDispatchEvent({
+            await github.rest.repos.createDispatchEvent({
               owner, repo,
               event_type: 'monorepo_release',
               client_payload: payload,
