@@ -1,0 +1,12 @@
+content: |-
+  {{ .Header }}
+
+  ## Example
+
+  ```hcl
+  {{ include "examples/main.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
