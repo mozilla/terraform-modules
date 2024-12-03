@@ -2,9 +2,8 @@ data "terraform_remote_state" "platform_shared" {
   backend = "gcs"
 
   config = {
-    prefix                      = "projects/platform-shared/global"
-    bucket                      = "moz-fx-platform-terraform-state-global"
-    impersonate_service_account = "tf-platform@moz-fx-platfrm-terraform-admin.iam.gserviceaccount.com"
+    prefix = "projects/platform-shared/global"
+    bucket = "moz-fx-platform-terraform-state-global"
   }
 }
 
@@ -137,7 +136,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
   #          approvals_needed          = 1 # this is all that's supported by google ATM
   #          approver_email_recipients = []
   #          approvers {
-  #            principals = 
+  #            principals =
   #          }
   #        }
   #      }
@@ -189,7 +188,7 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
   #          approvals_needed          = 1 # this is all that's supported by google ATM
   #          approver_email_recipients = []
   #          approvers {
-  #            principals = 
+  #            principals =
   #          }
   #        }
   #      }
@@ -277,7 +276,3 @@ resource "google_pubsub_topic" "feed_output" {
   name                       = var.entitlement_slack_topic
   message_retention_duration = "86400s"
 }
-
-
-
-
