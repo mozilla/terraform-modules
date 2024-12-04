@@ -1,0 +1,33 @@
+name: 'Monorepo: Release'
+on:
+  repository_dispatch:
+    types: [monorepo_release]
+
+jobs:
+
+  tag:
+    runs-on: ubuntu-latest
+    name: 'Tag Releases'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/github-script@v7
+        env:
+          CLIENT_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+        with:
+          script: |
+            const { sha, releases } = JSON.parse(process.env.CLIENT_PAYLOAD);
+
+            for (const release of releases) {
+              const tagName = `${release.module}-${release.newVersion}`;
+
+              const ref = `refs/tags/${tagName}`;
+              console.log('Tagging', tagName, 'as', sha);
+              console.log('Owner', context.repo.owner, 'repo', context.repo.repo);
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: ref,
+                sha: sha
+              });
+            }
