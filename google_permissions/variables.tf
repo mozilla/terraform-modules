@@ -1,3 +1,59 @@
+variable "app_code" {
+  description = "The application code or tenant name for this set of permissions."
+  type        = string
+}
+
+variable "prod_project_id" {
+  description = "The ID of the prod project."
+  type        = string
+  default     = ""
+}
+
+variable "nonprod_project_id" {
+  description = "The ID of the nonprod project."
+  type        = string
+  default     = ""
+}
+
+variable "entitlement_enabled" {
+  description = "Whether or not to enable entitlements."
+  type        = bool
+  default     = false
+}
+
+variable "entitlement_data" {
+  description = "The entitlement data for the project."
+  type = object({
+    enabled          = bool
+    additional_roles = list(string)
+    additional_entitlements = list(object({
+      name       = string
+      roles      = list(string)
+      principals = list(string)
+      approval_workflow = optional(object({
+        principals = list(string)
+      }))
+    }))
+  })
+  default = {
+    enabled                 = false
+    additional_roles        = []
+    additional_entitlements = []
+  }
+}
+
+variable "entitlement_slack_topic" {
+  description = "The name of the pubsub topic to use for slack notifications."
+  type        = string
+  default     = ""
+}
+
+variable "feed_id" {
+  description = "The ID of the feed to be created"
+  type        = string
+  default     = "grant_feed"
+}
+
 variable "google_folder_id" {
   description = "The ID of the folder to create the project in."
   type        = string
@@ -28,7 +84,7 @@ variable "google_nonprod_project_id" {
 
 // roles that are folder-only in scope are in this list
 variable "folder_roles" {
-  description = "List of roles to apply at the folder level."
+  description = "List of roles to apply at the folder level. Also used as the roles in the entitlement."
   type        = list(string)
   default     = []
 }
@@ -49,7 +105,7 @@ variable "nonprod_roles" {
 }
 
 /*
-// Optional - this sets a special flag that sets  the role on a project as admin only. It is mutually 
+// Optional - this sets a special flag that sets  the role on a project as admin only. It is mutually
 // exclusive with the other roles variables and with the core set of roles.
 */
 variable "admin_only" {
