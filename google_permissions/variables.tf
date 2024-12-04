@@ -1,6 +1,45 @@
-variable "appcode" {
+variable "app_code" {
   description = "The application code or tenant name for this set of permissions."
   type        = string
+}
+
+variable "prod_project_id" {
+  description = "The ID of the prod project."
+  type        = string
+  default     = ""
+}
+
+variable "nonprod_project_id" {
+  description = "The ID of the nonprod project."
+  type        = string
+  default     = ""
+}
+
+variable "entitlement_enabled" {
+  description = "Whether or not to enable entitlements."
+  type        = bool
+  default     = false
+}
+
+variable "entitlement_data" {
+  description = "The entitlement data for the project."
+  type = object({
+    enabled          = bool
+    additional_roles = list(string)
+    additional_entitlements = list(object({
+      name       = string
+      roles      = list(string)
+      principals = list(string)
+      approval_workflow = optional(object({
+        principals = list(string)
+      }))
+    }))
+  })
+  default = {
+    enabled                 = false
+    additional_roles        = []
+    additional_entitlements = []
+  }
 }
 
 variable "entitlement_slack_topic" {

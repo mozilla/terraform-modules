@@ -1,11 +1,3 @@
-data "terraform_remote_state" "platform_shared" {
-  backend = "gcs"
-
-  config = {
-    prefix = "projects/platform-shared/global"
-    bucket = "moz-fx-platform-terraform-state-global"
-  }
-}
 
 locals {
   // this is the list of roles that we want all of the entitlements to have by default
@@ -17,22 +9,18 @@ locals {
     "roles/cloudsql.admin",
   ]
 
-  // this is the single set of entitlement data for the current appcode
-  tenant_entitlement = data.terraform_remote_state.platform_shared.outputs.tenant_entitlements[var.appcode]
-  entitlement_data   = try(local.tenant_entitlement.entitlements, {})
-
   // Populate the environments list dynamically
   environments = [
     for environment in ["nonprod", "prod"] : environment
-    if local.tenant_entitlement[environment] != ""
+    if(environment == "nonprod" && var.nonprod_project_id != "") || (environment == "prod" && var.prod_project_id != "")
   ]
 
   additional_entitlements = flatten([
     for environment in local.environments : [
-      for entitlement in try(local.entitlement_data.additional_entitlements, []) : {
-        key         = "${var.appcode}/${environment}/${entitlement.name}"
-        tenant      = var.appcode
-        project_id  = local.tenant_entitlement[environment]
+      for entitlement in try(var.entitlement_data.additional_entitlements, []) : {
+        key         = "${var.app_code}/${environment}/${entitlement.name}"
+        tenant      = var.app_code
+        project_id  = environment == "nonprod" ? var.nonprod_project_id : var.prod_project_id
         entitlement = entitlement
       }
     ]
@@ -50,7 +38,7 @@ locals {
   # Create the map with the hard-coded value and append the distinct principals
   entitlement_wg_map = merge(
     {
-      "default" : ["workgroup:${var.appcode}/developers"] # this the default value for the default system entitlement
+      "default" : ["workgroup:${var.app_code}/developers"] # this the default value for the default system entitlement
     },
     {
       for name, add_entitlement in try(local.additional_entitlements, []) : add_entitlement.key => add_entitlement.entitlement.principals
@@ -62,7 +50,7 @@ locals {
   approver_wg_map = {
     for e in try(local.additional_entitlements, []) :
     e.key => e.entitlement.approval_workflow.principals
-    if can(e.entitlement.approval_workflow)
+    if can(e.entitlement.approval_workflow) && e.entitlement.approval_workflow != null
   }
 }
 
@@ -94,11 +82,11 @@ locals {
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_prod_entitlement" {
-  count                = (local.tenant_entitlement.prod != "") ? 1 : 0
+  count                = var.entitlement_enabled && (var.prod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
-  parent               = "projects/${local.tenant_entitlement.prod}"
+  parent               = "projects/${var.prod_project_id}"
 
   requester_justification_config {
     unstructured {}
@@ -110,12 +98,12 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
   privileged_access {
     gcp_iam_access {
       dynamic "role_bindings" {
-        for_each = setunion(try(local.entitlement_data.entitlements.additional_roles, []), local.default_admin_role_list)
+        for_each = setunion(try(var.entitlement_data.additional_roles, []), local.default_admin_role_list)
         content {
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${local.tenant_entitlement.prod}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.prod_project_id}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
@@ -147,11 +135,11 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
 # now we handle the additional entitlements - these need to be created for BOTH environments
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_nonprod_entitlement" {
-  count                = (local.tenant_entitlement.nonprod != "") ? 1 : 0
+  count                = var.entitlement_enabled && (var.nonprod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
-  parent               = "projects/${local.tenant_entitlement.nonprod}"
+  parent               = "projects/${var.nonprod_project_id}"
 
   requester_justification_config {
     unstructured {}
@@ -163,12 +151,12 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
   privileged_access {
     gcp_iam_access {
       dynamic "role_bindings" {
-        for_each = setunion(try(local.entitlement_data.additional_roles, []), local.default_admin_role_list)
+        for_each = setunion(try(var.entitlement_data.additional_roles, []), local.default_admin_role_list)
         content {
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${local.tenant_entitlement.nonprod}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.nonprod_project_id}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
@@ -197,9 +185,9 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
 }
 
 resource "google_privileged_access_manager_entitlement" "additional_entitlements" {
-  for_each = {
+  for_each = var.entitlement_enabled ? {
     for entitlement in local.additional_entitlements : entitlement.key => entitlement
-  }
+  } : {}
   entitlement_id       = each.value.entitlement.name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
@@ -242,17 +230,17 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
 }
 
 resource "google_service_account" "account" {
-  for_each     = var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
   account_id   = "slack-send-pam-sa"
   display_name = "Slack sender function service account"
-  project      = local.tenant_entitlement[each.key]
+  project      = local.environments[each.key]
 }
 
 
 # Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
-  for_each     = var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  project      = local.tenant_entitlement[each.key]
+  for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  project      = local.environments[each.key]
   feed_id      = var.feed_id
   content_type = "RESOURCE"
 
@@ -271,8 +259,8 @@ resource "google_cloud_asset_project_feed" "project_feed" {
 
 # The topic where the resource change notifications will be sent.
 resource "google_pubsub_topic" "feed_output" {
-  for_each                   = var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  project                    = local.tenant_entitlement[each.key]
+  for_each                   = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  project                    = local.environments[each.key]
   name                       = var.entitlement_slack_topic
   message_retention_duration = "86400s"
 }

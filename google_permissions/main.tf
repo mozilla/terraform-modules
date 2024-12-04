@@ -67,7 +67,7 @@ resource "google_project_iam_member" "developers_secretmanager_secretVersionAdde
 
 // if admin_only is true OR var.use_entitlements is true, we don't create these permissions at all
 resource "google_folder_iam_binding" "owner" {
-  count   = var.admin_only || local.entitlement_data != {} ? 0 : 1
+  count   = var.admin_only || var.entitlement_enabled != {} ? 0 : 1
   folder  = var.google_folder_id
   role    = "roles/owner"
   members = module.admins_workgroup.members
