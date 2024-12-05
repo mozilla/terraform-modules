@@ -1,6 +1,9 @@
 /* 
- * # AWS-GKE OIDC Connector 
- * This module will create an AWS role + an OIDC configuration that will allow a specified GKE service account to assume it.
+ * # AWS-GKE OIDC Role 
+ * This module will create an AWS role that will allow a specified GKE service account to assume it.
+ *
+ * Requires that `../aws_gke_oidc_config` has been applied for a given AWS account + GKE cluster combination
+ * if you get an error about the `aws_iam_openid_connect_provider` data source being missing, apply that module. 
  *
  * After creating these resources, add the following environment variables, volumes, and volume mounts to your pod definition: 
  * * env:
@@ -31,31 +34,19 @@
  *   name: aws-token
  * ```
 */
+
 module "iam_assumable_role_for_oidc" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "~> v5.9"
   create_role                   = true
   role_name                     = var.role_name
   role_description              = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} to assume"
-  provider_url                  = replace(aws_iam_openid_connect_provider.gke_oidc.url, "https://", "")
+  provider_url                  = replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", "")
   role_policy_arns              = var.iam_policy_arns
   oidc_fully_qualified_subjects = ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"]
   tags                          = var.tags
 }
 
-resource "aws_iam_openid_connect_provider" "gke_oidc" {
-  url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
-
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
-
-  thumbprint_list = [
-    data.tls_certificate.gke_oidc.certificates.0.sha1_fingerprint
-  ]
-}
-
-data "tls_certificate" "gke_oidc" {
+data "aws_iam_openid_connect_provider" "gke_oidc" {
   url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
 }
-
