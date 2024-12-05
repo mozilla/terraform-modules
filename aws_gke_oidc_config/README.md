@@ -9,7 +9,9 @@ See the `aws_gke_oidc_role` for complete usage instructions
 
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.37 |
 
 ## Providers
 

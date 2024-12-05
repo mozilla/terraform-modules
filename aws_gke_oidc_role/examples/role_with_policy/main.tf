@@ -5,8 +5,7 @@
 */
 
 module "oidc_role" {
-  depends_on = [module.oidc_config]
-  source = ".././"
+  source = "../.././"
   role_name = "oidc-example-role"
   aws_region = "us-west-1"
   gcp_region = "us-west1"
@@ -14,7 +13,7 @@ module "oidc_role" {
   gcp_project_id = "example-project"
   gke_namespace = "bar"
   gke_service_account = "foo"
-  iam_policy_arns = [aws_iam_policy.example_policy, data.aws_iam_policy.view_only]
+  iam_policy_arns = [aws_iam_policy.example_policy.arn, data.aws_iam_policy.view_only.arn]
 }
 
 resource "aws_iam_policy" "example_policy" {
