@@ -1,6 +1,7 @@
 variable "app_code" {
   description = "The application code for the permissions. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv."
   type        = string
+  default     = ""
 }
 
 variable "entitlement_enabled" {
