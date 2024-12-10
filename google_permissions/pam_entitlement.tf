@@ -36,14 +36,14 @@ locals {
   default_admin_entitlement_name = "admin-entitlement-01"
 
   # Create the map with the hard-coded value and append the distinct principals
-  entitlement_wg_map = merge(
+  entitlement_wg_map = var.app_code != "" ? merge(
     {
       "default" : ["workgroup:${var.app_code}/developers"] # this the default value for the default system entitlement
     },
     {
       for name, add_entitlement in try(local.additional_entitlements, []) : add_entitlement.key => add_entitlement.entitlement.principals
     }
-  )
+  ) : {}
 
   # prep the module workgroup lookup list for the approval workflow
   # approvals on default currently NYI
