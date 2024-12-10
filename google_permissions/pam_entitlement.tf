@@ -12,7 +12,7 @@ locals {
   // Populate the environments list dynamically
   environments = [
     for environment in ["nonprod", "prod"] : environment
-    if(environment == "nonprod" && var.nonprod_project_id != "") || (environment == "prod" && var.prod_project_id != "")
+    if(environment == "nonprod" && var.google_nonprod_project_id != "") || (environment == "prod" && var.google_prod_project_id != "")
   ]
 
   additional_entitlements = flatten([
@@ -20,7 +20,7 @@ locals {
       for entitlement in try(var.entitlement_data.additional_entitlements, []) : {
         key         = "${var.app_code}/${environment}/${entitlement.name}"
         tenant      = var.app_code
-        project_id  = environment == "nonprod" ? var.nonprod_project_id : var.prod_project_id
+        project_id  = environment == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
         entitlement = entitlement
       }
     ]
@@ -82,11 +82,11 @@ locals {
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_prod_entitlement" {
-  count                = var.entitlement_enabled && (var.prod_project_id != "") ? 1 : 0
+  count                = var.entitlement_enabled && (var.google_prod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
-  parent               = "projects/${var.prod_project_id}"
+  parent               = "projects/${var.google_prod_project_id}"
 
   requester_justification_config {
     unstructured {}
@@ -103,7 +103,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.prod_project_id}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.google_prod_project_id}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }
@@ -134,11 +134,11 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_nonprod_entitlement" {
-  count                = var.entitlement_enabled && (var.nonprod_project_id != "") ? 1 : 0
+  count                = var.entitlement_enabled && (var.google_nonprod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
-  parent               = "projects/${var.nonprod_project_id}"
+  parent               = "projects/${var.google_nonprod_project_id}"
 
   requester_justification_config {
     unstructured {}
@@ -155,7 +155,7 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
           role = role_bindings.value
         }
       }
-      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.nonprod_project_id}"
+      resource      = "//cloudresourcemanager.googleapis.com/projects/${var.google_nonprod_project_id}"
       resource_type = "cloudresourcemanager.googleapis.com/Project"
     }
   }

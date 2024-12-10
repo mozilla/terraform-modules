@@ -3,18 +3,6 @@ variable "app_code" {
   type        = string
 }
 
-variable "prod_project_id" {
-  description = "The ID of the prod project."
-  type        = string
-  default     = ""
-}
-
-variable "nonprod_project_id" {
-  description = "The ID of the nonprod project."
-  type        = string
-  default     = ""
-}
-
 variable "entitlement_enabled" {
   description = "Whether or not to enable entitlements."
   type        = bool
@@ -64,6 +52,8 @@ variable "google_folder_id" {
 * code later checks for this.
 */
 
+
+// default for both of these is to pull these values from the remote state
 variable "google_prod_project_id" {
   description = "The ID of the prod project."
   type        = string
