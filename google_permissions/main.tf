@@ -51,7 +51,7 @@ resource "google_folder_iam_binding" "developers_techsupport_editor" {
 resource "google_project_iam_member" "developers_secretmanager_secretAccessor" {
   //for_each = module.developers_workgroup.members
   for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_nonprod_project_id
+  project  = var.nonprod_project_id
   role     = "roles/secretmanager.secretAccessor"
   member   = each.value
 }

@@ -26,7 +26,7 @@ locals {
     ]
   ])
 
-  // The maximum allowed request duration is 4 hours no matter what the user specifiesa
+  // The maximum allowed request duration is 4 hours no matter what the user specifies
   // GCP allows this to be up to 12 hours, but we're going to limit it to 4 hours.
   max_allowed_request_duration = 14400
 
@@ -133,7 +133,6 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
 }
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
-# now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_nonprod_entitlement" {
   count                = var.entitlement_enabled && (var.nonprod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
@@ -229,14 +228,6 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
   }
 }
 
-resource "google_service_account" "account" {
-  for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  account_id   = "slack-send-pam-sa"
-  display_name = "Slack sender function service account"
-  project      = local.environments[each.key]
-}
-
-
 # Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
   for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
@@ -250,17 +241,7 @@ resource "google_cloud_asset_project_feed" "project_feed" {
 
   feed_output_config {
     pubsub_destination {
-      topic = google_pubsub_topic.feed_output[each.key].id
+      topic = var.entitlement_slack_topic
     }
   }
-
-  # start with no condition to see what we get in the feed
-}
-
-# The topic where the resource change notifications will be sent.
-resource "google_pubsub_topic" "feed_output" {
-  for_each                   = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  project                    = local.environments[each.key]
-  name                       = var.entitlement_slack_topic
-  message_retention_duration = "86400s"
 }
