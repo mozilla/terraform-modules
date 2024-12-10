@@ -1,5 +1,5 @@
 module "permissions" {
-  source = "github.com/mozilla/terraform-modules//google_permissions?ref=pam-integration"
+  source = "github.com/mozilla/terraform-modules//google_permissions"
   //source = "../google_permissions"
 
   // the appcode (aka application or tenant name) is used to create the workgroups and entitlements if used
