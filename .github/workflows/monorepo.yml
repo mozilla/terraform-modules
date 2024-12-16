@@ -104,7 +104,7 @@ jobs:
   plan:
     needs: detect
     name: 'Release plan & docs for module: ${{ matrix.directory }}'
-    if: ${{ needs.detect.outputs.directories != '{}' }}
+    if: needs.detect.outputs.directories != '{}' && needs.detect.outputs.release-type != 'no-release'
     runs-on: ubuntu-latest
     outputs:
       new-version: ${{ steps.new-version.outputs.result }}
@@ -160,7 +160,7 @@ jobs:
 
   comment:
     needs: [detect, plan]
-    if: needs.detect.outputs.is-merge-event == 'false'
+    if: needs.detect.outputs.is-merge-event == 'false' && needs.detect.outputs.release-type != 'no-release'
     runs-on: ubuntu-latest
     name: 'Comment on PR with release plan'
     permissions:
@@ -227,7 +227,7 @@ jobs:
 
   trigger-release:
     needs: [plan]
-    if: needs.detect.outputs.is-merge-event == 'true'
+    if: needs.detect.outputs.is-merge-event == 'true' && needs.detect.outputs.release-type != 'no-release'
     runs-on: ubuntu-latest
     name: 'Dispatch release event'
     permissions:
