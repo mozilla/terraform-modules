@@ -51,18 +51,8 @@ If you want to ensure specific people or teams have to review changes to certain
 
 ### Documentation
 
-A `README.md` is required for each module, and CI will automatically regenerate it.
-
-If you need to generate documentation run:
-
-```
-for directory in */
-do
-  terraform-docs --sort-by required markdown "$directory" > "${directory}README.md"
-done
-```
-
-Alternatively, `pre-commit install` on this repository to automatically format the docs on commit.
+A `README.md` is required for each module, and CI will automatically regenerate it using the [tf-docs github action](https://github.com/terraform-docs/gh-actions).
+To include non-generated content in your README, place it outside the `<!-- BEGIN_TF_DOCS -->` block.
 
 ## Using these modules
 
