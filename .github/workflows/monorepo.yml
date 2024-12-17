@@ -1,0 +1,275 @@
+name: Monorepo CI
+concurrency:  #avoid concurrent runs on label events, might cause issues on super fast commits  ¯\_(ツ)_/¯
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  pull_request_target:
+    types: [closed]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    name: 'Detect pull request context'
+    permissions:
+      pull-requests: write
+      contents: read
+      repository-projects: read
+    outputs:
+      directories: ${{ steps.condense.outputs.result }}
+      release-type: ${{ steps.check_pr_label.outputs.release-type}}
+      is-merge-event: >-
+        ${{ github.event_name == 'pull_request_target'
+         && github.event.action == 'closed'
+         && github.event.pull_request.merged == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+        # I'm getting the labels from the API and not the context("contains(github.event.pull_request.labels.*.name, 'Env Promote')") as the labels
+        # are added in 2nd API call so they aren't included in the PR context
+      - name: Check PR labels for semver
+        id: check_pr_label
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          PR_ID: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          LABELS=$(gh pr view $PR_URL --json labels --jq '.labels[] | select((.name=="minor") or (.name=="major") or (.name=="patch") or (.name=="no-release")) |.name')
+          NUMBER_OF_LABELS=$(echo "$LABELS" | wc -w)
+          if [ "$NUMBER_OF_LABELS" -eq "1" ] ; then
+            echo "Found: $LABELS"
+            echo "release-type=$LABELS" >> "$GITHUB_OUTPUT"
+          elif [ "$NUMBER_OF_LABELS" -gt "1" ] ; then
+            echo "::error ::Too many release type labels: $( echo $LABELS | tr '\n' ' ' )"
+            exit 1
+          else
+            echo "::warn ::No release type labels found(patch/minor/major/no-release)"
+            echo "Checking commit messages for semantic labels"
+
+            # fetch all commits
+            PR_COMMITS=`gh pr view $PR_ID --json commits | jq '.commits | length'`
+            git fetch --no-tags --prune --progress --no-recurse-submodules --deepen=$PR_COMMITS
+
+            # retrive the commit messages of the PR
+            COMMIT_MESSAGES="$(gh pr view $prId --json commits --jq '.[].[].messageHeadline')"
+
+            # Check all commits in PR for conventional commit messages - add appropriate label if found
+            # Follows https://www.conventionalcommits.org/en/v1.0.0/
+
+            # If there's conflicting messages take the largest semver change
+            if echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'breaking change:'; then
+              LABEL="major"
+            elif echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'feat:' ; then
+              LABEL="minor"
+            elif echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'fix:' ; then
+              LABEL="patch"
+            else
+              echo "::error No release label found, and no conventional commit messages found. Label your PR with major/minor/patch"
+              exit 2
+            fi
+            echo "release-type=$LABEL" >> "$GITHUB_OUTPUT"
+            gh pr edit $PR_ID --add-label "$LABEL"
+          fi
+      - name: Get changed files
+        uses: tj-actions/changed-files@v45
+        id: raw-files
+        with:
+          json: "true"
+          escape_json: "false"
+      - name: Condense to directory list
+        uses: actions/github-script@v7
+        id: condense
+        env:
+          RAW_FILES: ${{ steps.raw-files.outputs.all_changed_files }}
+        with:
+          script: |
+            const raw = JSON.parse(process.env.RAW_FILES);
+            const directories = Array.from(new Set(raw
+              .filter(x => !x.startsWith('.'))
+              .filter(x => x.includes('/'))
+              .map(x => x.split('/')[0])
+            ));
+            if (directories.length < 1) return {};
+            return {
+              include: directories.map(directory => ({ directory })),
+            };
+
+  plan:
+    needs: detect
+    name: 'Release plan & docs for module: ${{ matrix.directory }}'
+    if: needs.detect.outputs.directories != '{}' && needs.detect.outputs.release-type != 'no-release'
+    runs-on: ubuntu-latest
+    outputs:
+      new-version: ${{ steps.new-version.outputs.result }}
+    permissions:
+      contents: write
+      pull-requests: read
+    strategy:
+      matrix: "${{ fromJson(needs.detect.outputs.directories) }}"
+      fail-fast: false
+      # Do serially so git operations don't collide
+      max-parallel: 1
+    steps:
+    - name: Extract changelog entry
+      uses: actions/github-script@v7
+      id: changelog
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const { data: prInfo } = await github.rest.pulls.get({
+            owner, repo,
+            pull_number: context.issue.number,
+          });
+          console.log('Found PR body:|');
+          console.log(prInfo.body);
+
+          const changelogEntry = ((prInfo.body
+            .split(/^#+ ?/m)
+            .find(x => x.startsWith('Changelog'))
+            || '').split(/^```/m)[1] || '').trim();
+          if (!changelogEntry)
+            throw `'Changelog' section not found in PR body! Please add it back.`;
+          if (changelogEntry.match(/^TODO:/m))
+            throw `'Changelog' section needs proper text, instead of 'TODO'`;
+
+          const { writeFile } = require('fs').promises;
+          const entry=`* PR [#${ prInfo.number }](${ prInfo.html_url }) - ${ prInfo.title }
+          \`\`\`
+          ${changelogEntry}
+          \`\`\`
+          `
+          return entry
+    - name: Checkout repository to use composite action
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+      # Do the per-module steps in a composite action because matrixes can't handle dynamic outputs
+    - name: Generate docs and version bump
+      uses: ./.github/workflows/actions/
+      with:
+        package-name: ${{ matrix.directory }}
+        changelog-entry: ${{ steps.changelog.outputs.result }}
+        release-type: ${{ needs.detect.outputs.release-type }}
+
+  comment:
+    needs: [detect, plan]
+    if: needs.detect.outputs.is-merge-event == 'false' && needs.detect.outputs.release-type != 'no-release'
+    runs-on: ubuntu-latest
+    name: 'Comment on PR with release plan'
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          path: outputs
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: outputs
+
+      - uses: actions/github-script@v7
+        id: comment
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const { number: issue_number } = context.issue;
+            const { readdir, readFile } = require('fs').promises;
+            const utf8 = { encoding: 'utf-8' };
+
+            const lines = [
+              '# Release plan', '',
+              '| Directory | Previous version | New version |',
+              '|--|--|--|',
+            ];
+            const sections = [];
+
+            for (const folder of await readdir('outputs', { withFileTypes: true })) {
+              if (!folder.isDirectory()) continue;
+              const readText = (name) => readFile(name, utf8).then(x => x.trim());
+
+              lines.push('| '+[
+                `\`${folder.name}\``,
+                `${await readText(`outputs/${folder.name}/previous-version.txt`)}`,
+                `**${await readText(`outputs/${folder.name}/new-version.txt`)}**`,
+              ].join(' | ')+' |');
+
+            }
+
+            const finalBody = [lines.join('\n'), ...sections].join('\n\n');
+
+            const {data: allComments} = await github.rest.issues.listComments({ issue_number, owner, repo });
+            const ourComments = allComments
+              .filter(comment => comment.user.login === 'github-actions[bot]')
+              .filter(comment => comment.body.startsWith(lines[0]+'\n'));
+
+            const latestComment = ourComments.slice(-1)[0];
+            if (latestComment && latestComment.body === finalBody) {
+              console.log('Existing comment is already up to date.');
+              return;
+            }
+
+            const {data: newComment} = await github.rest.issues.createComment({ issue_number, owner, repo, body: finalBody });
+            console.log('Posted comment', newComment.id, '@', newComment.html_url);
+            // Delete all our previous comments
+            for (const comment of ourComments) {
+              if (comment.id === newComment.id) continue;
+              console.log('Deleting previous PR comment from', comment.created_at);
+              await github.rest.issues.deleteComment({ comment_id: comment.id, owner, repo });
+            }
+
+  trigger-release:
+    needs: [plan]
+    if: needs.detect.outputs.is-merge-event == 'true' && needs.detect.outputs.release-type != 'no-release'
+    runs-on: ubuntu-latest
+    name: 'Dispatch release event'
+    permissions:
+      actions: write
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          path: outputs
+      - name: Combine version information
+        id: extract-releases
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { readdir, readFile } = require('fs').promises;
+            const utf8 = { encoding: 'utf-8' };
+            const readText = (name) => readFile(name, utf8).then(x => x.trim());
+
+            const directories = await readdir('outputs', { withFileTypes: true });
+            return await Promise.all(directories
+              .filter(x => x.isDirectory())
+              .map(async folder => ({
+                module: folder.name,
+                prevVersion: await readText(`outputs/${folder.name}/previous-version.txt`),
+                newVersion: await readText(`outputs/${folder.name}/new-version.txt`),
+              })));
+      - name: Dispatch monorepo_release event
+        uses: actions/github-script@v7
+        env:
+          RELEASE_LIST: ${{ steps.extract-releases.outputs.result }}
+        with:
+          script: |
+            const payload = {
+              run_id: "${{ github.run_id }}",
+              sha: context.sha,
+              releases: JSON.parse(process.env.RELEASE_LIST),
+            };
+            console.log('Event payload:', JSON.stringify(payload, null, 2));
+
+            const { owner, repo } = context.repo;
+            await github.rest.repos.createDispatchEvent({
+              owner, repo,
+              event_type: 'monorepo_release',
+              client_payload: payload,
+            });
