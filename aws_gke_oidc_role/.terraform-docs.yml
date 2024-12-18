@@ -1,0 +1,16 @@
+content: |-
+  {{ .Header }}
+
+  ## Example
+
+  ```hcl
+  {{ include "examples/role_and_config/main.tf" }}
+  ```
+  
+  ```hcl
+  {{ include "examples/role_with_policy/main.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
