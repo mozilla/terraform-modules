@@ -39,11 +39,3 @@ variable "gke_service_account" {
   description = "GKE service account to grant role assumption privilleges"
   type        = string
 }
-
-### Optional
-
-variable "tags" {
-  description = "Tags to apply to the AWS role"
-  type        = map(string)
-  default     = {}
-}

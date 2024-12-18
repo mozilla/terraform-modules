@@ -44,7 +44,6 @@ module "iam_assumable_role_for_oidc" {
   provider_url                  = replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", "")
   role_policy_arns              = var.iam_policy_arns
   oidc_fully_qualified_subjects = ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"]
-  tags                          = var.tags
 }
 
 data "aws_iam_openid_connect_provider" "gke_oidc" {
