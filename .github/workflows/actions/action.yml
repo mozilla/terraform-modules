@@ -130,17 +130,25 @@ runs:
     - name: Commit changelogs(s)
       env:
         PACKAGE_NAME: ${{ inputs.package-name }}
+        PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+        GH_TOKEN: ${{ github.token }}
       shell: bash
       run: |
-        rm '.git/COMMIT_EDITMSG' || true # Prevent fatal: could not open '.git/COMMIT_EDITMSG'
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git pull # In case we have multiple changelog updates
-        git add "$PACKAGE_NAME/CHANGELOG.md"
-        if ! git diff --quiet --exit-code --cached ; then
+        FILE_TO_COMMIT="$PACKAGE_NAME/CHANGELOG.md"
+        if ! git diff --quiet --exit-code $FILE_TO_COMMIT ; then
+          ### Signed commit workaround - if we do a normal `git commit` here, it will be unsigned
+          # GHA doesn't have a good native way to sign commits (https://github.com/actions/runner/issues/667)
+          # Commits submitted via the API do get signed, so do that instead - adapted from https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
           echo "Committing changes to CHANGELOG.md"
-          git commit -m "Automated changelog for $PACKAGE_NAME"
-          git push
+          TODAY=$( date -u '+%Y-%m-%d' )
+          MESSAGE="Automated changelog for $PACKAGE_NAME"
+          SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+            --field message="$MESSAGE" \
+            --field branch="$PR_BRANCH" \
+            --field content=@<( base64 -i $FILE_TO_COMMIT ) \
+            --field sha="$SHA"
         else
           echo "No changes to CHANGELOG.md"
           exit 0
