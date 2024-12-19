@@ -4,6 +4,7 @@ locals {
   // and that already have have existing supporting resource definitions.
   folder_additional_roles = [
     "roles/bigquery.jobUser",
+    "roles/bigquery.dataViewer",
     "roles/redis.admin",
     "roles/logging.admin",
     "roles/monitoring.alertPolicyEditor",
