@@ -5,9 +5,7 @@ concurrency:  #avoid concurrent runs on label events, might cause issues on supe
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
-  pull_request_target:
-    types: [closed]
+    types: [opened, closed, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   pull-requests: read
@@ -24,12 +22,11 @@ jobs:
       directories: ${{ steps.condense.outputs.result }}
       release-type: ${{ steps.check_pr_label.outputs.release-type}}
       is-merge-event: >-
-        ${{ github.event_name == 'pull_request_target'
+        ${{ github.event_name == 'pull_request'
          && github.event.action == 'closed'
          && github.event.pull_request.merged == true }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
         # I'm getting the labels from the API and not the context("contains(github.event.pull_request.labels.*.name, 'Env Promote')") as the labels
@@ -149,10 +146,10 @@ jobs:
     - name: Checkout repository to use composite action
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.pull_request.head.ref }}
+        ref: main # Only use composite action from main to prevent malicious PRs
       # Do the per-module steps in a composite action because matrixes can't handle dynamic outputs
     - name: Generate docs and version bump
-      uses: ./.github/workflows/actions/
+      uses: mozilla/terraform-modules/.github/actions@main
       with:
         package-name: ${{ matrix.directory }}
         changelog-entry: ${{ steps.changelog.outputs.result }}

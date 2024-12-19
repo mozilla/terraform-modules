@@ -39,7 +39,7 @@ runs:
       run: |
         git fetch --tags
         TAG=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" "refs/tags/$PACKAGE_NAME-[0-9].[0-9].[0-9]")
-        
+
         if [ -z "$TAG" ] ; then
           echo "No git tag found for $PACKAGE_NAME, using 0.0.0 as previous version"
           echo "result=0.0.0" >> "$GITHUB_OUTPUT"
