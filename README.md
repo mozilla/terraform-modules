@@ -51,7 +51,7 @@ If you want to ensure specific people or teams have to review changes to certain
 
 ### Documentation
 
-A `README.md` is required for each module, and CI will automatically regenerate it using the [tf-docs github action](https://github.com/terraform-docs/gh-actions).
+A `README.md` is required for each module, and CI will automatically regenerate it using the [tf-docs github action](https://github.com/terraform-docs/gh-actions) if your module has a `.terraform-docs.yml`.
 To include non-generated content in your README, place it outside the `<!-- BEGIN_TF_DOCS -->` block.
 
 ## Using these modules
