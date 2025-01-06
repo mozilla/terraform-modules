@@ -8,8 +8,8 @@ resource "random_id" "project" {
 }
 
 resource "google_project" "project" {
-  name        = local.display_name
-  project_id  = local.project_id
+  name            = local.display_name
+  project_id      = local.project_id
   deletion_policy = ABANDON
 
   billing_account = var.billing_account_id
