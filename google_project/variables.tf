@@ -115,3 +115,9 @@ variable "log_analytics" {
   description = "Enable log analytics for _Default log bucket"
   default     = false
 }
+
+variable "deletion_policy" {
+  default     = "ABANDON"
+  description = " The deletion policy for the Project."
+  type        = string
+}
