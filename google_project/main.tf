@@ -10,7 +10,7 @@ resource "random_id" "project" {
 resource "google_project" "project" {
   name            = local.display_name
   project_id      = local.project_id
-  deletion_policy = "ABANDON"
+  deletion_policy = contains(local.project_id, "bastion") ? "PREVENT" : "ABANDON"
 
   billing_account = var.billing_account_id
   folder_id       = var.parent_id
