@@ -117,7 +117,7 @@ variable "log_analytics" {
 }
 
 variable "deletion_policy" {
-  default     = "ABANDON"
+  default     = "PREVENT"
   description = "The deletion policy for the Project."
   type        = string
 }
