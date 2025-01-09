@@ -20,6 +20,7 @@ locals {
   all_project_labels = merge(local.default_project_labels, var.extra_project_labels)
 
   default_project_services = [
+    "cloudasset.googleapis.com",
     "cloudbilling.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
