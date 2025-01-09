@@ -10,7 +10,7 @@ resource "google_folder_iam_binding" "bq_job_user" {
   //
   // NOTE: this uses bq_data_viewer as well as the next resource block so that those we grant data viewer
   // also have to execute jobs so paired with .dataViewer
-  count  = contains(var.folder_roles, "roles/bigquery.jobUser") && !var.admin_only && var.entitlement_enabled ? 1 : 0
+  count  = contains(var.folder_roles, "roles/bigquery.jobUser") && !var.admin_only ? 1 : 0
   folder = var.google_folder_id
   role   = "roles/bigquery.jobUser"
   members = setunion(
@@ -20,7 +20,7 @@ resource "google_folder_iam_binding" "bq_job_user" {
 }
 
 resource "google_folder_iam_binding" "bq_data_viewer" {
-  count  = contains(var.folder_roles, "roles/bigquery.dataViewer") && !var.admin_only && var.entitlement_enabled ? 1 : 0
+  count  = contains(var.folder_roles, "roles/bigquery.dataViewer") && !var.admin_only ? 1 : 0
   folder = var.google_folder_id
   role   = "roles/bigquery.dataViewer"
   members = setunion(
@@ -32,7 +32,7 @@ resource "google_folder_iam_binding" "bq_data_viewer" {
 # roles/redis.admin as folder_role
 
 resource "google_folder_iam_binding" "developers_redis_admin" {
-  count   = contains(var.folder_roles, "roles/redis.admin") && !var.admin_only && var.entitlement_enabled ? 1 : 0
+  count   = contains(var.folder_roles, "roles/redis.admin") && !var.admin_only && !var.entitlement_enabled ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/redis.admin"
   members = module.developers_workgroup.members
@@ -42,7 +42,7 @@ resource "google_folder_iam_binding" "developers_redis_admin" {
 # roles/logging.admin as folder_role
 
 resource "google_folder_iam_binding" "developers_logging_admin" {
-  count   = contains(var.folder_roles, "roles/logging.admin") && !var.admin_only && var.entitlement_enabled ? 1 : 0
+  count   = contains(var.folder_roles, "roles/logging.admin") && !var.admin_only && !var.entitlement_enabled ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/logging.admin"
   members = module.developers_workgroup.members
@@ -52,7 +52,7 @@ resource "google_folder_iam_binding" "developers_logging_admin" {
 # roles/monitoring.alertPolicyEditor as folder_role
 
 resource "google_folder_iam_binding" "developers_monitoring_alertPolicyEditor" {
-  count   = contains(var.folder_roles, "roles/monitoring.alertPolicyEditor") && !var.admin_only && var.entitlement_enabled ? 1 : 0
+  count   = contains(var.folder_roles, "roles/monitoring.alertPolicyEditor") && !var.admin_only && !var.entitlement_enabled ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/monitoring.alertPolicyEditor"
   members = module.developers_workgroup.members
@@ -62,7 +62,7 @@ resource "google_folder_iam_binding" "developers_monitoring_alertPolicyEditor" {
 # roles/monitoring.notificationChannelEditor in as folder_role
 
 resource "google_folder_iam_binding" "developers_monitoring_notificationChannelEditor" {
-  count   = contains(var.folder_roles, "roles/monitoring.notificationChannelEditor") && !var.admin_only && var.entitlement_enabled ? 1 : 0
+  count   = contains(var.folder_roles, "roles/monitoring.notificationChannelEditor") && !var.admin_only ? 1 : 0
   folder  = var.google_folder_id
   role    = "roles/monitoring.notificationChannelEditor"
   members = module.developers_workgroup.members
