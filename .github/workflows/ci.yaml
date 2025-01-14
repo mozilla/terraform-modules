@@ -31,6 +31,11 @@ jobs:
       matrix: ${{fromJson(needs.matrixify.outputs.matrix)}}
 
     steps:
+    - name: Install terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_wrapper: false
+
     - id: terraform-checks
       name: Terraform Checks
       uses: mozilla/tf-actions/ci@v0.0.4
