@@ -356,7 +356,6 @@ variable "monitoring_config_enable_components" {
     # kube control plane metrics
     # https://cloud.google.com/kubernetes-engine/docs/how-to/control-plane-metrics
     "SYSTEM_COMPONENTS",
-    "APISERVER",
     "SCHEDULER",
     "CONTROLLER_MANAGER",
     # kube state metrics
@@ -370,6 +369,8 @@ variable "monitoring_config_enable_components" {
     # TODO: Available in 1.29.3
     # "KUBELET",
     # "CADVISOR"
+    # We remove APISERVER since it emits a lot of metrics and is unused
+    # "APISERVER",
   ]
   description = "Monitoring configuration for the cluster"
   type        = list(string)
