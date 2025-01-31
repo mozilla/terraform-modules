@@ -254,15 +254,15 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 5.35 |
-| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 5.35 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 5.35 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 5.35 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 5.35 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | ~> 5.35 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 5.35 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | >= 5.35 |
 
 ## Resources
 
