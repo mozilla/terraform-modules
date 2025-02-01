@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Google CDN Distribution for external endpoints
 
 ## Requirements
@@ -62,3 +63,4 @@ No modules.
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->
