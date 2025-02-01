@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Project DNS
 Creates a DNS zone for an application's project and realm and links it to the parent zone.
 
@@ -47,3 +48,4 @@ No modules.
 |------|-------------|
 | <a name="output_zone_dns_name"></a> [zone\_dns\_name](#output\_zone\_dns\_name) | n/a |
 | <a name="output_zone_name"></a> [zone\_name](#output\_zone\_name) | n/a |
+<!-- END_TF_DOCS -->
