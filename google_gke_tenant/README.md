@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Google GKE tenant
 Sets up a service account for use with GKE
 
@@ -31,4 +32,4 @@ None
 | Name | Description |
 |------|-------------|
 | <a name="output_gke_service_account"></a> [gke\_service\_account](#output\_gke\_service\_account) | n/a |
-
+<!-- END_TF_DOCS -->
