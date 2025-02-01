@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Google Permissions
 
 This module provides an interface to adding permissions to your google projects and folders.
@@ -100,3 +101,4 @@ For information on how to add new roles to the modules, please see [this documen
 | <a name="output_validate_folder_roles"></a> [validate\_folder\_roles](#output\_validate\_folder\_roles) | n/a |
 | <a name="output_validate_nonprod_roles"></a> [validate\_nonprod\_roles](#output\_validate\_nonprod\_roles) | n/a |
 | <a name="output_validate_prod_roles"></a> [validate\_prod\_roles](#output\_validate\_prod\_roles) | n/a |
+<!-- END_TF_DOCS -->
