@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # google\_cdn\_backend\_bucket
 
 this module builds a GCP Load Balancer with a backend bucket
@@ -48,3 +49,4 @@ No modules.
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->
