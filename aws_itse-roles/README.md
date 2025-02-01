@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module for Default AWS Delegated Roles
 Module that creates roles on accounts to allow delegated access from another account.
 
@@ -59,3 +60,4 @@ No modules.
 | <a name="output_atlantis_role_arn"></a> [atlantis\_role\_arn](#output\_atlantis\_role\_arn) | ARN for the IT-SE Delegated Access Admin Role |
 | <a name="output_poweruser_role_arn"></a> [poweruser\_role\_arn](#output\_poweruser\_role\_arn) | ARN for the IT-SE Delegated Access Admin Role |
 | <a name="output_readonly_role_arn"></a> [readonly\_role\_arn](#output\_readonly\_role\_arn) | ARN for the IT-SE Delegated Access Admin Role |
+<!-- END_TF_DOCS -->
