@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Memcache
 Creates a memcache instance within GCP using Cloud Memorystore
 
@@ -48,3 +49,4 @@ module "memcache" {
 |------|-------------|
 | <a name="output_discovery_endpoint"></a> [discovery\_endpoint](#output\_discovery\_endpoint) | n/a |
 | <a name="output_memcache_nodes"></a> [memcache\_nodes](#output\_memcache\_nodes) | n/a |
+<!-- END_TF_DOCS -->
