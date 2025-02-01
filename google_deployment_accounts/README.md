@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Service Accounts for deployment from GitHub Actions and CircleCI
 Creates a Cloud IAM service account which lets CI workflows authenticate to GCP.
 
@@ -48,3 +49,4 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
+<!-- END_TF_DOCS -->
