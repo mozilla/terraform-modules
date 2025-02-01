@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -45,3 +46,4 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_psc_connection_id"></a> [psc\_connection\_id](#output\_psc\_connection\_id) | n/a |
+<!-- END_TF_DOCS -->
