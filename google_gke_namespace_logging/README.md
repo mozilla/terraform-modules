@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: GKE Tenant Namepsace Logging
 Creates a logging bucket and grants access to the logging service account so that
 GKE Logs associated with the tenant namespace are available in the tenant project.
@@ -30,3 +31,4 @@ module "gke_logging" {
 |------|-------------|
 | <a name="output_logging_bucket_id"></a> [logging\_bucket\_id](#output\_logging\_bucket\_id) | n/a |
 | <a name="output_logging_dataset_id"></a> [logging\_dataset\_id](#output\_logging\_dataset\_id) | n/a |%
+<!-- END_TF_DOCS -->
