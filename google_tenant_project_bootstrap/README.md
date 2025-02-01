@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Tenant project bootstrapping
 Calls submodules to bootstrap a tenant project
 
@@ -44,4 +45,4 @@ Calls submodules to bootstrap a tenant project
 | <a name="output_deploy_service_account"></a> [deploy\_service\_account](#output\_deploy\_service\_account) | n/a |
 | <a name="output_gar_service_account"></a> [gar\_service\_account](#output\_gar\_service\_account) | n/a |
 | <a name="output_gar_repository"></a> [gar\_repository](#output\_gar\_repository) | n/a |
-
+<!-- END_TF_DOCS -->
