@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Google Artifact Registry repository
 Creates a GAR repository and a service account to access it.
 
@@ -50,3 +51,4 @@ No modules.
 |------|-------------|
 | <a name="output_repository"></a> [repository](#output\_repository) | n/a |
 | <a name="output_writer_service_account"></a> [writer\_service\_account](#output\_writer\_service\_account) | n/a |
+<!-- END_TF_DOCS -->
