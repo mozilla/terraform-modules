@@ -1,15 +1,7 @@
 formatter: markdown
 content: |-
-
-  {{ include ".readme-header.yml" }}
-
   {{ .Header }}
-
-  {{ .Requirements }}
-
-  {{ .Providers }}
 
   {{ .Inputs }}
 
   {{ .Outputs }}
-

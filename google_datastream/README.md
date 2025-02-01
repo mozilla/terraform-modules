@@ -1,4 +1,4 @@
-
+<!-- BEGIN_TF_DOCS -->
 # google_datastream
 ## WARNING! This is module only does part of the work. Because setting up postgresql as a source (the only thing I've tested) requires a valid database username and password, and we don't want to store passwords in Terraform, this module will only create a Private Connectivity Connection and a BigQuery Destination profile.
 ### Prework
@@ -53,3 +53,4 @@
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->
