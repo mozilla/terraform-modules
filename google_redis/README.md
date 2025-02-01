@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Redis
 Creates a Redis instance within GCP using Cloud Memorystore
 
@@ -55,3 +56,4 @@ module "redis" {
 | <a name="output_host"></a> [host](#output\_host) | n/a |
 | <a name="output_persistence_iam_identity"></a> [persistence\_iam\_identity](#output\_persistence\_iam\_identity) | n/a |
 | <a name="output_port"></a> [port](#output\_port) | n/a |
+<!-- END_TF_DOCS -->
