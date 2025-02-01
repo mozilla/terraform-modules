@@ -2,16 +2,6 @@
 content: |-
   {{ .Header }}
 
-  {{ .Requirements }}
-
-  {{ .Providers }}
-
-  {{ .Resources }}
-
-  {{ .Inputs }}
-
-  {{ .Outputs }}
-
   ## Simple Example
 
   This uses distinct networking variables and the (module) default node pool.
@@ -36,3 +26,6 @@ content: |-
   {{ include "examples/complex2.tf" }}
   ```
 
+  {{ .Inputs }}
+
+  {{ .Outputs }}
