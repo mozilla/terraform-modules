@@ -1,0 +1,24 @@
+content: |-
+  {{ .Header }}
+
+  ## Examples
+
+  ```hcl
+  {{ include "examples/circleci.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/circleci2.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/circleci3.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/gha.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
