@@ -1,0 +1,6 @@
+content: |-
+  {{ .Header }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
