@@ -35,6 +35,6 @@ locals {
   ]
   all_project_services = setunion(local.default_project_services, var.project_services)
 
-  default_data_access_logs = ["iam.googleapis.com", "secretmanager.googleapis.com", "sts.googleapis.com"]
+  default_data_access_logs = ["iam.googleapis.com", "secretmanager.googleapis.com", "sts.googleapis.com", "privilegedaccessmanager.googleapis.com"]
   data_access_logs_filter  = join("\n", toset([for v in concat(local.default_data_access_logs, var.additional_data_access_logs) : "AND NOT protoPayload.serviceName=\"${v}\""]))
 }
