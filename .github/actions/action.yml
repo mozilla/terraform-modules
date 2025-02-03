@@ -99,14 +99,35 @@ runs:
         else
           echo "tf_docs=false" >> "$GITHUB_OUTPUT"
         fi
-    - name: Render terraform docs inside the README.md and push changes back to PR branch
+    - name: Render terraform docs inside the README.md
       if: ${{ steps.tf_docs.outputs.tf_docs == 'true' }}
+      id: terraform_docs
       uses: terraform-docs/gh-actions@v1.3.0
       with:
         working-dir: ${{ inputs.package-name }}
         output-file: README.md
-        git-push: "true"
         config-file: .terraform-docs.yml
+    - name: If documentation is updated, push to PR branch with a signed commit
+      if: ${{ steps.terraform_docs.outputs.num_changed != '0' }}
+      env:
+        DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
+        FILE_TO_COMMIT: ${{ inputs.package-name }}/README.md
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        ### Signed commit workaround - if we do a normal `git commit` here, it will be unsigned
+        # GHA doesn't have a good native way to sign commits (https://github.com/actions/runner/issues/667)
+        # Commits submitted via the API do get signed, so do that instead - adapted from https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
+        export TODAY=$( date -u '+%Y-%m-%d' )
+        export MESSAGE="chore(docs): ${FILE_TO_COMMIT}"
+        export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+        export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+        gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+          --field message="$MESSAGE" \
+          --field content="$CONTENT" \
+          --field encoding="base64" \
+          --field branch="$DESTINATION_BRANCH" \
+          --field sha="$SHA"
     - name: Sparse checkout unmodified changelogs from main
       uses: actions/checkout@v4
       with:
