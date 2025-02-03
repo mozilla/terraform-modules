@@ -112,7 +112,7 @@ runs:
       env:
         DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
         FILE_TO_COMMIT: ${{ inputs.package-name }}/README.md
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       shell: bash
       run: |
         ### Signed commit workaround - if we do a normal `git commit` here, it will be unsigned
