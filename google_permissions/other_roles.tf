@@ -29,6 +29,33 @@ resource "google_folder_iam_binding" "bq_data_viewer" {
   )
 }
 
+resource "google_folder_iam_binding" "bq_resource_viewer" {
+  count   = contains(var.folder_roles, "roles/bigquery.resourceViewer") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/bigquery.resourceViewer"
+  members = module.developers_workgroup.members
+}
+
+# roles/cloudtasks.queueAdmin as folder_role
+
+resource "google_folder_iam_binding" "cloudtasks_queue_admin" {
+  count   = contains(var.folder_roles, "roles/cloudtasks.queueAdmin") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/cloudtasks.queueAdmin"
+  members = module.developers_workgroup.members
+
+}
+
+# roles/cloudtasks.taskRunner as folder_role
+
+resource "google_folder_iam_binding" "cloudtasks_task_runner" {
+  count   = contains(var.folder_roles, "roles/cloudtasks.taskRunner") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/cloudtasks.taskRunner"
+  members = module.developers_workgroup.members
+
+}
+
 # roles/redis.admin as folder_role
 
 resource "google_folder_iam_binding" "developers_redis_admin" {

@@ -5,6 +5,7 @@ locals {
   folder_additional_roles = [
     "roles/bigquery.jobUser",
     "roles/bigquery.dataViewer",
+    "roles/bigquery.resourceViewer",
     "roles/redis.admin",
     "roles/logging.admin",
     "roles/monitoring.alertPolicyEditor",
@@ -14,6 +15,8 @@ locals {
   project_additional_roles = [
     "roles/automl.editor",
     "roles/cloudsql.admin",
+    "roles/cloudtasks.queueAdmin",
+    "roles/cloudtasks.taskRunner",
     "roles/cloudtranslate.editor",
     "roles/editor",
     "roles/monitoring.uptimeCheckConfigEditor",
