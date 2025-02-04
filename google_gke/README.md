@@ -254,15 +254,15 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 5.35 |
-| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 5.35 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 6.11 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 6.11 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 5.35 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | ~> 5.35 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 6.11 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | >= 6.11 |
 
 ## Resources
 
@@ -290,6 +290,7 @@ Module creates an opinionated GKE cluster plus related resources within a Shared
 | <a name="input_dns_cache"></a> [dns\_cache](#input\_dns\_cache) | The status of the NodeLocal DNSCache addon. | `bool` | `true` | no |
 | <a name="input_enable_cost_allocation"></a> [enable\_cost\_allocation](#input\_enable\_cost\_allocation) | Enables Cost Allocation Feature and the cluster name and namespace of your GKE workloads appear in the labels field of the billing export to BigQuery | `bool` | `false` | no |
 | <a name="input_enable_dataplane"></a> [enable\_dataplane](#input\_enable\_dataplane) | Whether to enable dataplane v2 on the cluster. Sets DataPath field. Defaults to false. | `bool` | `false` | no |
+| <a name="input_enable_dns_endpoint"></a> [enable\_dns\_endpoint](#input\_enable\_dns\_endpoint) | Enable external DNS endpoint for control plane access | `bool` | `false` | no |
 | <a name="input_enable_gcfs"></a> [enable\_gcfs](#input\_enable\_gcfs) | Enable Google Container File System (gcfs) image streaming. | `bool` | `true` | no |
 | <a name="input_enable_k8s_api_proxy_ip"></a> [enable\_k8s\_api\_proxy\_ip](#input\_enable\_k8s\_api\_proxy\_ip) | Whether we reserve an internal private ip for the k8s\_api\_proxy. Defaults to false. | `bool` | `false` | no |
 | <a name="input_enable_network_egress_export"></a> [enable\_network\_egress\_export](#input\_enable\_network\_egress\_export) | Whether to enable network egress metering for this cluster. If enabled, a daemonset will be created in the cluster to meter network egress traffic. Doesn't work with Shared VPC (https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-usage-metering). Defaults to false. | `bool` | `false` | no |

@@ -81,6 +81,12 @@ resource "google_container_cluster" "primary" {
     gcp_public_cidrs_access_enabled = var.enable_public_cidrs_access
   }
 
+  control_plane_endpoints_config {
+    dns_endpoint_config {
+      allow_external_traffic = var.enable_dns_endpoint
+    }
+  }
+
   dynamic "private_cluster_config" {
     for_each = var.enable_private_cluster ? [1] : []
 
