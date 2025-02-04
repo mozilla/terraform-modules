@@ -30,9 +30,9 @@ resource "google_folder_iam_binding" "bq_data_viewer" {
 }
 
 resource "google_folder_iam_binding" "bq_resource_admin" {
-  count  = contains(var.folder_roles, "roles/bigquery.resourceAdmin") && !var.admin_only ? 1 : 0
-  folder = var.google_folder_id
-  role   = "roles/bigquery.resourceAdmin"
+  count   = contains(var.folder_roles, "roles/bigquery.resourceAdmin") && !var.admin_only ? 1 : 0
+  folder  = var.google_folder_id
+  role    = "roles/bigquery.resourceAdmin"
   members = module.developers_workgroup.members
 }
 
