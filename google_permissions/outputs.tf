@@ -5,7 +5,7 @@ locals {
   folder_additional_roles = [
     "roles/bigquery.jobUser",
     "roles/bigquery.dataViewer",
-    "roles/bigquery.resourceAdmin",
+    "roles/bigquery.resourceViewer",
     "roles/redis.admin",
     "roles/logging.admin",
     "roles/monitoring.alertPolicyEditor",
