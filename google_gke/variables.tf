@@ -7,6 +7,12 @@ variable "description" {
   type        = string
 }
 
+variable "enable_dns_endpoint" {
+  default     = false
+  description = "Enable external DNS endpoint for control plane access"
+  type        = bool
+}
+
 variable "kubernetes_version" {
   default     = "latest"
   description = "The Kubernetes version of the masters. If set to 'latest' it will pull latest available version. Defaults to 'latest'."
