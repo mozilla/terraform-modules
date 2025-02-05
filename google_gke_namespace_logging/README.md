@@ -3,6 +3,7 @@
 Creates a logging bucket and grants access to the logging service account so that
 GKE Logs associated with the tenant namespace are available in the tenant project.
 The log routing configuration happens as part of the GKE tenant bootstrapping.
+
 ## Example
 ```hcl
 module "gke_logging" {
@@ -13,6 +14,7 @@ module "gke_logging" {
   logging_writer_service_account_member = "serviceAccount:test@gcp-sa-logging.iam.gserviceaccount.com"
 }
 ```
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -25,10 +27,11 @@ module "gke_logging" {
 | <a name="input_logging_writer_service_account_member"></a> [logging\_writer\_service\_account\_member](#input\_logging\_writer\_service\_account\_member) | The unique\_writer\_identity service account that is provisioned when creating a Logging Sink | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | `null` | no |
 | <a name="input_retention_days"></a> [retention\_days](#input\_retention\_days) | Log retention for logs, values between 1 and 3650 days | `number` | `90` | no |
+
 ## Outputs
 
 | Name | Description |
 |------|-------------|
 | <a name="output_logging_bucket_id"></a> [logging\_bucket\_id](#output\_logging\_bucket\_id) | n/a |
-| <a name="output_logging_dataset_id"></a> [logging\_dataset\_id](#output\_logging\_dataset\_id) | n/a |%
+| <a name="output_logging_dataset_id"></a> [logging\_dataset\_id](#output\_logging\_dataset\_id) | n/a |
 <!-- END_TF_DOCS -->
