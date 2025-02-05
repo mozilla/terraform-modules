@@ -1,9 +1,10 @@
 content: |-
   {{ .Header }}
 
-  ## Example
+  ## Examples
+
   ```hcl
-  {{ include "examples/example1.tf" }}
+  {{ include "examples/example.tf" }}
   ```
 
   {{ .Inputs }}

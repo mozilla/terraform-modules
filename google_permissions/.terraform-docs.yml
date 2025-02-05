@@ -1,0 +1,20 @@
+content: |-
+  {{ .Header }}
+
+  ## Examples
+
+  ```hcl
+  {{ include "examples/basic/main.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/basic_with_addon/main.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/admin_only/main.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}

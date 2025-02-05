@@ -1,30 +1,105 @@
+<!-- BEGIN_TF_DOCS -->
 # Terraform Module: Service Accounts for deployment from GitHub Actions and CircleCI
 Creates a Cloud IAM service account which lets CI workflows authenticate to GCP.
 
-## Requirements
+## Examples
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.0 |
+```hcl
+# Allow OIDC access from CircleCI jobs triggered in a specific repo
+data "terraform_remote_state" "wip_project" {
+  backend = "gcs"
 
-## Providers
+  config = {
+    bucket = "my-wip-project"
+    prefix = "wip-project/prefix"
+  }
+}
 
-| Name | Version |
-|------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 3.0 |
+module "google_deployment_accounts" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "stage"
+  github_repository  = "org/project"
+  wip_name           = "circleci"
+  wip_project_number = data.terraform_remote_state.wip_project.number
+}
+```
 
-## Modules
+```hcl
+# Allow OIDC access from CircleCI jobs triggered on the main branch only of a
+# specific repo
+data "terraform_remote_state" "wip_project" {
+  backend = "gcs"
 
-No modules.
+  config = {
+    bucket = "my-wip-project"
+    prefix = "wip-project/prefix"
+  }
+}
 
-## Resources
+module "google_deployment_accounts" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "stage"
+  github_repository  = "org/project"
+  wip_name           = "circleci"
+  wip_project_number = data.terraform_remote_state.wip_project.number
+  circleci_branches  = ["main"]
+}
+```
 
-| Name | Type |
-|------|------|
-| [google_service_account.account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
-| [google_service_account_iam_binding.circleci-access](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) | resource |
-| [google_service_account_iam_binding.github-actions-access](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) | resource |
+```hcl
+# A more complex example using attribute specifiers directly. Allow OIDC access
+# from CircleCI jobs triggered on the main branch of org/repo1 and org/repo2,
+# as well as any job using the fake-context context
+data "terraform_remote_state" "wip_project" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-wip-project"
+    prefix = "wip-project/prefix"
+  }
+}
+
+locals {
+  allowed_repos = formatlist("attribute.vcs/github.com/org/%s:refs/heads/main", ["repo1", "repo2"])
+  allowed_contexts = formatlist("attribute.context_id/%s",
+    one(values({ "fake-context" = "6e1515f7-40f0-4063-a74a-d77d22ee9f7e" }
+  )))
+}
+
+module "google_deployment_accounts" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "prod"
+  wip_name           = "circleci"
+  wip_project_number = data.terraform_remote_state.wip_project.number
+  circleci_attribute_specifiers = setunion(
+    local.allowed_repos,
+    local.allowed_contexts,
+  )
+}
+```
+
+```hcl
+data "terraform_remote_state" "wip_project" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-wip-project"
+    prefix = "wip-project/prefix"
+  }
+}
+
+module "google_deployment_accounts" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "stage"
+  github_repository  = "org/project"
+  wip_name           = "github-actions"
+  wip_project_number = data.terraform_remote_state.wip_project.number
+}
+```
 
 ## Inputs
 
@@ -48,3 +123,4 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
+<!-- END_TF_DOCS -->

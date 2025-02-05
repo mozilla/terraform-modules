@@ -1,3 +1,8 @@
+/**
+ * # Terraform Module: Tenant project bootstrapping
+ * Calls submodules to bootstrap a tenant project
+ */
+
 module "google_gke_tenant" {
   source = "github.com/mozilla/terraform-modules//google_gke_tenant?ref=main"
 

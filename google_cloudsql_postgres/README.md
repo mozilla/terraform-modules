@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # gcp-postgres
 Creates a PostgreSQL instance within GCP using Cloud SQL
 
@@ -51,8 +52,6 @@ output "postgres_database" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `any` | n/a | yes |
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `any` | n/a | yes |
-| <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `any` | n/a | yes |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | n/a | `list` | `[]` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | high availability (REGIONAL) or single zone (ZONAL) | `string` | `"REGIONAL"` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
@@ -70,6 +69,7 @@ output "postgres_database" {
 | <a name="input_enable_insights_config_on_replica"></a> [enable\_insights\_config\_on\_replica](#input\_enable\_insights\_config\_on\_replica) | If true, will allow enable insights config on replica | `bool` | `false` | no |
 | <a name="input_enable_private_path_for_google_cloud_services"></a> [enable\_private\_path\_for\_google\_cloud\_services](#input\_enable\_private\_path\_for\_google\_cloud\_services) | If true, will allow Google Cloud Services access over private IP. | `bool` | `false` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `any` | n/a | yes |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
 | <a name="input_ip_configuration_ssl_mode"></a> [ip\_configuration\_ssl\_mode](#input\_ip\_configuration\_ssl\_mode) | n/a | `string` | `"ALLOW_UNENCRYPTED_AND_ENCRYPTED"` | no |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | n/a | `number` | `1` | no |
@@ -77,6 +77,7 @@ output "postgres_database" {
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | n/a | `string` | `"stable"` | no |
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
+| <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |
 | <a name="input_replica_availability_type"></a> [replica\_availability\_type](#input\_replica\_availability\_type) | Allow setting availability configuration of replica | `string` | `"ZONAL"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | n/a | `number` | `0` | no |
@@ -102,3 +103,5 @@ output "postgres_database" {
 | <a name="output_replica_public_ip_address"></a> [replica\_public\_ip\_address](#output\_replica\_public\_ip\_address) | n/a |
 | <a name="output_self_link"></a> [self\_link](#output\_self\_link) | n/a |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
+| <a name="output_tier"></a> [tier](#output\_tier) | n/a |  
+<!-- END_TF_DOCS -->
