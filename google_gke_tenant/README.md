@@ -2,30 +2,14 @@
 # Terraform Module: Google GKE tenant
 Sets up a service account for use with GKE
 
-## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.0 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 3.0 |
-
-## Modules
-
-None
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `string` | n/a | yes |
-| <a name="input_project_id"></a> [project_id](#input\_project\_id) | n/a | `string` | `null` | yes |
-| <a name="input_application"></a> [application](#input\_application) | n/a | `string` | `null` | yes |
+| <a name="input_application"></a> [application](#input\_application) | Application name, eg. bouncer | `string` | `null` | no |
+| <a name="input_cluster_project_id"></a> [cluster\_project\_id](#input\_cluster\_project\_id) | The project ID for the GKE cluster this app uses | `string` | `null` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment to create (like, 'dev', 'stage', or 'prod') | `string` | `null` | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID in which we're doing this work. | `string` | `null` | no |
 
 ## Outputs
 
