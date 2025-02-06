@@ -245,3 +245,57 @@ resource "google_cloud_asset_project_feed" "project_feed" {
     }
   }
 }
+
+// a custom role for the privileged access manager CLI user
+// basically we took privilegedaccessmanager.entitlements.admin and removed
+// the delete entitlement permissions
+resource "google_project_iam_custom_role" "privileged_access_manager_custom_role" {
+  role_id     = "privilegedaccessmanager.entitlements.user"
+  title       = "Privileged Access Manager Entitlements User"
+  description = "Custom role for using privileged access manager entitlements with JIT"
+  permissions = [
+    "privilegedaccessmanager.entitlements.get",
+    "privilegedaccessmanager.entitlements.list",
+    "privilegedaccessmanager.grants.get",
+    "privilegedaccessmanager.grants.list",
+    "privilegedaccessmanager.grants.revoke",
+    "privilegedaccessmanager.locations.checkOnboardingStatus",
+    "privilegedaccessmanager.locations.get",
+    "privilegedaccessmanager.locations.list",
+    "privilegedaccessmanager.operations.delete",
+    "privilegedaccessmanager.operations.get",
+    "privilegedaccessmanager.operations.list",
+    "resourcemanager.projects.get",
+  ]
+}
+
+// needed for PAM cli to work
+// - the first to enable their gcloud auth commands to work
+// - the second to allow them to create grants for the PAM entitlements
+resource "google_project_iam_member" "developers_serviceusage_nonprod_serviceUsageAdmin" {
+  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_nonprod_project_id
+  role     = "roles/serviceusage.serviceUsageAdmin"
+  member   = each.value
+}
+
+resource "google_project_iam_member" "developers_serviceusage_prod_serviceUsageAdmin" {
+  for_each = !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_prod_project_id
+  role     = "roles/serviceusage.serviceUsageAdmin"
+  member   = each.value
+}
+
+resource "google_project_iam_member" "privileged_access_manager_custom_role_nonprod" {
+  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_nonprod_project_id
+  role     = google_project_iam_custom_role.privileged_access_manager_custom_role.id
+  member   = each.value
+}
+
+resource "google_project_iam_member" "privileged_access_manager_custom_role_prod" {
+  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_prod_project_id
+  role     = google_project_iam_custom_role.privileged_access_manager_custom_role.id
+  member   = each.value
+}
