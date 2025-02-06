@@ -9,6 +9,11 @@ output "endpoint" {
   value       = google_container_cluster.primary.endpoint
 }
 
+output "id" {
+  description = "Cluster id"
+  value       = google_container_cluster.primary.id
+}
+
 output "location" {
   description = "Cluster location (region)"
   value       = google_container_cluster.primary.location
