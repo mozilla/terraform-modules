@@ -168,6 +168,9 @@ runs:
         GH_TOKEN: ${{ github.token }}
       shell: bash
       run: |
+        # Workaround "error: insufficient permission for adding an object to repository database .git/objects"
+        # https://github.com/terraform-docs/gh-actions/issues/50#issuecomment-1231314373
+        sudo chown runner:docker -R .git
         git pull # In case we have multiple changelog updates
         FILE_TO_COMMIT="$PACKAGE_NAME/CHANGELOG.md"
         if ! git diff --quiet --exit-code $FILE_TO_COMMIT ; then
