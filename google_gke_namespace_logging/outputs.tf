@@ -9,3 +9,7 @@ output "logging_bucket_linked_dataset_id" {
 output "logging_dataset_id" {
   value = var.log_destination == "bigquery" ? google_bigquery_dataset.namespace[0].dataset_id : null
 }
+
+output "foo" {
+  value = "bar"
+}
