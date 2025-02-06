@@ -15,6 +15,11 @@ locals {
     if(environment == "nonprod" && var.google_nonprod_project_id != "") || (environment == "prod" && var.google_prod_project_id != "")
   ]
 
+  // create an environment map of environment to project id
+  environment_project_map = {
+    for environment in local.environments : environment => environment == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
+  }
+
   additional_entitlements = flatten([
     for environment in local.environments : [
       for entitlement in try(var.entitlement_data.additional_entitlements, []) : {
@@ -245,6 +250,41 @@ resource "google_cloud_asset_project_feed" "project_feed" {
     }
   }
 }
+
+
+/*
+resource "google_iam_deny_policy" "PAMDevDelEntDeny" {
+  for_each     = !var.admin_only ? local.environment_project_map : {}
+  parent       = urlencode("cloudresourcemanager.googleapis.com/projects/${each.value}")
+  name         = "pam-dev-del-ent-deny"
+  display_name = "PAM Dev Delete Entitlement Deny ${each.key}"
+  rules {
+    description = "Deny delete entitlements"
+    deny_rule {
+      denied_principals = toset(module.developers_workgroup.members)
+      denied_permissions = [
+        "privilegedaccessmanager.googleapis.com/entitlements.delete",
+        "privilegedaccessmanager.googleapis.com/entitlements.create",
+        "privilegedaccessmanager.googleapis.com/entitlements.update"
+      ]
+    }
+  }
+}
+
+resource "google_project_iam_member" "privileged_access_manager_admin_prod" {
+  for_each = !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_prod_project_id
+  role     = "roles/privilegedaccessmanager.admin"
+  member   = each.value
+}
+
+resource "google_project_iam_member" "privileged_access_manager_admin_nonprod" {
+  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_nonprod_project_id
+  role     = "roles/privilegedaccessmanager.admin"
+  member   = each.value
+}
+*/
 
 // a custom role for the privileged access manager CLI user
 // basically we took privilegedaccessmanager.entitlements.admin and removed
