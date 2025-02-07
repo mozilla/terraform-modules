@@ -9,16 +9,14 @@ locals {
     "roles/cloudsql.admin",
   ]
 
+  // this is the role that we want to give to the JIT access users
+  jit_access_user_role = "organizations/442341870013/roles/JITAccessUser"
+
   // Populate the environments list dynamically
   environments = [
     for environment in ["nonprod", "prod"] : environment
     if(environment == "nonprod" && var.google_nonprod_project_id != "") || (environment == "prod" && var.google_prod_project_id != "")
   ]
-
-  // create an environment map of environment to project id
-  environment_project_map = {
-    for environment in local.environments : environment => environment == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
-  }
 
   additional_entitlements = flatten([
     for environment in local.environments : [
@@ -251,93 +249,17 @@ resource "google_cloud_asset_project_feed" "project_feed" {
   }
 }
 
-
-/*
-resource "google_iam_deny_policy" "PAMDevDelEntDeny" {
-  for_each     = !var.admin_only ? local.environment_project_map : {}
-  parent       = urlencode("cloudresourcemanager.googleapis.com/projects/${each.value}")
-  name         = "pam-dev-del-ent-deny"
-  display_name = "PAM Dev Delete Entitlement Deny ${each.key}"
-  rules {
-    description = "Deny delete entitlements"
-    deny_rule {
-      denied_principals = toset(module.developers_workgroup.members)
-      denied_permissions = [
-        "privilegedaccessmanager.googleapis.com/entitlements.delete",
-        "privilegedaccessmanager.googleapis.com/entitlements.create",
-        "privilegedaccessmanager.googleapis.com/entitlements.update"
-      ]
-    }
-  }
-}
-
-resource "google_project_iam_member" "privileged_access_manager_admin_prod" {
-  for_each = !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_prod_project_id
-  role     = "roles/privilegedaccessmanager.admin"
-  member   = each.value
-}
-
-resource "google_project_iam_member" "privileged_access_manager_admin_nonprod" {
+# custom role for JIT access - created at the org level
+resource "google_project_iam_member" "developers_jitaccess_nonprod" {
   for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_nonprod_project_id
-  role     = "roles/privilegedaccessmanager.admin"
-  member   = each.value
-}
-*/
-
-// a custom role for the privileged access manager CLI user
-// basically we took privilegedaccessmanager.entitlements.admin and removed
-// the delete entitlement permissions
-resource "google_project_iam_custom_role" "privileged_access_manager_custom_role" {
-  for_each    = !var.admin_only ? toset(local.environments) : toset([])
-  project     = each.key == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
-  role_id     = "privilegedaccessmanager.entitlements.user"
-  title       = "Privileged Access Manager Entitlements User"
-  description = "Custom role for using privileged access manager entitlements with JIT"
-  permissions = [
-    "privilegedaccessmanager.entitlements.get",
-    "privilegedaccessmanager.entitlements.list",
-    "privilegedaccessmanager.grants.get",
-    "privilegedaccessmanager.grants.list",
-    "privilegedaccessmanager.grants.revoke",
-    "privilegedaccessmanager.locations.checkOnboardingStatus",
-    "privilegedaccessmanager.locations.get",
-    "privilegedaccessmanager.locations.list",
-    "privilegedaccessmanager.operations.delete",
-    "privilegedaccessmanager.operations.get",
-    "privilegedaccessmanager.operations.list",
-    "resourcemanager.projects.get",
-  ]
-}
-
-resource "google_project_iam_member" "privileged_access_manager_custom_role_nonprod" {
-  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_nonprod_project_id
-  role     = google_project_iam_custom_role.privileged_access_manager_custom_role["nonprod"].id
+  role     = local.jit_access_user_role
   member   = each.value
 }
 
-resource "google_project_iam_member" "privileged_access_manager_custom_role_prod" {
+resource "google_project_iam_member" "developers_jitaccess_prod" {
   for_each = !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_prod_project_id
-  role     = google_project_iam_custom_role.privileged_access_manager_custom_role["prod"].id
-  member   = each.value
-}
-
-// needed for PAM cli to work
-// - the first to enable their gcloud auth commands to work
-// - the second to allow them to create grants for the PAM entitlements
-resource "google_project_iam_member" "developers_serviceusage_nonprod_serviceUsageAdmin" {
-  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_nonprod_project_id
-  role     = "roles/serviceusage.serviceUsageAdmin"
-  member   = each.value
-}
-
-resource "google_project_iam_member" "developers_serviceusage_prod_serviceUsageAdmin" {
-  for_each = !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
-  project  = var.google_prod_project_id
-  role     = "roles/serviceusage.serviceUsageAdmin"
+  role     = local.jit_access_user_role
   member   = each.value
 }
