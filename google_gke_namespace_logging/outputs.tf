@@ -3,7 +3,8 @@ output "logging_bucket_id" {
 }
 
 output "logging_bucket_linked_dataset_id" {
-  value = var.log_analytics ? google_logging_linked_dataset.namespace_linked_dataset[0].bigquery_dataset[0].dataset_id : null
+  description = "Log Analytics BigQuery dataset id"
+  value       = var.log_analytics ? google_logging_linked_dataset.namespace_linked_dataset[0].bigquery_dataset[0].dataset_id : null
 }
 
 output "logging_dataset_id" {
