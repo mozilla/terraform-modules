@@ -33,6 +33,6 @@ module "gke_logging" {
 | Name | Description |
 |------|-------------|
 | <a name="output_logging_bucket_id"></a> [logging\_bucket\_id](#output\_logging\_bucket\_id) | n/a |
-| <a name="output_logging_bucket_linked_dataset_id"></a> [logging\_bucket\_linked\_dataset\_id](#output\_logging\_bucket\_linked\_dataset\_id) | n/a |
+| <a name="output_logging_bucket_linked_dataset_id"></a> [logging\_bucket\_linked\_dataset\_id](#output\_logging\_bucket\_linked\_dataset\_id) | Log Analytics BigQuery dataset id |
 | <a name="output_logging_dataset_id"></a> [logging\_dataset\_id](#output\_logging\_dataset\_id) | n/a |
 <!-- END_TF_DOCS -->
