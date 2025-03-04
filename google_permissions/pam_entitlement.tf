@@ -7,6 +7,8 @@ locals {
     "roles/storage.admin",
     "roles/spanner.admin",
     "roles/cloudsql.admin",
+    "roles/secretmanager.secretAccessor",    // added for OPST-1833
+    "roles/secretmanager.secretVersionAdder" // added for OPST-1833
   ]
 
   // Populate the environments list dynamically
