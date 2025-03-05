@@ -1,6 +1,6 @@
 ## Design
 
-### Three scenarios 
+### Three scenarios
 
 The first two are default settings and the third is the flexible way of adding additional permissions IN ADDITION to the core dev permissions:
 
