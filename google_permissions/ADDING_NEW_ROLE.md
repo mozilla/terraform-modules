@@ -36,7 +36,7 @@ locals {
 
 That's it for that file. We use this list to validate user input.
 
-The other thing to notice here is that three types of input lists are declared - folder, prod, and non_prod. This will allow the module user to set which role but also at which level of permissions. Why? 
+The other thing to notice here is that three types of input lists are declared - folder, prod, and non_prod. This will allow the module user to set which role but also at which level of permissions. Why?
 
 This gets a little convoluted as they represent two different things -- folder level roles and project level roles (of two types: prod and non-prod -- or at least those are the two arbitrary types that we use.). However, the roles provided by Google Cloud fall into those same two distinctions: hierarchy where folders contain projects and roles are available at folder or project level. So, in setting them in our environments, we have to understand which are folder level and which are project level. Fortunately, as we define or update our other roles available in [the file](./other_roles.tf), we'll see this explicitly called out.
 
