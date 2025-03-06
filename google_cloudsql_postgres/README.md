@@ -76,6 +76,7 @@ output "postgres_database" {
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | n/a | `number` | `17` | no |
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | n/a | `string` | `"stable"` | no |
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
+| <a name="input_password_validation_policy"></a> [password\_validation\_policy](#input\_password\_validation\_policy) | A map of password validation policies: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `map` | `{}` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |
