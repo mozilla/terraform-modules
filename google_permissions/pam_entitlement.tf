@@ -95,7 +95,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
   }
 
   eligible_users {
-    principals = local.module_outputs["default"].members
+    principals = local.module_outputs["default"]
   }
   privileged_access {
     gcp_iam_access {
