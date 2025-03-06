@@ -27,7 +27,8 @@ resource "google_sql_database_instance" "primary" {
   project  = var.project_id
   region   = var.region
 
-  database_version = var.database_version
+  database_version            = var.database_version
+  password_validation_policy  = var.password_validation_policy
 
   settings {
     deletion_protection_enabled = var.deletion_protection_enabled
@@ -35,7 +36,6 @@ resource "google_sql_database_instance" "primary" {
     availability_type           = var.availability_type
     connector_enforcement       = var.connector_enforcement
     edition                     = var.edition
-    password_validation_policy  = var.password_validation_policy
 
     backup_configuration {
       enabled                        = true
