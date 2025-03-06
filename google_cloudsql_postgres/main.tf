@@ -35,6 +35,7 @@ resource "google_sql_database_instance" "primary" {
     availability_type           = var.availability_type
     connector_enforcement       = var.connector_enforcement
     edition                     = var.edition
+    password_validation_policy  = var.password_validation_policy
 
     backup_configuration {
       enabled                        = true

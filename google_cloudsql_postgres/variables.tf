@@ -145,6 +145,11 @@ variable "database_flags" {
   default     = []
 }
 
+variable "password_validation_policy" {
+  description = "A map of password validation policies: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html"
+  default     = {}
+}
+
 variable "enable_private_path_for_google_cloud_services" {
   default     = false
   description = "If true, will allow Google Cloud Services access over private IP."
