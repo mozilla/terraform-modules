@@ -113,8 +113,8 @@ resource "google_sql_database_instance" "primary" {
 
   lifecycle {
     ignore_changes = [
-      settings.insights_config.query_plans_per_minute,
-      settings.insights_config.query_string_length
+      settings[0].insights_config.query_plans_per_minute,
+      settings[0].insights_config.query_string_length
     ]
   }
 }
@@ -190,8 +190,8 @@ resource "google_sql_database_instance" "replica" {
 
   lifecycle {
     ignore_changes = [
-      settings.insights_config.query_plans_per_minute,
-      settings.insights_config.query_string_length
+      settings[0].insights_config.query_plans_per_minute,
+      settings[0].insights_config.query_string_length
     ]
   }
 }
