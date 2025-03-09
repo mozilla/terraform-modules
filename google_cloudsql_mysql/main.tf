@@ -110,6 +110,13 @@ resource "google_sql_database_instance" "primary" {
   }
 
   deletion_protection = var.deletion_protection
+
+  lifecycle {
+    ignore_changes = [
+      insights_config.query_plans_per_minute,
+      insights_config.query_string_length
+    ]
+  }
 }
 
 resource "google_sql_database_instance" "replica" {
@@ -180,4 +187,11 @@ resource "google_sql_database_instance" "replica" {
   }
 
   deletion_protection = var.deletion_protection
+
+  lifecycle {
+    ignore_changes = [
+      insights_config.query_plans_per_minute,
+      insights_config.query_string_length
+    ]
+  }
 }
