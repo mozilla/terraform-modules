@@ -145,6 +145,40 @@ variable "database_flags" {
   default     = []
 }
 
+variable "password_validation_policy_enable" {
+  description = "Enable password validation policy"
+  default     = false
+}
+
+variable "password_validation_policy_min_length" {
+  description = "Min length for password"
+  default     = 0
+}
+
+variable "password_validation_policy_complexity" {
+  description = "Require complex password, must contain an uppercase letter, lowercase letter, number, and symbol"
+  default     = "COMPLEXITY_DEFAULT"
+  validation {
+    condition   = contains(["COMPLEXITY_DEFAULT", "COMPLEXITY_UNSPECIFIED"], var.password_validation_policy_complexity)
+    error_message = "The password_validation_policy_complexity value must be one of COMPLEXITY_DEFAULT or COMPLEXITY_UNSPECIFIED."
+  }
+}
+
+variable "password_validation_policy_reuse_interval" {
+  description = "Specifies the number of previous passwords that can't reuse"
+  default     = 0
+}
+
+variable "password_validation_policy_disallow_username_substring" {
+  description = "Prevents the use of the username in the password"
+  default     = false
+}
+
+variable "password_validation_policy_password_change_interval" {
+  description = "Specifies the minimum duration after which you can change the password in hours"
+  default     = 0
+}
+
 variable "enable_private_path_for_google_cloud_services" {
   default     = false
   description = "If true, will allow Google Cloud Services access over private IP."
