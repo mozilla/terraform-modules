@@ -157,7 +157,11 @@ variable "password_validation_policy_min_length" {
 
 variable "password_validation_policy_complexity" {
   description = "Require complex password, must contain an uppercase letter, lowercase letter, number, and symbol"
-  default     = false
+  default     = "COMPLEXITY_DEFAULT"
+  validation {
+    condition   = contains(["COMPLEXITY_DEFAULT", "COMPLEXITY_UNSPECIFIED"], var.password_validation_policy_complexity)
+    error_message = "The password_validation_policy_complexity value must be one of COMPLEXITY_DEFAULT or COMPLEXITY_UNSPECIFIED."
+  }
 }
 
 variable "password_validation_policy_reuse_interval" {
