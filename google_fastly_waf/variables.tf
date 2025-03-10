@@ -43,16 +43,6 @@ variable "subscription_domains" {
 }
 
 ## NGWAF
-variable "ngwaf_corp" {
-  type        = string
-  description = "Corp name for NGWAF"
-}
-
-variable "ngwaf_email" {
-  type        = string
-  description = "Email address associated with the token for the NGWAF API."
-}
-
 variable "ngwaf_agent_level" {
   type        = string
   default     = "log"
