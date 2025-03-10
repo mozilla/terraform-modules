@@ -27,10 +27,18 @@ resource "google_sql_database_instance" "primary" {
   project  = var.project_id
   region   = var.region
 
-  database_version            = var.database_version
-  password_validation_policy  = var.password_validation_policy
+  database_version = var.database_version
+
 
   settings {
+    password_validation_policy {
+      enable_password_policy      = var.password_validation_policy_enable
+      min_length                  = var.password_validation_policy_min_length
+      complexity                  = var.password_validation_policy_complexity
+      reuse_interval              = var.password_validation_policy_reuse_interval
+      disallow_username_substring = var.password_validation_policy_disallow_username_substring
+      password_change_interval    = var.password_validation_policy_password_change_interval
+    }
     deletion_protection_enabled = var.deletion_protection_enabled
     tier                        = local.tier
     availability_type           = var.availability_type
