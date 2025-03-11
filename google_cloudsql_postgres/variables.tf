@@ -165,7 +165,7 @@ variable "password_validation_policy_complexity" {
 }
 
 variable "password_validation_policy_reuse_interval" {
-  description = "Specifies the number of previous passwords that can't reuse"
+  description = "Specifies the number of previous passwords that can't be reused"
   default     = 0
 }
 
