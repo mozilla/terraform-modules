@@ -159,7 +159,7 @@ variable "password_validation_policy_complexity" {
   description = "Require complex password, must contain an uppercase letter, lowercase letter, number, and symbol"
   default     = "COMPLEXITY_UNSPECIFIED"
   validation {
-    condition   = contains(["COMPLEXITY_DEFAULT", "COMPLEXITY_UNSPECIFIED"], var.password_validation_policy_complexity)
+    condition     = contains(["COMPLEXITY_DEFAULT", "COMPLEXITY_UNSPECIFIED"], var.password_validation_policy_complexity)
     error_message = "The password_validation_policy_complexity value must be one of COMPLEXITY_DEFAULT or COMPLEXITY_UNSPECIFIED."
   }
 }
