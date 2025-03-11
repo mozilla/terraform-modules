@@ -76,7 +76,7 @@ output "postgres_database" {
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | n/a | `number` | `17` | no |
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | n/a | `string` | `"stable"` | no |
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
-| <a name="input_password_validation_policy_complexity"></a> [password\_validation\_policy\_complexity](#input\_password\_validation\_policy\_complexity) | Require complex password, must contain an uppercase letter, lowercase letter, number, and symbol | `any` | `null` | no |
+| <a name="input_password_validation_policy_complexity"></a> [password\_validation\_policy\_complexity](#input\_password\_validation\_policy\_complexity) | Require complex password, must contain an uppercase letter, lowercase letter, number, and symbol | `bool` | `false` | no |
 | <a name="input_password_validation_policy_disallow_username_substring"></a> [password\_validation\_policy\_disallow\_username\_substring](#input\_password\_validation\_policy\_disallow\_username\_substring) | Prevents the use of the username in the password | `bool` | `false` | no |
 | <a name="input_password_validation_policy_enable"></a> [password\_validation\_policy\_enable](#input\_password\_validation\_policy\_enable) | Enable password validation policy | `bool` | `false` | no |
 | <a name="input_password_validation_policy_min_length"></a> [password\_validation\_policy\_min\_length](#input\_password\_validation\_policy\_min\_length) | Min length for password | `number` | `0` | no |
