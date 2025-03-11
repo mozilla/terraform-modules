@@ -81,7 +81,7 @@ output "postgres_database" {
 | <a name="input_password_validation_policy_enable"></a> [password\_validation\_policy\_enable](#input\_password\_validation\_policy\_enable) | Enable password validation policy | `bool` | `false` | no |
 | <a name="input_password_validation_policy_min_length"></a> [password\_validation\_policy\_min\_length](#input\_password\_validation\_policy\_min\_length) | Min length for password | `number` | `0` | no |
 | <a name="input_password_validation_policy_password_change_interval"></a> [password\_validation\_policy\_password\_change\_interval](#input\_password\_validation\_policy\_password\_change\_interval) | Specifies the minimum duration after which you can change the password in hours | `string` | `"0s"` | no |
-| <a name="input_password_validation_policy_reuse_interval"></a> [password\_validation\_policy\_reuse\_interval](#input\_password\_validation\_policy\_reuse\_interval) | Specifies the number of previous passwords that can't reuse | `number` | `0` | no |
+| <a name="input_password_validation_policy_reuse_interval"></a> [password\_validation\_policy\_reuse\_interval](#input\_password\_validation\_policy\_reuse\_interval) | Specifies the number of previous passwords that can't be reused | `number` | `0` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |
