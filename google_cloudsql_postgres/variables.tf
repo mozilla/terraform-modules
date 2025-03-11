@@ -176,7 +176,7 @@ variable "password_validation_policy_disallow_username_substring" {
 
 variable "password_validation_policy_password_change_interval" {
   description = "Specifies the minimum duration after which you can change the password in hours"
-  default     = 0
+  default     = "0s"
 }
 
 variable "enable_private_path_for_google_cloud_services" {
