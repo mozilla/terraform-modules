@@ -233,7 +233,7 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
 # Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
   for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  project      = local.environments[each.key]
+  project      = each.value == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
   feed_id      = var.feed_id
   content_type = "RESOURCE"
 
