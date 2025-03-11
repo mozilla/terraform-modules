@@ -36,7 +36,7 @@ resource "google_sql_database_instance" "primary" {
       content {
         enable_password_policy      = true
         min_length                  = var.password_validation_policy_min_length
-        complexity                  = var.password_validation_policy_complexity
+        complexity                  = var.password_validation_policy_complexity ? "COMPLEXITY_DEFAULT" : null
         reuse_interval              = var.password_validation_policy_reuse_interval
         disallow_username_substring = var.password_validation_policy_disallow_username_substring
         password_change_interval    = var.password_validation_policy_password_change_interval
@@ -136,7 +136,7 @@ resource "google_sql_database_instance" "replica" {
       content {
         enable_password_policy      = true
         min_length                  = var.password_validation_policy_min_length
-        complexity                  = var.password_validation_policy_complexity
+        complexity                  = var.password_validation_policy_complexity ? "COMPLEXITY_DEFAULT" : null
         reuse_interval              = var.password_validation_policy_reuse_interval
         disallow_username_substring = var.password_validation_policy_disallow_username_substring
         password_change_interval    = var.password_validation_policy_password_change_interval

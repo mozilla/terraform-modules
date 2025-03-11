@@ -157,7 +157,7 @@ variable "password_validation_policy_min_length" {
 
 variable "password_validation_policy_complexity" {
   description = "Require complex password, must contain an uppercase letter, lowercase letter, number, and symbol"
-  default     = null
+  default     = false
 }
 
 variable "password_validation_policy_reuse_interval" {
