@@ -235,6 +235,8 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
 // The project feed requires that cloudasset API is not only set up but also that the service account is created
 
 // Create a service account for the cloudasset API
+// ref: https://stackoverflow.com/questions/63785247/gcp-managed-service-account-is-not-created-for-cloud-asset-api
+//
 resource "google_project_service_identity" "cloud_asset_sa" {
   for_each = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
   provider = google-beta
