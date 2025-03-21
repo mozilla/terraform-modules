@@ -10,5 +10,7 @@
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_uptime_checks"></a> [uptime\_checks](#output\_uptime\_checks) | n/a |
 <!-- END_TF_DOCS -->

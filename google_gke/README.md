@@ -209,6 +209,7 @@ module "gke" {
 |------|-------------|
 | <a name="output_ca_certificate"></a> [ca\_certificate](#output\_ca\_certificate) | CA Certificate for the Cluster |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Cluster endpoint |
+| <a name="output_id"></a> [id](#output\_id) | Cluster id |
 | <a name="output_k8s_api_proxy_dns_name"></a> [k8s\_api\_proxy\_dns\_name](#output\_k8s\_api\_proxy\_dns\_name) | K8s api proxy dns record |
 | <a name="output_location"></a> [location](#output\_location) | Cluster location (region) |
 | <a name="output_master_version"></a> [master\_version](#output\_master\_version) | Current Kubernetes master version |

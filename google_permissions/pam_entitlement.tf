@@ -7,6 +7,8 @@ locals {
     "roles/storage.admin",
     "roles/spanner.admin",
     "roles/cloudsql.admin",
+    "roles/secretmanager.secretAccessor",    // added for OPST-1833
+    "roles/secretmanager.secretVersionAdder" // added for OPST-1833
   ]
 
   // this is the role that we want to give to the JIT access users
@@ -96,7 +98,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
   }
 
   eligible_users {
-    principals = local.module_outputs["default"].members
+    principals = local.module_outputs["default"]
   }
   privileged_access {
     gcp_iam_access {
@@ -231,10 +233,24 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
   }
 }
 
-# Create a feed that sends notifications about network resource updates.
+// Needed for slack notifications for PAM activity from cloudasset to a central topic
+
+// The project feed requires that cloudasset API is not only set up but also that the service account is created
+
+// Create a service account for the cloudasset API
+// ref: https://stackoverflow.com/questions/63785247/gcp-managed-service-account-is-not-created-for-cloud-asset-api
+//
+resource "google_project_service_identity" "cloud_asset_sa" {
+  for_each = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  provider = google-beta
+  project  = each.value == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
+  service  = "cloudasset.googleapis.com"
+}
+
+// Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
   for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
-  project      = local.environments[each.key]
+  project      = each.value == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
   feed_id      = var.feed_id
   content_type = "RESOURCE"
 
