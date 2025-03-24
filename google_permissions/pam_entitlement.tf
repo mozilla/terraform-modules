@@ -11,6 +11,9 @@ locals {
     "roles/secretmanager.secretVersionAdder" // added for OPST-1833
   ]
 
+  // this is the role that we want to give to the JIT access users
+  jit_access_user_role = "organizations/442341870013/roles/JITAccessUser"
+
   // Populate the environments list dynamically
   environments = [
     for environment in ["nonprod", "prod"] : environment
@@ -260,4 +263,19 @@ resource "google_cloud_asset_project_feed" "project_feed" {
       topic = var.entitlement_slack_topic
     }
   }
+}
+
+# custom role for JIT access - created at the org level
+resource "google_project_iam_member" "developers_jitaccess_nonprod" {
+  for_each = var.entitlement_enabled && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_nonprod_project_id
+  role     = local.jit_access_user_role
+  member   = each.value
+}
+
+resource "google_project_iam_member" "developers_jitaccess_prod" {
+  for_each = var.entitlement_enabled && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  project  = var.google_prod_project_id
+  role     = local.jit_access_user_role
+  member   = each.value
 }
