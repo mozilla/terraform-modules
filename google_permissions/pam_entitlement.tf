@@ -267,14 +267,14 @@ resource "google_cloud_asset_project_feed" "project_feed" {
 
 # custom role for JIT access - created at the org level
 resource "google_project_iam_member" "developers_jitaccess_nonprod" {
-  for_each = !var.admin_only && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  for_each = var.entitlement_enabled && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_nonprod_project_id
   role     = local.jit_access_user_role
   member   = each.value
 }
 
 resource "google_project_iam_member" "developers_jitaccess_prod" {
-  for_each = !var.admin_only && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  for_each = var.entitlement_enabled && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_prod_project_id
   role     = local.jit_access_user_role
   member   = each.value
