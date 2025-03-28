@@ -4,6 +4,8 @@ on:
 - push
 - pull_request
 
+permissions: {}
+
 jobs:
   matrixify:
     name: Matrixify
@@ -18,7 +20,9 @@ jobs:
       with:
         ignore_dir: "**/example**"
     - name: Outputs
-      run: echo "${{ steps.search.outputs.matrix }}"
+      run: echo "${OUTPUTS_MATRIX}"
+      env:
+        OUTPUTS_MATRIX: ${{ steps.search.outputs.matrix }}
 
   terraform-ci:
     name: Terraform CI on "${{ matrix.directory }}"

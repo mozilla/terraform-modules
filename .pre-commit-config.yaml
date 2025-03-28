@@ -22,3 +22,9 @@ repos:
       - id: terraform_fmt
         exclude: \.terraform\/.*$
       - id: terraform_docs
+  - repo: https://github.com/woodruffw/zizmor-pre-commit
+    # Zizmor version.
+    rev: v1.5.2
+    hooks:
+      # Run the linter.
+      - id: zizmor
