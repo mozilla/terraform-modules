@@ -31,6 +31,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
         # I'm getting the labels from the API and not the context("contains(github.event.pull_request.labels.*.name, 'Env Promote')") as the labels
         # are added in 2nd API call so they aren't included in the PR context
+          persist-credentials: false
       - name: Check PR labels for semver
         id: check_pr_label
         env:
@@ -147,6 +148,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: main # Only use composite action from main to prevent malicious PRs
+        persist-credentials: false
       # Do the per-module steps in a composite action because matrixes can't handle dynamic outputs
     - name: Generate docs and version bump
       uses: mozilla/terraform-modules/.github/actions@main
