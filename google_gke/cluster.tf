@@ -19,6 +19,10 @@ resource "google_container_cluster" "primary" {
   project         = local.project_id
   resource_labels = local.labels
 
+  cluster_autoscaling {
+    autoscaling_profile = var.autoscaling_profile
+  }
+
   release_channel {
     channel = var.release_channel
   }
