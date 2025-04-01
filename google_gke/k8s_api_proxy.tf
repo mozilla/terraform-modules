@@ -1,6 +1,7 @@
 #
 # K8S API Proxy Setup
 #
+
 resource "google_compute_address" "static_v4_k8s_api_proxy_ip" {
   count        = var.enable_k8s_api_proxy_ip ? 1 : 0
   provider     = google-beta # At this time the beta provider is required to define labels
