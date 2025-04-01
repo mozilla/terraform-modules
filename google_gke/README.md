@@ -150,6 +150,7 @@ module "gke" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_autoscaling_profile"></a> [autoscaling\_profile](#input\_autoscaling\_profile) | Specify the profile to be used for autoscaling.  Defaults to 'BALANCED' | `string` | `"BALANCED"` | no |
 | <a name="input_create_resource_usage_export_dataset"></a> [create\_resource\_usage\_export\_dataset](#input\_create\_resource\_usage\_export\_dataset) | The ID of a BigQuery Dataset for using BigQuery as the destination of resource usage export. Defaults to empty string. | `bool` | `false` | no |
 | <a name="input_description"></a> [description](#input\_description) | The description of the cluster | `string` | `null` | no |
 | <a name="input_disable_snat_status"></a> [disable\_snat\_status](#input\_disable\_snat\_status) | Whether the cluster disables default in-node sNAT rules. Defaults to false. | `bool` | `false` | no |

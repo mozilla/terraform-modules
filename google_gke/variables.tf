@@ -412,3 +412,9 @@ variable "service_subnetworks" {
     subnetwork_id = string
   }))
 }
+
+variable "autoscaling_profile" {
+  description = "Specify the profile to be used for autoscaling.  Defaults to 'BALANCED'"
+  type        = string
+  default     = "BALANCED"
+}
