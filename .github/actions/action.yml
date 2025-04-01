@@ -78,7 +78,7 @@ runs:
         echo "${NEW_VERSION}" > output/new-version.txt
       env:
         PREV_VERSION: "${{ steps.prev-version.outputs.result }}"
-        NEW_VERSIION: "${{ steps.new-version.outputs.result }}"
+        NEW_VERSION: "${{ steps.new-version.outputs.result }}"
     - name: Upload version artifacts
       uses: actions/upload-artifact@v4
       with:
