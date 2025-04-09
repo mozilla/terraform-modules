@@ -14,5 +14,7 @@
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_dns_authorizations"></a> [dns\_authorizations](#output\_dns\_authorizations) | n/a |
 <!-- END_TF_DOCS -->
