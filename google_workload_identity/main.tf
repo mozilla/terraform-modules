@@ -20,7 +20,7 @@ locals {
 data "google_service_account" "cluster_service_account" {
   count = var.use_existing_gcp_sa ? 1 : 0
 
-  account_id = local.gcp_given_name
+  account_id = "projects/${var.project_id}/serviceAccounts/${local.gcp_given_name}"
 }
 
 resource "google_service_account" "cluster_service_account" {
