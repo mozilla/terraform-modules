@@ -6,6 +6,7 @@
 
 locals {
   gcp_given_name = var.gcp_sa_name != null ? var.gcp_sa_name : substr(var.name, 0, 30)
+  gcp_sa_project = regex("@(.*)\\.iam\\.gserviceaccount\\.com", gcp_given_name)[0]
   gcp_sa_email   = var.use_existing_gcp_sa ? data.google_service_account.cluster_service_account[0].email : google_service_account.cluster_service_account[0].email
   gcp_sa_fqn     = "serviceAccount:${local.gcp_sa_email}"
 
@@ -20,7 +21,7 @@ locals {
 data "google_service_account" "cluster_service_account" {
   count = var.use_existing_gcp_sa ? 1 : 0
 
-  account_id = "projects/${var.project_id}/serviceAccounts/${local.gcp_given_name}"
+  account_id = "projects/${locals.gcp_sa_project}/serviceAccounts/${local.gcp_given_name}"
 }
 
 resource "google_service_account" "cluster_service_account" {
