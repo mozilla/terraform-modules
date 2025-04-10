@@ -14,6 +14,12 @@ variable "gcp_sa_name" {
   default     = null
 }
 
+variable "gcp_sa_email" {
+  description = "Email for an existing Google service account."
+  type        = string
+  default     = null
+}
+
 variable "use_existing_gcp_sa" {
   description = "Use an existing Google service account instead of creating one"
   type        = bool

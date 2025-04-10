@@ -9,6 +9,7 @@ accounts to go with it
 |------|-------------|------|---------|:--------:|
 | <a name="input_automount_service_account_token"></a> [automount\_service\_account\_token](#input\_automount\_service\_account\_token) | Enable automatic mounting of the service account token | `bool` | `false` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Cluster name. Required if using existing KSA. | `string` | `""` | no |
+| <a name="input_gcp_sa_email"></a> [gcp\_sa\_email](#input\_gcp\_sa\_email) | Email for an existing Google service account. | `string` | `null` | no |
 | <a name="input_gcp_sa_name"></a> [gcp\_sa\_name](#input\_gcp\_sa\_name) | Name for the Google service account; overrides `var.name`. | `string` | `null` | no |
 | <a name="input_impersonate_service_account"></a> [impersonate\_service\_account](#input\_impersonate\_service\_account) | An optional service account to impersonate for gcloud commands. If this service account is not specified, the module will use Application Default Credentials. | `string` | `""` | no |
 | <a name="input_k8s_sa_name"></a> [k8s\_sa\_name](#input\_k8s\_sa\_name) | Name for the Kubernetes service account; overrides `var.name`. | `string` | `null` | no |
