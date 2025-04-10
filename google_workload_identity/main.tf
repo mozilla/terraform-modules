@@ -21,7 +21,6 @@ data "google_service_account" "cluster_service_account" {
   count = var.use_existing_gcp_sa ? 1 : 0
 
   account_id = local.gcp_given_name
-  project    = var.project_id
 }
 
 resource "google_service_account" "cluster_service_account" {
