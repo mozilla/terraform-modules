@@ -1,8 +1,16 @@
-
 ## Examples
 
-### Uptime Checks without Alert Policy
+### Uptime Checks with Alert Policy (minimal configuration)
 ```hcl
+resource "google_monitoring_notification_channel" "dev_team_notification_channel" {
+  display_name = "Dev Team"
+  type         = "email"
+  labels = {
+    email_address = "dev_team+alerts@mydomain.com"
+  }
+  force_delete = false
+}
+
 module "uptime_checks" {
   # Using main branch for simplicity, always pin your dependencies
   source     = "github.com/mozilla/terraform-modules//google_monitoring?ref=main"
@@ -17,8 +25,12 @@ module "uptime_checks" {
       host = myservice.mydomain.com
       path = "/__heartbeat__"
 
-      timeout   = "30s"
-      period    = "60s"
+      alert_policy = {
+        enabled  = true
+        notification_channels = [
+          google_monitoring_notification_channel.dev_team_notification_channel.id
+        ]
+      }
     }
   ]
 }
@@ -73,6 +85,30 @@ module "uptime_checks" {
           }
         ]
       }
+    }
+  ]
+}
+```
+
+
+### Uptime Checks without Alert Policy
+```hcl
+module "uptime_checks" {
+  # Using main branch for simplicity, always pin your dependencies
+  source     = "github.com/mozilla/terraform-modules//google_monitoring?ref=main"
+  project_id = local.project_id
+  environment  = local.environment
+  application  = local.application
+  realm        = local.realm
+
+  uptime_checks = [
+    {
+      name = local.uptime_check_name
+      host = myservice.mydomain.com
+      path = "/__heartbeat__"
+
+      timeout   = "30s"
+      period    = "60s"
     }
   ]
 }
