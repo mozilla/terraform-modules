@@ -26,8 +26,8 @@ variable "uptime_checks" {
     content_type        = optional(string)
     custom_content_type = optional(string)
     body                = optional(string)
-    timeout             = optional(string, "60s")
-    period              = optional(string, "300s")
+    timeout             = optional(string, "30s")
+    period              = optional(string, "60s")
     user_labels         = optional(map(string), {})
     selected_regions    = optional(list(string), ["EUROPE", "USA_OREGON", "USA_VIRGINIA"])
 
