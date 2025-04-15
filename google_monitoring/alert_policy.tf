@@ -5,11 +5,11 @@ resource "google_monitoring_alert_policy" "uptime_alert_policies" {
     if try(uptime_check.alert_policy.enabled, false)
   }
 
-  display_name = "${var.application} Uptime Check Failed - ${each.key}"
+  display_name = "${each.key}: Uptime Check Failed"
   combiner     = "OR"
 
   conditions {
-    display_name = "${var.application} Uptime Check Failure - ${each.key}"
+    display_name = "${each.key}: Uptime Check Failure"
 
     condition_threshold {
       filter = format(
