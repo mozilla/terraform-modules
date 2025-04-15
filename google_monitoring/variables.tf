@@ -8,7 +8,7 @@ variable "application" {
 }
 
 variable "realm" {
-  description = "Realm is a grouping of environments being one of: global, nonprod, prod"
+  description = "Grouping of environments being one of: nonprod, prod"
   type        = string
 }
 
@@ -46,7 +46,7 @@ variable "uptime_checks" {
 
     alert_policy = optional(object({
       enabled                  = optional(bool, false)
-      severity                 = optional(string, "warning")
+      severity                 = optional(string, "WARNING")
       alert_threshold_duration = optional(string, "300s")
       alignment_period         = optional(string, "60s")
       trigger_count            = optional(number, 1)
