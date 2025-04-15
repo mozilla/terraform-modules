@@ -1,7 +1,8 @@
 resource "google_monitoring_alert_policy" "uptime_alert_policies" {
   for_each = {
-    for name, check in var.uptime_checks :
-    name => check if try(check.alert_policy.enabled, false)
+    for uptime_check in var.uptime_checks :
+    uptime_check.name => uptime_check
+    if try(uptime_check.alert_policy.enabled, false)
   }
 
   display_name = "${var.application} Uptime Check Failed - ${each.key}"
