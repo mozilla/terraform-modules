@@ -2,6 +2,21 @@ variable "project_id" {
   type = string
 }
 
+variable "application" {
+  description = "Name of the application being monitored"
+  type        = string
+}
+
+variable "realm" {
+  description = "Realm is a grouping of environments being one of: global, nonprod, prod"
+  type        = string
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment name."
+}
+
 variable "uptime_checks" {
   type = list(object({
     name                = string
@@ -28,7 +43,20 @@ variable "uptime_checks" {
       content = optional(string)
       matcher = optional(string)
     })), [])
-  }))
 
+    alert_policy = optional(object({
+      enabled                  = optional(bool, false)
+      severity                 = optional(string, "warning")
+      alert_threshold_duration = optional(string, "300s")
+      alignment_period         = optional(string, "60s")
+      trigger_count            = optional(number, 1)
+      notification_channels    = optional(list(string), [])
+      documentation_links = optional(list(object({
+        display_name = string
+        url          = string
+      })), [])
+      custom_documentation = optional(string)
+    }))
+  }))
   default = []
 }
