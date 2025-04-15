@@ -60,7 +60,7 @@ module "uptime_checks" {
         alert_threshold_duration = "300s"
         alignment_period         = "60s"
         trigger_count            = 1
-        autoclose                = "7200s"
+        auto_close                = "7200s"
         documentation_links = [
           {
             display_name = "Service Runbook"
