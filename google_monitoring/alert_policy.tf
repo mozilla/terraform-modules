@@ -50,7 +50,7 @@ resource "google_monitoring_alert_policy" "uptime_alert_policies" {
   documentation {
     subject   = "${each.key}: Uptime Check Alert"
     mime_type = "text/markdown"
-    content = try(each.value.alert_policy.custom_documentation, <<EOT
+    content = coalesce(each.value.alert_policy.custom_documentation, <<EOT
     ## ${var.application} Uptime Check Alert
     The `${each.key}` check failed.
 
