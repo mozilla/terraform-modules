@@ -1,10 +1,17 @@
 resource "google_monitoring_uptime_check_config" "https" {
   for_each = { for uptime_check in var.uptime_checks : uptime_check.name => uptime_check }
 
-  display_name     = each.value.name
-  timeout          = each.value.timeout
-  period           = each.value.period
-  user_labels      = each.value.user_labels
+  display_name = each.value.name
+  timeout      = each.value.timeout
+  period       = each.value.period
+  user_labels = merge(
+    {
+      realm       = var.realm
+      environment = var.environment
+      application = var.application
+    },
+    each.value.user_labels
+  )
   selected_regions = each.value.selected_regions
 
   http_check {
