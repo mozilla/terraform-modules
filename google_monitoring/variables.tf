@@ -50,6 +50,7 @@ variable "uptime_checks" {
       alert_threshold_duration = optional(string, "300s")
       alignment_period         = optional(string, "60s")
       trigger_count            = optional(number, 1)
+      auto_close               = optional(string, "7200s")
       notification_channels    = optional(list(string), [])
       documentation_links = optional(list(object({
         display_name = string

@@ -34,7 +34,7 @@ resource "google_monitoring_alert_policy" "uptime_alert_policies" {
   }
 
   alert_strategy {
-    auto_close           = "7200s"
+    auto_close           = var.uptime_checks.alert_policy.auto_close
     notification_prompts = ["OPENED", "CLOSED"]
   }
 
