@@ -48,7 +48,7 @@ resource "google_monitoring_alert_policy" "uptime_alert_policies" {
   }
 
   documentation {
-    subject   = "${var.application} Uptime Check Alert - ${each.key}"
+    subject   = "${each.key}: Uptime Check Alert"
     mime_type = "text/markdown"
     content = try(each.value.alert_policy.custom_documentation, <<EOT
     ## ${var.application} Uptime Check Alert
