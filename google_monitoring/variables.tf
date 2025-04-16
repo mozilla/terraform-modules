@@ -3,18 +3,18 @@ variable "project_id" {
 }
 
 variable "application" {
-  description = "Name of the application being monitored"
+  description = "Used as default user_label. Name of the application being monitored"
   type        = string
 }
 
 variable "realm" {
-  description = "Grouping of environments being one of: nonprod, prod"
+  description = "Used as default user_label. Grouping of environments being one of: nonprod, prod"
   type        = string
 }
 
 variable "environment" {
   type        = string
-  description = "Environment name."
+  description = "Used as default user_label. Environment name."
 }
 
 variable "uptime_checks" {
