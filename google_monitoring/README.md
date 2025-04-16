@@ -1,5 +1,71 @@
-## Examples
+## Uptime Check Configuration Guidelines
 
+Google Cloud Platform provides [1,000,000 free uptime checks per month per project](https://cloud.google.com/monitoring/pricing). Each check is counted **per region**, so selecting more regions and/or decreasing the period between checks can significantly increase your usage.
+
+We divide projects by **realm**, typically using:
+- `prod` for production environments
+- `nonprod` for development and staging
+
+To help manage cost and alert relevance, we recommend the following defaults and practices:
+
+### Suggested Parameters
+
+| Parameter                 | Recommended Value (prod)                   | Recommended Value (nonprod) | Notes                                                                 |
+|--------------------------|--------------------------------------------|-----------------------------|-----------------------------------------------------------------------|
+| `period`                 | `20s`                                      | `60s`                       | Frequency of uptime checks. Shorter periods result in more checks.   |
+| `timeout`                | `30s`                                      | `30s`                       | Timeout for each check attempt.                                       |
+| `selected_regions`       | `["EUROPE", "USA_OREGON", "USA_VIRGINIA"]` | `["USA_VIRGINIA"]`          | More regions improve reliability but multiply check count.           |
+| `alignment_period`       | `20s`                                      | `60s`                       | Used in the alert policy time series aggregation. Match to `period`. |
+| `trigger_count`          | `1`                                        | `1`                         | Number of violations needed to trigger an alert.                      |
+| `alert_threshold_duration` | `60s`                                      | `300s`                      | How long a condition must hold true before alerting.                 |
+| `auto_close`             | `86400s` (24h)                             | `7200s`                     | Automatically closes open incidents after this duration.             |
+
+### Cost Example
+#### `nonprod` realm example
+A single uptime check with:
+- `period = 60s`
+- `1 selected regions`
+- `2 environments` (stage and dev)
+
+Will generate:
+
+```
+1 check / minute * 60 * 24 * 30 days = 43,200 checks per region
+43,200 * 1 region * 2 environment = 86,400 checks / month
+```
+#### `prod` realm example
+A single uptime check with:
+- `period = 20s`
+- `3 selected regions`
+- `1 environments` (prod)
+
+Will generate:
+
+```
+3 checks / minute * 60 * 24 * 30 days = 129,600 checks per region
+129,600 * 3 region * 1 environment = 388,800 checks / month
+```
+
+Keep this in mind when configuring many services, especially in nonprod realms.
+
+### Fine-Tuning by Realm
+
+You can tailor alert behavior and sensitivity using Terraform expressions. For example:
+
+```hcl
+severity = var.realm == "prod" ? "CRITICAL" : "WARNING"
+period   = var.realm == "prod" ? "20s" : "60s"
+```
+
+This lets you use more sensitive alerting in production, while maintaining cost-effective monitoring in development and staging environments.
+
+### Additional Tips
+
+- Prefer fewer regions in `nonprod` unless you are testing regional availability.
+- Avoid very short `period` values in `nonprod` to stay within the free tier.
+- Review uptime check and alerting metrics in GCP Monitoring to ensure your settings are appropriate.
+
+## Examples
 ### Uptime Checks with Alert Policy (minimal configuration)
 ```hcl
 resource "google_monitoring_notification_channel" "dev_team_notification_channel" {
