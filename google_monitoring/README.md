@@ -13,20 +13,20 @@ resource "google_monitoring_notification_channel" "dev_team_notification_channel
 
 module "uptime_checks" {
   # Using main branch for simplicity, always pin your dependencies
-  source     = "github.com/mozilla/terraform-modules//google_monitoring?ref=main"
-  project_id = local.project_id
-  environment  = local.environment
-  application  = local.application
-  realm        = local.realm
+  source      = "github.com/mozilla/terraform-modules//google_monitoring?ref=main"
+  project_id  = local.project_id
+  environment = local.environment
+  application = local.application
+  realm       = local.realm
 
   uptime_checks = [
     {
       name = local.uptime_check_name
-      host = myservice.mydomain.com
+      host = "myservice.mydomain.com"
       path = "/__heartbeat__"
 
       alert_policy = {
-        enabled  = true
+        enabled = true
         notification_channels = [
           google_monitoring_notification_channel.dev_team_notification_channel.id
         ]
@@ -95,20 +95,20 @@ module "uptime_checks" {
 ```hcl
 module "uptime_checks" {
   # Using main branch for simplicity, always pin your dependencies
-  source     = "github.com/mozilla/terraform-modules//google_monitoring?ref=main"
-  project_id = local.project_id
-  environment  = local.environment
-  application  = local.application
-  realm        = local.realm
+  source      = "github.com/mozilla/terraform-modules//google_monitoring?ref=main"
+  project_id  = local.project_id
+  environment = local.environment
+  application = local.application
+  realm       = local.realm
 
   uptime_checks = [
     {
       name = local.uptime_check_name
-      host = myservice.mydomain.com
+      host = "myservice.mydomain.com"
       path = "/__heartbeat__"
 
-      timeout   = "30s"
-      period    = "60s"
+      timeout = "30s"
+      period  = "60s"
     }
   ]
 }
