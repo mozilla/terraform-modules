@@ -10,40 +10,40 @@ To help manage cost and alert relevance, we recommend the following defaults and
 
 ### Suggested Parameters
 
-| Parameter                 | Recommended Value (prod)                   | Recommended Value (nonprod) | Notes                                                                 |
-|--------------------------|--------------------------------------------|-----------------------------|-----------------------------------------------------------------------|
-| `period`                 | `20s`                                      | `60s`                       | Frequency of uptime checks. Shorter periods result in more checks.   |
-| `timeout`                | `30s`                                      | `30s`                       | Timeout for each check attempt.                                       |
-| `selected_regions`       | `["EUROPE", "USA_OREGON", "USA_VIRGINIA"]` | `["USA_VIRGINIA"]`          | More regions improve reliability but multiply check count.           |
-| `alignment_period`       | `20s`                                      | `60s`                       | Used in the alert policy time series aggregation. Match to `period`. |
-| `trigger_count`          | `1`                                        | `1`                         | Number of violations needed to trigger an alert.                      |
-| `alert_threshold_duration` | `60s`                                      | `300s`                      | How long a condition must hold true before alerting.                 |
-| `auto_close`             | `86400s` (24h)                             | `7200s`                     | Automatically closes open incidents after this duration.             |
+| Parameter                 | Recommended Value (prod)                   | Recommended Value (nonprod)                | Notes                                                                                     |
+|--------------------------|--------------------------------------------|--------------------------------------------|-------------------------------------------------------------------------------------------|
+| `period`                 | `60s`                                      | `300s`                                     | Frequency of uptime checks. Shorter periods result in more checks.                        |
+| `timeout`                | `30s`                                      | `30s`                                      | Timeout for each check attempt.                                                           |
+| `selected_regions`       | `["EUROPE", "USA_OREGON", "USA_VIRGINIA"]` | `["EUROPE", "USA_OREGON", "USA_VIRGINIA"]` | More regions improve reliability but multiply check count. **Minimum 3 regions are required** |
+| `alignment_period`       | `60s`                                      | `300s`                                     | Used in the alert policy time series aggregation. Match to `period`.                      |
+| `trigger_count`          | `1`                                        | `1`                                        | Number of violations needed to trigger an alert.                                          |
+| `alert_threshold_duration` | `60s`                                      | `300s`                                     | How long a condition must hold true before alerting.                                      |
+| `auto_close`             | `86400s` (24h)                             | `7200s`                                    | Automatically closes open incidents after this duration.                                  |
 
 ### Cost Example
 #### `nonprod` realm example
 A single uptime check with:
 - `period = 60s`
-- `1 selected regions`
+- `3 selected regions`
 - `2 environments` (stage and dev)
 
 Will generate:
 
 ```
 1 check / minute * 60 * 24 * 30 days = 43,200 checks per region
-43,200 * 1 region * 2 environment = 86,400 checks / month
+43,200 * 3 region * 2 environment = 259,200 checks / month
 ```
 #### `prod` realm example
-A single uptime check with:
-- `period = 20s`
+Five uptime check with:
+- `period = 60s`
 - `3 selected regions`
 - `1 environments` (prod)
 
 Will generate:
 
 ```
-3 checks / minute * 60 * 24 * 30 days = 129,600 checks per region
-129,600 * 3 region * 1 environment = 388,800 checks / month
+5 checks / minute * 60 * 24 * 30 days = 216,000 checks per region
+216,000 * 3 region * 1 environment = 648,000 checks / month
 ```
 
 Keep this in mind when configuring many services, especially in nonprod realms.
@@ -54,15 +54,16 @@ You can tailor alert behavior and sensitivity using Terraform expressions. For e
 
 ```hcl
 severity = var.realm == "prod" ? "CRITICAL" : "WARNING"
-period   = var.realm == "prod" ? "20s" : "60s"
+period   = var.realm == "prod" ? "60s" : "300s"
 ```
 
 This lets you use more sensitive alerting in production, while maintaining cost-effective monitoring in development and staging environments.
 
 ### Additional Tips
 
-- Prefer fewer regions in `nonprod` unless you are testing regional availability.
-- Avoid very short `period` values in `nonprod` to stay within the free tier.
+- Do not use more than the minimum three regions required by GCP for `nonprod` unless you are testing regional availability.
+- Avoid setting multiple checks with `period` values of `60s` unless required.
+- Consider that `stage` and `dev` environments are both in the same `nonprod` project, thus sharing the same quota.
 - Review uptime check and alerting metrics in GCP Monitoring to ensure your settings are appropriate.
 
 ## Examples
