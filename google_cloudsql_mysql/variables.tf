@@ -112,7 +112,7 @@ variable "environment" {
 variable "force_ha" {
   description = "If set to true, create a mysql replica for HA. Currently the availability_type works only for postgres"
   default     = false
-  type        = string
+  type        = bool
 }
 
 variable "instance_version" {
