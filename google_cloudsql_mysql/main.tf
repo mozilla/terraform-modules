@@ -131,6 +131,8 @@ resource "google_sql_database_instance" "replica" {
 
     deletion_protection_enabled = var.deletion_protection_enabled
 
+    edition = var.replica_edition
+
     dynamic "database_flags" {
       for_each = var.database_flags
       content {
