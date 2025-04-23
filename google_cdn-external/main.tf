@@ -3,7 +3,7 @@
  */
 
 locals {
-  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-${var.name_suffix_override}" : "cdn"])
+  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
   # when both a bucket and backend service are specified, prefer the backend
   # service as the default backend, and use backend_bucket_paths to route
   # specific paths to the backend bucket
@@ -90,7 +90,7 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_backend_bucket" "default" {
   count = contains(["bucket", "service_and_bucket"], var.backend_type) ? 1 : 0
 
-  name        = local.name_prefix
+  name        = var.backend_bucket_name_override != "" ? var.backend_bucket_name_override : local.name_prefix
   bucket_name = var.bucket_name
   enable_cdn  = true
 
