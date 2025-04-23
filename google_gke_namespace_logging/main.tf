@@ -9,18 +9,26 @@ locals {
   tenant_namespace = "${var.application}-${var.environment}"
 }
 
+moved {
+  from = google_logging_project_bucket_config.namespace[0]
+  to   = google_logging_project_bucket_config.namespace
+}
+
 resource "google_logging_project_bucket_config" "namespace" {
-  count            = var.log_destination == "bucket" ? 1 : 0
   project          = var.project
   location         = var.location
   bucket_id        = "gke-${local.tenant_namespace}-log-bucket"
   description      = "Log bucket for ${local.tenant_namespace}"
   retention_days   = var.retention_days
-  enable_analytics = var.log_analytics
+  enable_analytics = true
+}
+
+moved {
+  from = google_project_iam_member.logging_bucket_writer[0]
+  to   = google_project_iam_member.logging_bucket_writer
 }
 
 resource "google_project_iam_member" "logging_bucket_writer" {
-  count   = var.logging_writer_service_account_member != "" ? 1 : 0
   project = var.project
   role    = "roles/logging.bucketWriter"
   member  = var.logging_writer_service_account_member
@@ -32,8 +40,12 @@ resource "google_project_iam_member" "logging_bucket_writer" {
   }
 }
 
+moved {
+  from = google_bigquery_dataset.namespace[0]
+  to   = google_bigquery_dataset.namespace
+}
+
 resource "google_bigquery_dataset" "namespace" {
-  count         = var.log_destination == "bigquery" ? 1 : 0
   dataset_id    = replace("gke-${local.tenant_namespace}-log", "-", "_")
   friendly_name = "gke-${local.tenant_namespace}-log-dataset"
   description   = "Log dataset for ${local.tenant_namespace}"
@@ -43,16 +55,24 @@ resource "google_bigquery_dataset" "namespace" {
   location                        = "US"
 }
 
+moved {
+  from = google_bigquery_dataset_iam_member.logging_dataset_writer[0]
+  to   = google_bigquery_dataset_iam_member.logging_dataset_writer
+}
+
 resource "google_bigquery_dataset_iam_member" "logging_dataset_writer" {
-  count      = var.log_destination == "bigquery" ? 1 : 0
-  dataset_id = google_bigquery_dataset.namespace[0].dataset_id
+  dataset_id = google_bigquery_dataset.namespace.dataset_id
   role       = "roles/bigquery.dataEditor"
   member     = var.logging_writer_service_account_member
 }
 
+moved {
+  from = google_logging_linked_dataset.namespace_linked_dataset[0]
+  to   = google_logging_linked_dataset.namespace_linked_dataset
+}
+
 resource "google_logging_linked_dataset" "namespace_linked_dataset" {
-  count       = var.log_analytics ? 1 : 0
   link_id     = replace("gke-${local.tenant_namespace}-log-linked", "-", "_")
-  bucket      = google_logging_project_bucket_config.namespace[0].id
+  bucket      = google_logging_project_bucket_config.namespace.id
   description = "Linked Dataset for GKE Namespace Logging ${local.tenant_namespace}"
 }
