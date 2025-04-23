@@ -105,7 +105,7 @@ runs:
     - name: Render terraform docs inside the README.md
       if: ${{ steps.tf_docs.outputs.tf_docs == 'true' }}
       id: terraform_docs
-      uses: terraform-docs/gh-actions@v1.3.0
+      uses: terraform-docs/gh-actions@aeae0038ed47a547e0c0fca5c059d3335f48fb25 #v1.3.0
       with:
         working-dir: ${{ inputs.package-name }}
         output-file: README.md

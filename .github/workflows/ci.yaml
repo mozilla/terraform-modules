@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Get Changed Terraform directories
       id: search
-      uses: mozilla/tf-actions/matrixify@main
+      uses: mozilla/tf-actions/matrixify@ddd76d971c53359fd7c89099197a6cc26adc72b8
       with:
         ignore_dir: "**/example**"
     - name: Outputs
@@ -36,13 +36,13 @@ jobs:
 
     steps:
     - name: Install terraform
-      uses: hashicorp/setup-terraform@v3
+      uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd #v3
       with:
         terraform_wrapper: false
 
     - id: terraform-checks
       name: Terraform Checks
-      uses: mozilla/tf-actions/ci@v0.0.4
+      uses: mozilla/tf-actions/ci@4c2eeab2ff55a389cd171aa90b1c64c345ec8af7 #v0.0.4
       with:
         readme_check: "true"
         tfpath: ${{ matrix.directory }}
