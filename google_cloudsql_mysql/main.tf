@@ -146,6 +146,14 @@ resource "google_sql_database_instance" "replica" {
       }
     }
 
+    dynamic "data_cache_config" {
+      for_each = var.replica_edition == "ENTERPRISE_PLUS" ? [1] : []
+
+      content {
+        data_cache_enabled = var.replica_data_cache_enabled
+      }
+    }
+
     ip_configuration {
       ipv4_enabled                                  = var.enable_public_ip
       private_network                               = var.network

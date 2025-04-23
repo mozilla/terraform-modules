@@ -217,6 +217,12 @@ variable "replica_count" {
   type        = number
 }
 
+variable "replica_data_cache_enabled" {
+  default     = true
+  description = "Whether data cache is enabled for the replica instance. Only available for `ENTERPRISE_PLUS` edition instances."
+  type        = bool
+}
+
 variable "replica_db_cpu" {
   description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing"
   default     = "2"
