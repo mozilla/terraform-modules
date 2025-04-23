@@ -7,6 +7,7 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_addresses"></a> [addresses](#input\_addresses) | IP Addresses. | <pre>object({<br/>    ipv4 = string,<br/>    ipv6 = string,<br/>  })</pre> | n/a | yes |
 | <a name="input_application"></a> [application](#input\_application) | Application name. | `string` | n/a | yes |
+| <a name="input_backend_bucket_name_override"></a> [backend\_bucket\_name\_override](#input\_backend\_bucket\_name\_override) | Force a particular name for CDN backend bucket. Should only be used for legacy infra. | `string` | n/a | yes |
 | <a name="input_backend_timeout_sec"></a> [backend\_timeout\_sec](#input\_backend\_timeout\_sec) | Timeout for backend service. | `number` | `10` | no |
 | <a name="input_backend_type"></a> [backend\_type](#input\_backend\_type) | Backend type to create. Must be set to one of [service, bucket, service\_and\_bucket]. When service\_and\_bucket, the default backend is the service | `string` | `"service"` | no |
 | <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Name of GCS bucket to use as CDN backend. Required if backend\_type is set to 'bucket' or 'service\_and\_bucket'. | `string` | `""` | no |
@@ -19,7 +20,6 @@
 | <a name="input_https_redirect"></a> [https\_redirect](#input\_https\_redirect) | Redirect from http to https. | `bool` | `true` | no |
 | <a name="input_log_sample_rate"></a> [log\_sample\_rate](#input\_log\_sample\_rate) | Sample rate for Cloud Logging. Must be in the interval [0, 1]. | `number` | `1` | no |
 | <a name="input_name"></a> [name](#input\_name) | Optional name of distribution. | `string` | `""` | no |
-| <a name="input_name_suffix_override"></a> [name\_suffix\_override](#input\_name\_suffix\_override) | Suffix to append to resource names. Should only be used to support legacy infra | `string` | `"cdn"` | no |
 | <a name="input_negative_caching_policy"></a> [negative\_caching\_policy](#input\_negative\_caching\_policy) | Negative caching policy config to be passed to backend service. | <pre>list(object({<br/>    code = string<br/>    ttl  = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_origin_fqdn"></a> [origin\_fqdn](#input\_origin\_fqdn) | Origin's fqdn: e.g., 'mozilla.org'. | `string` | n/a | yes |
 | <a name="input_origin_port"></a> [origin\_port](#input\_origin\_port) | Port to use for origin. | `number` | `443` | no |
