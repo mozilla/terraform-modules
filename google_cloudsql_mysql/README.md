@@ -145,6 +145,7 @@ output "mysql_database" {
 | <a name="input_region"></a> [region](#input\_region) | Region to use for Google SQL instance | `string` | `"us-west1"` | no |
 | <a name="input_replica_availability_type_override"></a> [replica\_availability\_type\_override](#input\_replica\_availability\_type\_override) | This OVERRIDES var.availability\_type for replicas (replicas use var.availability\_type per default).) | `string` | `""` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas to create | `number` | `0` | no |
+| <a name="input_replica_data_cache_enabled"></a> [replica\_data\_cache\_enabled](#input\_replica\_data\_cache\_enabled) | Whether data cache is enabled for the replica instance. Only available for `ENTERPRISE_PLUS` edition instances. | `bool` | `true` | no |
 | <a name="input_replica_db_cpu"></a> [replica\_db\_cpu](#input\_replica\_db\_cpu) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
 | <a name="input_replica_db_mem_gb"></a> [replica\_db\_mem\_gb](#input\_replica\_db\_mem\_gb) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
 | <a name="input_replica_edition"></a> [replica\_edition](#input\_replica\_edition) | The edition of the replica instance, can be `ENTERPRISE` or `ENTERPRISE_PLUS`. | `string` | `"ENTERPRISE"` | no |
