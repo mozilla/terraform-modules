@@ -99,6 +99,12 @@ variable "negative_caching_policy" {
   default = []
 }
 
+variable "bypass_cache_on_request_headers" {
+  description = "Headers to match when bypassing cache"
+  type        = list(string)
+  default     = []
+}
+
 variable "log_sample_rate" {
   description = "Sample rate for Cloud Logging. Must be in the interval [0, 1]."
   type        = number
@@ -133,4 +139,9 @@ variable "bucket_name" {
   type        = string
   default     = ""
   description = "Name of GCS bucket to use as CDN backend. Required if backend_type is set to 'bucket' or 'service_and_bucket'."
+}
+
+variable "backend_bucket_name_override" {
+  type        = string
+  description = "Force a particular name for CDN backend bucket. Should only be used for legacy infra."
 }

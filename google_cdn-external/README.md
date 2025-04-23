@@ -7,9 +7,11 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_addresses"></a> [addresses](#input\_addresses) | IP Addresses. | <pre>object({<br/>    ipv4 = string,<br/>    ipv6 = string,<br/>  })</pre> | n/a | yes |
 | <a name="input_application"></a> [application](#input\_application) | Application name. | `string` | n/a | yes |
+| <a name="input_backend_bucket_name_override"></a> [backend\_bucket\_name\_override](#input\_backend\_bucket\_name\_override) | Force a particular name for CDN backend bucket. Should only be used for legacy infra. | `string` | n/a | yes |
 | <a name="input_backend_timeout_sec"></a> [backend\_timeout\_sec](#input\_backend\_timeout\_sec) | Timeout for backend service. | `number` | `10` | no |
 | <a name="input_backend_type"></a> [backend\_type](#input\_backend\_type) | Backend type to create. Must be set to one of [service, bucket, service\_and\_bucket]. When service\_and\_bucket, the default backend is the service | `string` | `"service"` | no |
 | <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Name of GCS bucket to use as CDN backend. Required if backend\_type is set to 'bucket' or 'service\_and\_bucket'. | `string` | `""` | no |
+| <a name="input_bypass_cache_on_request_headers"></a> [bypass\_cache\_on\_request\_headers](#input\_bypass\_cache\_on\_request\_headers) | Headers to match when bypassing cache | `list(string)` | `[]` | no |
 | <a name="input_cache_key_policy"></a> [cache\_key\_policy](#input\_cache\_key\_policy) | Cache key policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_cdn_policy"></a> [cdn\_policy](#input\_cdn\_policy) | CDN policy config to be passed to backend service. | `map(any)` | `{}` | no |
 | <a name="input_certs"></a> [certs](#input\_certs) | List of certificates ids. If this list is empty, this will be HTTP only. | `list(string)` | n/a | yes |

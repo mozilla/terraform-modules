@@ -90,7 +90,7 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_backend_bucket" "default" {
   count = contains(["bucket", "service_and_bucket"], var.backend_type) ? 1 : 0
 
-  name        = local.name_prefix
+  name        = var.backend_bucket_name_override != "" ? var.backend_bucket_name_override : local.name_prefix
   bucket_name = var.bucket_name
   enable_cdn  = true
 
@@ -108,6 +108,12 @@ resource "google_compute_backend_bucket" "default" {
       negative_caching             = lookup(var.cdn_policy, "negative_caching", null)
       serve_while_stale            = lookup(var.cdn_policy, "serve_while_stale", null)
       signed_url_cache_max_age_sec = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
+      dynamic "bypass_cache_on_request_headers" {
+        for_each = var.bypass_cache_on_request_headers
+        content {
+          header_name = bypass_cache_on_request_headers.value
+        }
+      }
       dynamic "negative_caching_policy" {
         for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }
         content {
