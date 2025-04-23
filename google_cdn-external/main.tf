@@ -101,13 +101,14 @@ resource "google_compute_backend_bucket" "default" {
     for_each = var.cdn_policy != {} ? [1] : []
 
     content {
-      cache_mode                   = lookup(var.cdn_policy, "cache_mode", null)
-      client_ttl                   = lookup(var.cdn_policy, "client_ttl", null)
-      default_ttl                  = lookup(var.cdn_policy, "default_ttl", null)
-      max_ttl                      = lookup(var.cdn_policy, "max_ttl", null)
-      negative_caching             = lookup(var.cdn_policy, "negative_caching", null)
-      serve_while_stale            = lookup(var.cdn_policy, "serve_while_stale", null)
-      signed_url_cache_max_age_sec = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
+      cache_mode                      = lookup(var.cdn_policy, "cache_mode", null)
+      client_ttl                      = lookup(var.cdn_policy, "client_ttl", null)
+      default_ttl                     = lookup(var.cdn_policy, "default_ttl", null)
+      max_ttl                         = lookup(var.cdn_policy, "max_ttl", null)
+      negative_caching                = lookup(var.cdn_policy, "negative_caching", null)
+      serve_while_stale               = lookup(var.cdn_policy, "serve_while_stale", null)
+      signed_url_cache_max_age_sec    = lookup(var.cdn_policy, "signed_url_cache_max_age_sec", null)
+      bypass_cache_on_request_headers = lookup(var.cdn_policy, "bypass_cache_on_request_headers", null)
       dynamic "negative_caching_policy" {
         for_each = { for policy in var.negative_caching_policy : "${policy.code}.${policy.ttl}" => policy }
         content {
