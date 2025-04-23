@@ -99,6 +99,12 @@ variable "negative_caching_policy" {
   default = []
 }
 
+variable "bypass_cache_on_request_headers" {
+  description = "Headers to match when bypassing cache"
+  type        = list(string)
+  default     = []
+}
+
 variable "log_sample_rate" {
   description = "Sample rate for Cloud Logging. Must be in the interval [0, 1]."
   type        = number
