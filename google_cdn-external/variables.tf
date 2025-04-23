@@ -134,3 +134,9 @@ variable "bucket_name" {
   default     = ""
   description = "Name of GCS bucket to use as CDN backend. Required if backend_type is set to 'bucket' or 'service_and_bucket'."
 }
+
+variable "name_suffix_override" {
+  type        = string
+  default     = "cdn"
+  description = "Suffix to append to resource names. Should only be used to support legacy infra"
+}

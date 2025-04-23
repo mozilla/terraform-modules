@@ -3,7 +3,7 @@
  */
 
 locals {
-  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-cdn" : "cdn"])
+  name_prefix = join("-", [var.application, var.environment, var.name != "" ? "${var.name}-${name_suffix_override}" : "cdn"])
   # when both a bucket and backend service are specified, prefer the backend
   # service as the default backend, and use backend_bucket_paths to route
   # specific paths to the backend bucket
