@@ -42,11 +42,11 @@ resource "google_sql_database_instance" "primary" {
         password_change_interval    = var.password_validation_policy_password_change_interval
       }
     }
-    deletion_protection_enabled = var.deletion_protection_enabled
-    tier                        = local.tier
     availability_type           = var.availability_type
     connector_enforcement       = var.connector_enforcement
+    deletion_protection_enabled = var.deletion_protection_enabled
     edition                     = var.edition
+    tier                        = local.tier
 
     backup_configuration {
       enabled                        = true
@@ -142,17 +142,16 @@ resource "google_sql_database_instance" "replica" {
         password_change_interval    = var.password_validation_policy_password_change_interval
       }
     }
-    deletion_protection_enabled = var.deletion_protection_enabled
-    tier                        = local.replica_tier
     availability_type           = var.replica_availability_type
+    deletion_protection_enabled = var.deletion_protection_enabled
+    edition                     = var.replica_edition
+    tier                        = local.replica_tier
 
-    dynamic "insights_config" {
-      for_each = var.enable_insights_config_on_replica ? range(1) : []
+    dynamic "data_cache_config" {
+      for_each = var.replica_edition == "ENTERPRISE_PLUS" ? [1] : []
+
       content {
-        query_insights_enabled  = true
-        query_string_length     = 1024
-        record_application_tags = true
-        record_client_address   = true
+        data_cache_enabled = var.replica_data_cache_enabled
       }
     }
 
@@ -166,6 +165,16 @@ resource "google_sql_database_instance" "replica" {
 
         name  = lookup(database_flags.value, "name", null)
         value = lookup(database_flags.value, "value", null)
+      }
+    }
+
+    dynamic "insights_config" {
+      for_each = var.enable_insights_config_on_replica ? range(1) : []
+      content {
+        query_insights_enabled  = true
+        query_string_length     = 1024
+        record_application_tags = true
+        record_client_address   = true
       }
     }
 

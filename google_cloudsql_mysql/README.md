@@ -110,8 +110,8 @@ output "mysql_database" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `any` | n/a | yes |
-| <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | A list of authorized\_network maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list` | `[]` | no |
+| <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `string` | n/a | yes |
+| <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | A list of authorized\_network maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list(any)` | `[]` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#availability_type | `string` | `"ZONAL"` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
 | <a name="input_connector_enforcement"></a> [connector\_enforcement](#input\_connector\_enforcement) | Enables the enforcement of Cloud SQL Auth Proxy or Cloud SQL connectors for all the connections. If enabled, all the direct connections are rejected. | `string` | `null` | no |
@@ -127,10 +127,10 @@ output "mysql_database" {
 | <a name="input_edition"></a> [edition](#input\_edition) | The edition of the instance, can be `ENTERPRISE` or `ENTERPRISE_PLUS`. | `string` | `"ENTERPRISE"` | no |
 | <a name="input_enable_private_path_for_google_cloud_services"></a> [enable\_private\_path\_for\_google\_cloud\_services](#input\_enable\_private\_path\_for\_google\_cloud\_services) | If true, will allow Google Cloud Services access over private IP. | `bool` | `false` | no |
 | <a name="input_enable_public_ip"></a> [enable\_public\_ip](#input\_enable\_public\_ip) | If true, will assign a public IP to database instance. | `bool` | `false` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `any` | n/a | yes |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `string` | n/a | yes |
 | <a name="input_force_ha"></a> [force\_ha](#input\_force\_ha) | If set to true, create a mysql replica for HA. Currently the availability\_type works only for postgres | `bool` | `false` | no |
 | <a name="input_instance_version"></a> [instance\_version](#input\_instance\_version) | Version of database. Use this field if you need to spin up a new database instance. | `string` | `"v1"` | no |
-| <a name="input_ip_configuration_ssl_mode"></a> [ip\_configuration\_ssl\_mode](#input\_ip\_configuration\_ssl\_mode) | n/a | `string` | `"ALLOW_UNENCRYPTED_AND_ENCRYPTED"` | no |
+| <a name="input_ip_configuration_ssl_mode"></a> [ip\_configuration\_ssl\_mode](#input\_ip\_configuration\_ssl\_mode) | Specify how SSL connection should be enforced in DB connections. Supported values are ALLOW\_UNENCRYPTED\_AND\_ENCRYPTED, ENCRYPTED\_ONLY, and TRUSTED\_CLIENT\_CERTIFICATE\_REQUIRED | `string` | `"ALLOW_UNENCRYPTED_AND_ENCRYPTED"` | no |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | Maintenance window day | `number` | `2` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | Maintenance window hour | `number` | `16` | no |
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | Receive updates earlier (canary) or later (stable) | `string` | `"stable"` | no |
@@ -145,8 +145,10 @@ output "mysql_database" {
 | <a name="input_region"></a> [region](#input\_region) | Region to use for Google SQL instance | `string` | `"us-west1"` | no |
 | <a name="input_replica_availability_type_override"></a> [replica\_availability\_type\_override](#input\_replica\_availability\_type\_override) | This OVERRIDES var.availability\_type for replicas (replicas use var.availability\_type per default).) | `string` | `""` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas to create | `number` | `0` | no |
+| <a name="input_replica_data_cache_enabled"></a> [replica\_data\_cache\_enabled](#input\_replica\_data\_cache\_enabled) | Whether data cache is enabled for the replica instance. Only available for `ENTERPRISE_PLUS` edition instances. | `bool` | `true` | no |
 | <a name="input_replica_db_cpu"></a> [replica\_db\_cpu](#input\_replica\_db\_cpu) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
 | <a name="input_replica_db_mem_gb"></a> [replica\_db\_mem\_gb](#input\_replica\_db\_mem\_gb) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
+| <a name="input_replica_edition"></a> [replica\_edition](#input\_replica\_edition) | The edition of the replica instance, can be `ENTERPRISE` or `ENTERPRISE_PLUS`. | `string` | `"ENTERPRISE"` | no |
 | <a name="input_replica_enable_private_path_for_google_cloud_services"></a> [replica\_enable\_private\_path\_for\_google\_cloud\_services](#input\_replica\_enable\_private\_path\_for\_google\_cloud\_services) | This OVERRIDES var.enable\_private\_path\_for\_google\_cloud\_services for replicas (replicas use var.enable\_private\_path\_for\_google\_cloud\_services per default). | `bool` | `null` | no |
 | <a name="input_replica_region_override"></a> [replica\_region\_override](#input\_replica\_region\_override) | This OVERRIDES var.region for replicas (replicas use var.region per default). | `string` | `""` | no |
 | <a name="input_replica_tier_override"></a> [replica\_tier\_override](#input\_replica\_tier\_override) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.replica\_db\_cpu and var.replica\_db\_mem\_gb | `string` | `""` | no |

@@ -131,6 +131,8 @@ resource "google_sql_database_instance" "replica" {
 
     deletion_protection_enabled = var.deletion_protection_enabled
 
+    edition = var.replica_edition
+
     dynamic "database_flags" {
       for_each = var.database_flags
       content {
@@ -141,6 +143,14 @@ resource "google_sql_database_instance" "replica" {
 
         name  = lookup(database_flags.value, "name", null)
         value = lookup(database_flags.value, "value", null)
+      }
+    }
+
+    dynamic "data_cache_config" {
+      for_each = var.replica_edition == "ENTERPRISE_PLUS" ? [1] : []
+
+      content {
+        data_cache_enabled = var.replica_data_cache_enabled
       }
     }
 
