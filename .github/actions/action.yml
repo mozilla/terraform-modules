@@ -39,7 +39,7 @@ runs:
           exit 0
         fi
 
-        TAG_VERSION="${TAG#*-}"
+        TAG_VERSION="${TAG: -5}"
         echo "TAG_VERSION = $TAG_VERSION"
         SEMVER_REGEX="^[0-9].[0-9].[0-9]$"
         if [[ $TAG_VERSION =~ $SEMVER_REGEX ]] ; then
