@@ -23,12 +23,9 @@ resource "google_logging_project_bucket_config" "namespace" {
   enable_analytics = true
 }
 
-moved {
-  from = google_project_iam_member.logging_bucket_writer[0]
-  to   = google_project_iam_member.logging_bucket_writer
-}
-
 resource "google_project_iam_member" "logging_bucket_writer" {
+  count = var.logging_writer_service_account_member != "" ? 1 : 0
+
   project = var.project
   role    = "roles/logging.bucketWriter"
   member  = var.logging_writer_service_account_member
@@ -55,12 +52,9 @@ resource "google_bigquery_dataset" "namespace" {
   location                        = "US"
 }
 
-moved {
-  from = google_bigquery_dataset_iam_member.logging_dataset_writer[0]
-  to   = google_bigquery_dataset_iam_member.logging_dataset_writer
-}
-
 resource "google_bigquery_dataset_iam_member" "logging_dataset_writer" {
+  count = var.logging_writer_service_account_member != "" ? 1 : 0
+
   dataset_id = google_bigquery_dataset.namespace.dataset_id
   role       = "roles/bigquery.dataEditor"
   member     = var.logging_writer_service_account_member
