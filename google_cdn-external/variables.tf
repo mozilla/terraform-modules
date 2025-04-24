@@ -143,5 +143,6 @@ variable "bucket_name" {
 
 variable "backend_bucket_name_override" {
   type        = string
+  default     = ""
   description = "Force a particular name for CDN backend bucket. Should only be used for legacy infra."
 }
