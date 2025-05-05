@@ -245,3 +245,14 @@ resource "sigsci_site" "ngwaf_edge_site" {
   agent_level            = var.ngwaf_agent_level # this setting dictates blocking mode
   immediate_block        = var.ngwaf_immediate_block
 }
+
+resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {
+  site_short_name = sigsci_site.ngwaf_edge_site.short_name
+  fastly_sid      = fastly_service_vcl.default.id
+
+  fastly_service_vcl_active_version = fastly_service_vcl.default.active_version
+
+  depends_on = [
+    sigsci_edge_deployment_service.ngwaf_edge_service_link,
+  ]
+}
