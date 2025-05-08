@@ -75,6 +75,17 @@ resource "fastly_service_vcl" "default" {
     }
   }
 
+  # Allow passing in arbitrary snippets for VCL configuration
+  dynamic "snippet" {
+    for_each = var.snippets
+    content {
+      content  = snippet.value.content
+      name     = snippet.value.name
+      type     = snippet.value.type
+      priority = lookup(snippet.value, "priority", "")
+    }
+  }
+
   # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
   #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
   dynamicsnippet {

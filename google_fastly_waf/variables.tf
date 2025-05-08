@@ -31,6 +31,12 @@ variable "conditions" {
   default     = []
 }
 
+variable "snippets" {
+  description = "snippets"
+  type        = list(any)
+  default     = []
+}
+
 variable "project_id" {
   description = "The GCP project_ id for BigQuery logging"
   type        = string
