@@ -8,7 +8,7 @@ locals {
 }
 
 resource "google_certificate_manager_certificate_map" "default" {
-  project     = var.shared_infra_project_id
+  project     = coalesce(var.shared_infra_project_id, data.google_project.project.project_id)
   name        = format("%s", local.name_prefix)
   description = "managed by terraform"
 }
@@ -27,7 +27,7 @@ resource "random_id" "certificate_map_entry_id" {
 resource "google_certificate_manager_certificate_map_entry" "default" {
   for_each = local.certificate_map_entries_map
 
-  project     = var.shared_infra_project_id
+  project     = coalesce(var.shared_infra_project_id, data.google_project.project.project_id)
   name        = format("%s-%s", local.name_prefix, random_id.certificate_map_entry_id[each.key].hex)
   description = "managed by terraform"
 

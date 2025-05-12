@@ -1,7 +1,7 @@
 resource "google_certificate_manager_dns_authorization" "default" {
   for_each = { for cert in var.certificates : replace(cert.hostname, ".", "-") => cert if cert.dns_authorization == true }
 
-  project     = var.shared_infra_project_id
+  project     = coalesce(var.shared_infra_project_id, data.google_project.project.project_id)
   name        = format("%s", each.key)
   description = "managed by terraform"
 
@@ -11,7 +11,7 @@ resource "google_certificate_manager_dns_authorization" "default" {
 resource "google_certificate_manager_certificate" "default" {
   for_each = { for cert in var.certificates : replace(cert.hostname, ".", "-") => cert }
 
-  project     = var.shared_infra_project_id
+  project     = coalesce(var.shared_infra_project_id, data.google_project.project.project_id)
   name        = format("%s", each.key)
   description = "managed by terraform"
 
