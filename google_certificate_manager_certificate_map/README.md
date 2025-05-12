@@ -10,11 +10,12 @@
 | <a name="input_custom_name_prefix"></a> [custom\_name\_prefix](#input\_custom\_name\_prefix) | use this to set a custom name\_prefix for resource names | `string` | `""` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | n/a | `string` | n/a | yes |
-| <a name="input_shared_infra_project_id"></a> [shared\_infra\_project\_id](#input\_shared\_infra\_project\_id) | id of shared infra project to create resources in | `string` | n/a | yes |
+| <a name="input_shared_infra_project_id"></a> [shared\_infra\_project\_id](#input\_shared\_infra\_project\_id) | id of shared infra project to create resources in | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_certificate_map"></a> [certificate\_map](#output\_certificate\_map) | n/a |
 | <a name="output_dns_authorizations"></a> [dns\_authorizations](#output\_dns\_authorizations) | n/a |
 <!-- END_TF_DOCS -->
