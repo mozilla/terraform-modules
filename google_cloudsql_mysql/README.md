@@ -106,6 +106,55 @@ output "mysql_database" {
 }
 ```
 
+## Example using Private Services Connect (PSC)
+```hcl
+locals {
+  realm       = "nonprod"
+  project_id  = "moz-fx-test-modules-nonprod"
+  region      = "us-west1"
+  environment = "dev"
+
+  subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
+}
+
+# Configure remote_state for subnet outputs
+data "terraform_remote_state" "vpc" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-vpc-project"
+    prefix = "vpc"
+  }
+}
+
+module "mysql_database" {
+  source      = "github.com/mozilla/terraform-modules//google_cloudsql_mysql?ref=main"
+  application = "testing-mysql"
+  environment = local.environment
+  realm       = local.realm
+
+  network = local.subnetworks.regions[local.region].network
+
+  database_version = "MYSQL_8_4"
+
+  maintenance_window_update_track = local.realm == "prod" ? "stable" : "canary"
+
+  # `psc_allowed_consumer_projects`, and `psc_enabled` must be set for Private Services Connect (PSC) to work
+  # To have Google create the PSC endpoint automatically, set `psc_auto_connections` and create a Service Connection Policy in the consumer network project
+  # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/network_connectivity_service_connection_policy
+  # This policy exists if you're using a MozCloud Shared VPC
+  psc_allowed_consumer_projects = [local.project_id]
+  psc_auto_connections          = [{
+    consumer_network            = local.subnetworks.regions[local.region].network
+    consumer_service_project_id = local.project_id
+  }]
+  psc_enabled = true
+
+  # PSC is not compatible with query insights recording the client IP address
+  record_client_address = false
+}
+```
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -136,6 +185,9 @@ output "mysql_database" {
 | <a name="input_maintenance_window_update_track"></a> [maintenance\_window\_update\_track](#input\_maintenance\_window\_update\_track) | Receive updates earlier (canary) or later (stable) | `string` | `"stable"` | no |
 | <a name="input_network"></a> [network](#input\_network) | Network where the private peering should attach. | `string` | `"default"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP Project ID | `string` | `null` | no |
+| <a name="input_psc_allowed_consumer_projects"></a> [psc\_allowed\_consumer\_projects](#input\_psc\_allowed\_consumer\_projects) | List of consumer projects that are allow-listed for PSC connections to this instance | `list(string)` | `[]` | no |
+| <a name="input_psc_auto_connections"></a> [psc\_auto\_connections](#input\_psc\_auto\_connections) | List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work | `list(object({consumer_network = string, consumer_service_project_id = string}))` | `[]` | no |
+| <a name="input_psc_enabled"></a> [psc\_enabled](#input\_psc\_enabled) | Whether PSC connectivity is enabled for this instance | `bool` | `false` | no |
 | <a name="input_query_insights_enabled"></a> [query\_insights\_enabled](#input\_query\_insights\_enabled) | Enable / disable Query Insights (See: https://cloud.google.com/sql/docs/mysql/using-query-insights) | `bool` | `true` | no |
 | <a name="input_query_plans_per_minute"></a> [query\_plans\_per\_minute](#input\_query\_plans\_per\_minute) | Query Insights: sampling rate | `number` | `5` | no |
 | <a name="input_query_string_length"></a> [query\_string\_length](#input\_query\_string\_length) | Query Insights: length of queries | `number` | `1024` | no |
