@@ -204,9 +204,33 @@ variable "project_id" {
   type        = string
 }
 
+variable "psc_allowed_consumer_projects" {
+  default     = []
+  description = "List of consumer projects that are allow-listed for PSC connections to this instance"
+  type        = list(string)
+}
+
+variable "psc_auto_connections" {
+  default     = []
+  description = "List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work"
+  type        = list(object({consumer_network = string, consumer_service_project_id = string}))
+}
+
+variable "psc_enabled" {
+  default     = false
+  description = "Whether PSC connectivity is enabled for this instance"
+  type        = bool
+}
+
 variable "realm" {
   description = "Realm e.g., nonprod."
   type        = string
+}
+
+variable "record_client_address" {
+  description = "Query Insights: store client IP address"
+  default     = true
+  type        = bool
 }
 
 variable "region" {

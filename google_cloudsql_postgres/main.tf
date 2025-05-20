@@ -71,13 +71,32 @@ resource "google_sql_database_instance" "primary" {
       query_insights_enabled  = true
       query_string_length     = 1024
       record_application_tags = true
-      record_client_address   = true
+      record_client_address   = var.psc_enabled ? false : var.record_client_address
     }
 
     ip_configuration {
       ipv4_enabled                                  = var.enable_public_ip
       ssl_mode                                      = var.ip_configuration_ssl_mode
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
+
+      dynamic "psc_config" {
+        for_each = var.psc_enabled ? [1] : []
+
+        content {
+          allowed_consumer_projects = var.psc_allowed_consumer_projects
+          psc_enabled               = var.psc_enabled
+
+          dynamic "psc_auto_connections" {
+            for_each = var.psc_auto_connections
+
+            content {
+              consumer_network            = psc_auto_connections.value.consumer_network
+              consumer_service_project_id = psc_auto_connections.value.consumer_service_project_id
+            }
+          }
+        }
+      }
+
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         content {
@@ -174,7 +193,7 @@ resource "google_sql_database_instance" "replica" {
         query_insights_enabled  = true
         query_string_length     = 1024
         record_application_tags = true
-        record_client_address   = true
+        record_client_address   = var.psc_enabled ? false : var.record_client_address
       }
     }
 
