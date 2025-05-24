@@ -12,7 +12,8 @@ module "workload-identity-for-tenant-sa" {
   project_id          = var.cluster_project_id
   use_existing_k8s_sa = true
   use_existing_gcp_sa = true
-  gcp_sa_name         = google_service_account.gke-account.email
+  gcp_sa_name         = google_service_account.gke-account.name
+  gcp_sa_email        = google_service_account.gke-account.email
 }
 
 module "workload-identity-for-generic-tenant-sa" {
@@ -23,7 +24,8 @@ module "workload-identity-for-generic-tenant-sa" {
   project_id          = var.cluster_project_id
   use_existing_k8s_sa = true
   use_existing_gcp_sa = true
-  gcp_sa_name         = google_service_account.gke-account.email
+  gcp_sa_name         = google_service_account.gke-account.name
+  gcp_sa_email        = google_service_account.gke-account.email
 }
 
 module "workload-identity-for-tenant-external-secrets-sa" {
@@ -34,7 +36,8 @@ module "workload-identity-for-tenant-external-secrets-sa" {
   project_id          = var.cluster_project_id
   use_existing_k8s_sa = true
   use_existing_gcp_sa = true
-  gcp_sa_name         = google_service_account.gke-account.email
+  gcp_sa_name         = google_service_account.gke-account.name
+  gcp_sa_email        = google_service_account.gke-account.email
 }
 
 # permissions for use with External Secrets Operator in GKE
