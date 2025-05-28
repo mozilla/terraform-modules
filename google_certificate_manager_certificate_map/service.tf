@@ -1,7 +1,2 @@
-resource "google_project_service" "certificatemanager" {
-  project = var.shared_infra_project_id
-
-  service = "certificatemanager.googleapis.com"
-
-  disable_on_destroy = false
-}
+# This file was removed in https://github.com/mozilla/terraform-modules/pull/309
+# Please delete this file in a future update to this module.
