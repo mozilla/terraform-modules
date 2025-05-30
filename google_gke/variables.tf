@@ -7,6 +7,12 @@ variable "description" {
   type        = string
 }
 
+variable "enable_config_connector" {
+  default     = false
+  description = "Enable Config Connector Add-On"
+  type        = bool
+}
+
 variable "enable_dns_endpoint" {
   default     = false
   description = "Enable external DNS endpoint for control plane access"

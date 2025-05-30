@@ -155,6 +155,7 @@ module "gke" {
 | <a name="input_description"></a> [description](#input\_description) | The description of the cluster | `string` | `null` | no |
 | <a name="input_disable_snat_status"></a> [disable\_snat\_status](#input\_disable\_snat\_status) | Whether the cluster disables default in-node sNAT rules. Defaults to false. | `bool` | `false` | no |
 | <a name="input_dns_cache"></a> [dns\_cache](#input\_dns\_cache) | The status of the NodeLocal DNSCache addon. | `bool` | `true` | no |
+| <a name="input_enable_config_connector"></a> [enable\_config\_connector](#input\_enable\_config\_connector) | Enable Config Connector Add-On | `bool` | `false` | no |
 | <a name="input_enable_cost_allocation"></a> [enable\_cost\_allocation](#input\_enable\_cost\_allocation) | Enables Cost Allocation Feature and the cluster name and namespace of your GKE workloads appear in the labels field of the billing export to BigQuery | `bool` | `false` | no |
 | <a name="input_enable_dataplane"></a> [enable\_dataplane](#input\_enable\_dataplane) | Whether to enable dataplane v2 on the cluster. Sets DataPath field. Defaults to false. | `bool` | `false` | no |
 | <a name="input_enable_dns_endpoint"></a> [enable\_dns\_endpoint](#input\_enable\_dns\_endpoint) | Enable external DNS endpoint for control plane access | `bool` | `false` | no |
