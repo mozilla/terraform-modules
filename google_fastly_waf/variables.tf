@@ -26,9 +26,14 @@ variable "domains" {
 }
 
 variable "conditions" {
-  description = "Conditions"
-  type        = list(any)
-  default     = []
+  description = "List of Fastly conditions to create (REQUEST, RESPONSE or CACHE)."
+  type = list(object({
+    name      = string           # required, unique
+    statement = string           # VCL conditional expression
+    type      = string           # one of: REQUEST, RESPONSE, CACHE
+    priority  = optional(number) # lower runs first, default 10
+  }))
+  default = []
 }
 
 variable "snippets" {
@@ -46,6 +51,20 @@ variable "subscription_domains" {
   description = "Domains to issue SSL certificates for"
   type        = list(any)
   default     = []
+}
+
+variable "response_objects" {
+  description = "List of synthetic response objects to attach to the Fastly service."
+  type = list(object({
+    name              = string           # required
+    status            = optional(number) # e.g. 503
+    response          = optional(string) # e.g. "Ok"
+    content           = optional(string)
+    content_type      = optional(string)
+    request_condition = optional(string) # name of an existing REQUEST condition
+    cache_condition   = optional(string) # name of an existing CACHE   condition
+  }))
+  default = []
 }
 
 ## NGWAF
