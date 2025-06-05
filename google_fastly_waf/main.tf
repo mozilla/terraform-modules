@@ -86,6 +86,33 @@ resource "fastly_service_vcl" "default" {
     }
   }
 
+  # Allow creating custom response objects. Useful if you want to setup a maintenance page
+  # or error responses from Fastly
+  #
+  dynamic "condition" {
+    for_each = var.conditions
+    content {
+      name      = condition.value.name
+      statement = condition.value.statement
+      type      = condition.value.type
+      priority  = try(condition.value.priority, null)
+    }
+  }
+
+  dynamic "response_object" {
+    for_each = var.response_objects
+    iterator = ro
+    content {
+      name              = ro.value.name
+      status            = try(ro.value.status, null)
+      response          = try(ro.value.response, null)
+      content           = try(ro.value.content, null)
+      content_type      = try(ro.value.content_type, null)
+      request_condition = try(ro.value.request_condition, null)
+      cache_condition   = try(ro.value.cache_condition, null)
+    }
+  }
+
   # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
   #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
   dynamicsnippet {
@@ -137,15 +164,6 @@ resource "fastly_service_vcl" "default" {
     name      = "False"
     statement = "false"
     type      = "REQUEST"
-  }
-
-  dynamic "condition" {
-    for_each = var.conditions
-    content {
-      name      = condition.value.name
-      statement = condition.value.statement
-      type      = condition.value.type
-    }
   }
 
   vcl {

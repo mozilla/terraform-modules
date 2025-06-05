@@ -1,4 +1,4 @@
-module "gar" {
+module "fastly" {
   source      = "github.com/mozilla/terraform-modules//google_fastly_waf?ref=main"
   application = glab
   environment = foo
