@@ -5,6 +5,7 @@ content: |-
 
   ```hcl
   {{ include "examples/example.tf" }}
+  {{ include "examples/example_maintenance_page.tf" }}
   ```
 
   {{ .Inputs }}
