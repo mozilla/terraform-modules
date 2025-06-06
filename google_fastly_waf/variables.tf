@@ -67,6 +67,12 @@ variable "response_objects" {
   default = []
 }
 
+variable "stage" {
+  description = "Determine if something should be deployed to stage"
+  type        = bool
+  default     = false
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string
