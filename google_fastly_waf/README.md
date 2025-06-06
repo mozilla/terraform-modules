@@ -97,6 +97,43 @@ EOF
     },
   ]
 }
+# Fastly supports deploying your VCL to a "staging" environment. This environment
+# has a different IP that requires you to override your local `/etc/hosts` to test
+# https://docs.fastly.com/products/staging
+# 
+# The workflow to deploy stage would be to add the `stage = true` arguement for
+# the module, verify your changes look correct, then remove (or comment out) the
+# `stage` argument and apply again. This will promote your changes to production.
+module "fastly_stage" {
+  source      = "github.com/mozilla/terraform-modules//google_fastly_waf?ref=main"
+  application = glab
+  environment = foo
+  project_id  = bar
+  realm       = bar
+
+  waf_enabled       = true
+  ngwaf_agent_level = "block"
+  stage             = true
+
+  subscription_domains = [
+    { name = "my-app.mozilla.org" }
+  ]
+
+  domains = [
+    { name = "my-cool-app.global.ssl.fastly.net" },
+  ]
+
+  backends = [
+    {
+      address           = "my_cool_app.net"
+      name              = "my_cool_app_net"
+      port              = 443
+      ssl_cert_hostname = "my_cool_app.net"
+      ssl_sni_hostname  = "my_cool_app.net"
+      use_ssl           = true
+    },
+  ]
+}
 ```
 
 ## Inputs
@@ -114,6 +151,7 @@ EOF
 | <a name="input_realm"></a> [realm](#input\_realm) | The realm this module is deployed into | `string` | n/a | yes |
 | <a name="input_response_objects"></a> [response\_objects](#input\_response\_objects) | List of synthetic response objects to attach to the Fastly service. | <pre>list(object({<br/>    name              = string           # required<br/>    status            = optional(number) # e.g. 503<br/>    response          = optional(string) # e.g. "Ok"<br/>    content           = optional(string)<br/>    content_type      = optional(string)<br/>    request_condition = optional(string) # name of an existing REQUEST condition<br/>    cache_condition   = optional(string) # name of an existing CACHE   condition<br/>  }))</pre> | `[]` | no |
 | <a name="input_snippets"></a> [snippets](#input\_snippets) | snippets | `list(any)` | `[]` | no |
+| <a name="input_stage"></a> [stage](#input\_stage) | Determine if something should be deployed to stage | `bool` | `false` | no |
 | <a name="input_subscription_domains"></a> [subscription\_domains](#input\_subscription\_domains) | Domains to issue SSL certificates for | `list(any)` | `[]` | no |
 
 ## Outputs

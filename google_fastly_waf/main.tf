@@ -5,6 +5,12 @@ locals {
 resource "fastly_service_vcl" "default" {
   name = "${var.application}-${var.realm}-${var.environment}"
 
+  # Toggling staging environment deployment
+  # these variables work together and in inverse. I don't see a need
+  # to have a separate `activate` toggle right now
+  activate = !var.stage
+  stage    = var.stage
+
   product_enablement {
     brotli_compression = true
     bot_management     = true
@@ -77,7 +83,7 @@ resource "fastly_service_vcl" "default" {
 
   # Allow passing in arbitrary snippets for VCL configuration
   dynamic "snippet" {
-    for_each = var.snippets
+    for_each = local.snippets
     content {
       content  = snippet.value.content
       name     = snippet.value.name
