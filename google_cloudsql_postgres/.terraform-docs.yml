@@ -8,6 +8,11 @@ content: |-
   {{ include "examples/minimal/main.tf" }}
   ```
 
+  ## Example using Private Services Connect (PSC)
+  ```hcl
+  {{ include "examples/psc/main.tf" }}
+  ```
+
   {{ .Inputs }}
 
   {{ .Outputs }}  
