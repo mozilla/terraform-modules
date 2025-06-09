@@ -47,6 +47,54 @@ output "postgres_database" {
 }
 ```
 
+## Example using Private Services Connect (PSC)
+```hcl
+locals {
+  realm       = "nonprod"
+  project_id  = "moz-fx-test-modules-nonprod"
+  region      = "us-west1"
+  environment = "dev"
+
+  subnetworks = try(data.terraform_remote_state.vpc.outputs.subnetworks.realm[local.realm][local.project_id], {})
+}
+
+# Configure remote_state for subnet outputs
+data "terraform_remote_state" "vpc" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-vpc-project"
+    prefix = "vpc"
+  }
+}
+
+module "postgres_database" {
+  source      = "github.com/mozilla/terraform-modules//google_cloudsql_postgres?ref=main"
+  application = "testing-postgres"
+  environment = local.environment
+  realm       = local.realm
+  project_id  = local.project_id
+
+  network = local.subnetworks.regions[local.region].network
+
+  database_version = "POSTGRES_17"
+
+  # `psc_allowed_consumer_projects`, and `psc_enabled` must be set for Private Services Connect (PSC) to work
+  # To have Google create the PSC endpoint automatically, set `psc_auto_connections` and create a Service Connection Policy in the consumer network project
+  # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/network_connectivity_service_connection_policy
+  # This policy exists if you're using a MozCloud Shared VPC
+  psc_allowed_consumer_projects = [local.project_id]
+  psc_auto_connections          = [{
+    consumer_network            = local.subnetworks.regions[local.region].network
+    consumer_service_project_id = local.project_id
+  }]
+  psc_enabled = true
+
+  # PSC is not compatible with query insights recording the client IP address
+  record_client_address = false
+}
+```
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -83,7 +131,11 @@ output "postgres_database" {
 | <a name="input_password_validation_policy_password_change_interval"></a> [password\_validation\_policy\_password\_change\_interval](#input\_password\_validation\_policy\_password\_change\_interval) | Specifies the minimum duration after which you can change the password in hours | `string` | `"0s"` | no |
 | <a name="input_password_validation_policy_reuse_interval"></a> [password\_validation\_policy\_reuse\_interval](#input\_password\_validation\_policy\_reuse\_interval) | Specifies the number of previous passwords that can't be reused | `number` | `0` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP Project ID | `string` | `null` | no |
+| <a name="input_psc_allowed_consumer_projects"></a> [psc\_allowed\_consumer\_projects](#input\_psc\_allowed\_consumer\_projects) | List of consumer projects that are allow-listed for PSC connections to this instance | `list(string)` | `[]` | no |
+| <a name="input_psc_auto_connections"></a> [psc\_auto\_connections](#input\_psc\_auto\_connections) | List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work | `list(object({consumer_network = string, consumer_service_project_id = string}))` | `[]` | no |
+| <a name="input_psc_enabled"></a> [psc\_enabled](#input\_psc\_enabled) | Whether PSC connectivity is enabled for this instance | `bool` | `false` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
+| <a name="input_record_client_address"></a> [record\_client\_address](#input\_record\_client\_address) | Query Insights: store client IP address | `bool` | `true` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |
 | <a name="input_replica_availability_type"></a> [replica\_availability\_type](#input\_replica\_availability\_type) | Allow setting availability configuration of replica | `string` | `"ZONAL"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of instances | `number` | `0` | no |

@@ -73,6 +73,21 @@ resource "google_sql_database_instance" "primary" {
       private_network                               = var.network
       ssl_mode                                      = var.ip_configuration_ssl_mode
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
+      
+      psc_config {
+        allowed_consumer_projects = var.psc_allowed_consumer_projects
+        psc_enabled               = var.psc_enabled
+
+        dynamic "psc_auto_connections" {
+          for_each = var.psc_auto_connections
+
+          content {
+            consumer_network            = psc_auto_connections.value.consumer_network
+            consumer_service_project_id = psc_auto_connections.value.consumer_service_project_id
+          }
+        }
+      }
+
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         content {
@@ -104,7 +119,7 @@ resource "google_sql_database_instance" "primary" {
         query_plans_per_minute  = var.query_plans_per_minute
         query_string_length     = var.query_string_length
         record_application_tags = var.record_application_tags
-        record_client_address   = var.record_client_address
+        record_client_address   = var.psc_enabled ? false : var.record_client_address
       }
     }
   }
@@ -184,7 +199,7 @@ resource "google_sql_database_instance" "replica" {
         query_plans_per_minute  = var.query_plans_per_minute
         query_string_length     = var.query_string_length
         record_application_tags = var.record_application_tags
-        record_client_address   = var.record_client_address
+        record_client_address   = var.psc_enabled ? false : var.record_client_address
       }
     }
   }
