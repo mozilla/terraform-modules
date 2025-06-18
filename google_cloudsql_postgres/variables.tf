@@ -62,8 +62,8 @@ variable "database_flags" {
 }
 
 variable "database_version" {
-  default     = "POSTGRES_13"
-  description = "Postgres version e.g., POSTGRES_13"
+  default     = "POSTGRES_17"
+  description = "Postgres version e.g., POSTGRES_17"
   type        = string
 }
 

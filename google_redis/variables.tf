@@ -47,7 +47,7 @@ variable "redis_configs" {
 }
 
 variable "redis_version" {
-  default = "REDIS_6_X"
+  default = "REDIS_7_0"
   type    = string
 }
 
