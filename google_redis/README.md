@@ -43,7 +43,7 @@ module "redis" {
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
 | <a name="input_redis_configs"></a> [redis\_configs](#input\_redis\_configs) | Redis configs https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs | `map(string)` | n/a | yes |
-| <a name="input_redis_version"></a> [redis\_version](#input\_redis\_version) | n/a | `string` | `"REDIS_6_X"` | no |
+| <a name="input_redis_version"></a> [redis\_version](#input\_redis\_version) | n/a | `string` | `"REDIS_7_0"` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `null` | no |
 | <a name="input_tier"></a> [tier](#input\_tier) | Service tier of the instance. Either BASIC or STANDARD\_HA | `string` | n/a | yes |
 | <a name="input_transit_encryption_mode"></a> [transit\_encryption\_mode](#input\_transit\_encryption\_mode) | Controls whether tls is enabled | `string` | `"DISABLED"` | no |
