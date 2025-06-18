@@ -108,7 +108,7 @@ module "postgres_database" {
 | <a name="input_custom_replica_name"></a> [custom\_replica\_name](#input\_custom\_replica\_name) | Custom database replica name. | `string` | `""` | no |
 | <a name="input_data_cache_enabled"></a> [data\_cache\_enabled](#input\_data\_cache\_enabled) | Whether data cache is enabled for the instance. Only available for `ENTERPRISE_PLUS` edition instances. | `bool` | `true` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | A list of database flag maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list(any)` | `[]` | no |
-| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Postgres version e.g., POSTGRES\_13 | `string` | `"POSTGRES_13"` | no |
+| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Postgres version e.g., POSTGRES\_17 | `string` | `"POSTGRES_17"` | no |
 | <a name="input_db_cpu"></a> [db\_cpu](#input\_db\_cpu) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"2"` | no |
 | <a name="input_db_mem_gb"></a> [db\_mem\_gb](#input\_db\_mem\_gb) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing | `string` | `"12"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether the instance is protected from deletion (TF) | `bool` | `true` | no |
