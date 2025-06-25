@@ -86,6 +86,6 @@ variable "ngwaf_immediate_block" {
 }
 
 variable "ngwaf_percent_enabled" {
-  type    = int
+  type    = number
   default = 100
 }
