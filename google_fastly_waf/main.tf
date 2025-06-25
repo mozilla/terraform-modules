@@ -259,7 +259,7 @@ resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
   fastly_sid      = fastly_service_vcl.default.id
 
   activate_version = true
-  percent_enabled  = 100
+  percent_enabled  = var.ngwaf_percent_enabled
 
   depends_on = [
     sigsci_edge_deployment.ngwaf_edge_site_service,
