@@ -25,6 +25,7 @@ resource "fastly_service_vcl" "default" {
       "application/javascript",
       "text/javascript",
       "application/json",
+      "application/wasm",
       "application/vnd.ms-fontobject",
       "application/x-font-opentype",
       "application/x-font-truetype",
@@ -38,7 +39,7 @@ resource "fastly_service_vcl" "default" {
       "text/plain",
       "text/xml"
     ]
-    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json", "svg"]
+    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json", "svg", "geojson"]
   }
 
   dynamic "domain" {
