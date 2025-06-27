@@ -73,6 +73,11 @@ variable "stage" {
   default     = false
 }
 
+variable "service_account" {
+  type    = string
+  default = null
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string

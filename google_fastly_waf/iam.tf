@@ -1,6 +1,6 @@
 resource "google_service_account" "log_uploader" {
   project      = var.project_id
-  account_id   = substr("${var.application}-${var.realm}-${var.environment}-fastly", 0, 28)
+  account_id   = var.service_account != null ? var.service_account : substr("${var.application}-${var.realm}-${var.environment}-fastly", 0, 28)
   display_name = "Fastly Service account for uploading logs"
 }
 
