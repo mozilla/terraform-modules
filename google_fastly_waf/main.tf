@@ -38,7 +38,7 @@ resource "fastly_service_vcl" "default" {
       "text/plain",
       "text/xml"
     ]
-    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json", "svg"]
+    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json", "svg", "geojson"]
   }
 
   dynamic "domain" {
