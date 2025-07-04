@@ -17,6 +17,10 @@ locals {
   project_additional_roles = [
     "roles/automl.editor",
     "roles/cloudsql.admin",
+    "roles/cloudsql.client",
+    "roles/cloudsql.instanceUser",
+    "roles/cloudsql.studioUser",
+    "roles/cloudsql.viewer",
     "roles/cloudtranslate.editor",
     "roles/editor",
     "roles/monitoring.uptimeCheckConfigEditor",
