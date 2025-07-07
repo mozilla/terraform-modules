@@ -159,6 +159,62 @@ resource "google_project_iam_binding" "nonprod_developer_db_admin" {
   members = module.developers_workgroup.members
 }
 
+resource "google_project_iam_binding" "prod_developer_db_client" {
+  count   = contains(var.prod_roles, "roles/cloudsql.client") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/cloudsql.client"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_db_client" {
+  count   = contains(var.nonprod_roles, "roles/cloudsql.client") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/cloudsql.client"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_db_instanceUser" {
+  count   = contains(var.prod_roles, "roles/cloudsql.instanceUser") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/cloudsql.instanceUser"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_db_instanceUser" {
+  count   = contains(var.nonprod_roles, "roles/cloudsql.instanceUser") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/cloudsql.instanceUser"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_db_studioUser" {
+  count   = contains(var.prod_roles, "roles/cloudsql.studioUser") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/cloudsql.studioUser"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_db_studioUser" {
+  count   = contains(var.nonprod_roles, "roles/cloudsql.studioUser") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/cloudsql.studioUser"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "prod_developer_db_viewer" {
+  count   = contains(var.prod_roles, "roles/cloudsql.viewer") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
+  project = var.google_prod_project_id
+  role    = "roles/cloudsql.viewer"
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "nonprod_developer_db_viewer" {
+  count   = contains(var.nonprod_roles, "roles/cloudsql.viewer") && !var.admin_only && var.google_nonprod_project_id != "" ? 1 : 0
+  project = var.google_nonprod_project_id
+  role    = "roles/cloudsql.viewer"
+  members = module.developers_workgroup.members
+}
+
 resource "google_project_iam_binding" "prod_developer_monitoring_uptimecheckconfigeditor" {
   count   = contains(var.prod_roles, "roles/monitoring.uptimeCheckConfigEditor") && !var.admin_only && var.google_prod_project_id != "" ? 1 : 0
   project = var.google_prod_project_id
