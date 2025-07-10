@@ -222,6 +222,18 @@ variable "psc_enabled" {
   type        = bool
 }
 
+variable "query_plans_per_minute" {
+  description = "Query Insights: sampling rate"
+  default     = 5
+  type        = number
+}
+
+variable "query_string_length" {
+  description = "Query Insights: length of queries"
+  default     = 1024
+  type        = number
+}
+
 variable "realm" {
   description = "Realm e.g., nonprod."
   type        = string

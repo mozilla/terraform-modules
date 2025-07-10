@@ -69,7 +69,8 @@ resource "google_sql_database_instance" "primary" {
 
     insights_config {
       query_insights_enabled  = true
-      query_string_length     = 1024
+      query_plans_per_minute  = var.query_plans_per_minute
+      query_string_length     = var.query_string_length
       record_application_tags = true
       record_client_address   = var.psc_enabled ? false : var.record_client_address
     }
