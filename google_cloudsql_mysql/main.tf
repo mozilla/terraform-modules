@@ -73,7 +73,7 @@ resource "google_sql_database_instance" "primary" {
       private_network                               = var.network
       ssl_mode                                      = var.ip_configuration_ssl_mode
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
-      
+
       psc_config {
         allowed_consumer_projects = var.psc_allowed_consumer_projects
         psc_enabled               = var.psc_enabled
