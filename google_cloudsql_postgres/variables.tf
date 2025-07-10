@@ -213,13 +213,25 @@ variable "psc_allowed_consumer_projects" {
 variable "psc_auto_connections" {
   default     = []
   description = "List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work"
-  type        = list(object({consumer_network = string, consumer_service_project_id = string}))
+  type        = list(object({ consumer_network = string, consumer_service_project_id = string }))
 }
 
 variable "psc_enabled" {
   default     = false
   description = "Whether PSC connectivity is enabled for this instance"
   type        = bool
+}
+
+variable "query_plans_per_minute" {
+  description = "Query Insights: sampling rate"
+  default     = 5
+  type        = number
+}
+
+variable "query_string_length" {
+  description = "Query Insights: length of queries"
+  default     = 1024
+  type        = number
 }
 
 variable "realm" {

@@ -172,7 +172,7 @@ variable "psc_allowed_consumer_projects" {
 variable "psc_auto_connections" {
   default     = []
   description = "List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work"
-  type        = list(object({consumer_network = string, consumer_service_project_id = string}))
+  type        = list(object({ consumer_network = string, consumer_service_project_id = string }))
 }
 
 variable "psc_enabled" {

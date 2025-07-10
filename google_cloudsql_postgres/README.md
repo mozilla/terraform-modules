@@ -84,7 +84,7 @@ module "postgres_database" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/network_connectivity_service_connection_policy
   # This policy exists if you're using a MozCloud Shared VPC
   psc_allowed_consumer_projects = [local.project_id]
-  psc_auto_connections          = [{
+  psc_auto_connections = [{
     consumer_network            = local.subnetworks.regions[local.region].network
     consumer_service_project_id = local.project_id
   }]
@@ -132,8 +132,10 @@ module "postgres_database" {
 | <a name="input_password_validation_policy_reuse_interval"></a> [password\_validation\_policy\_reuse\_interval](#input\_password\_validation\_policy\_reuse\_interval) | Specifies the number of previous passwords that can't be reused | `number` | `0` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP Project ID | `string` | `null` | no |
 | <a name="input_psc_allowed_consumer_projects"></a> [psc\_allowed\_consumer\_projects](#input\_psc\_allowed\_consumer\_projects) | List of consumer projects that are allow-listed for PSC connections to this instance | `list(string)` | `[]` | no |
-| <a name="input_psc_auto_connections"></a> [psc\_auto\_connections](#input\_psc\_auto\_connections) | List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work | `list(object({consumer_network = string, consumer_service_project_id = string}))` | `[]` | no |
+| <a name="input_psc_auto_connections"></a> [psc\_auto\_connections](#input\_psc\_auto\_connections) | List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work | `list(object({ consumer_network = string, consumer_service_project_id = string }))` | `[]` | no |
 | <a name="input_psc_enabled"></a> [psc\_enabled](#input\_psc\_enabled) | Whether PSC connectivity is enabled for this instance | `bool` | `false` | no |
+| <a name="input_query_plans_per_minute"></a> [query\_plans\_per\_minute](#input\_query\_plans\_per\_minute) | Query Insights: sampling rate | `number` | `5` | no |
+| <a name="input_query_string_length"></a> [query\_string\_length](#input\_query\_string\_length) | Query Insights: length of queries | `number` | `1024` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
 | <a name="input_record_client_address"></a> [record\_client\_address](#input\_record\_client\_address) | Query Insights: store client IP address | `bool` | `true` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where database should be provisioned. | `string` | `"us-west1"` | no |

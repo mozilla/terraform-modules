@@ -33,7 +33,7 @@ module "postgres_database" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/network_connectivity_service_connection_policy
   # This policy exists if you're using a MozCloud Shared VPC
   psc_allowed_consumer_projects = [local.project_id]
-  psc_auto_connections          = [{
+  psc_auto_connections = [{
     consumer_network            = local.subnetworks.regions[local.region].network
     consumer_service_project_id = local.project_id
   }]
