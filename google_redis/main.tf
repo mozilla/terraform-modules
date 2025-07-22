@@ -24,6 +24,8 @@ resource "google_redis_instance" "main" {
   memory_size_gb          = var.memory_size_gb
   redis_configs           = local.redis_configs
   redis_version           = var.redis_version
+  replica_count           = var.replica_count
+  read_replicas_mode      = var.read_replicas_mode
   region                  = var.region
   tier                    = var.tier
   transit_encryption_mode = var.transit_encryption_mode
