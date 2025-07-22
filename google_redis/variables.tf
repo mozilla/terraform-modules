@@ -50,7 +50,14 @@ variable "redis_version" {
   default = "REDIS_7_0"
   type    = string
 }
-
+variable "replica_count" {
+  default = 0
+  type    = string
+}
+variable "read_replicas_mode" {
+  default = "READ_REPLICAS_DISABLED"
+  type    = string
+} 
 variable "region" {
   default = null
   type    = string
