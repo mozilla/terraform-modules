@@ -41,12 +41,12 @@ module "redis" {
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | The hour (from 0-23) when maintenance should start | `number` | `16` | no |
 | <a name="input_memory_size_gb"></a> [memory\_size\_gb](#input\_memory\_size\_gb) | Memory size in GiB | `number` | `1` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | `null` | no |
+| <a name="input_read_replicas_mode"></a> [read\_replicas\_mode](#input\_read\_replicas\_mode) | n/a | `string` | `"READ_REPLICAS_DISABLED"` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm e.g., nonprod. | `string` | n/a | yes |
 | <a name="input_redis_configs"></a> [redis\_configs](#input\_redis\_configs) | Redis configs https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs | `map(string)` | n/a | yes |
 | <a name="input_redis_version"></a> [redis\_version](#input\_redis\_version) | n/a | `string` | `"REDIS_7_0"` | no |
-| <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | The number of replica nodes | `number` | `0` | yes |
-| <a name="input_read_replicas_mode"></a> [read\_replicas\_mode](#input\_read\_replicas\_mode) |  Read replicas mode for the instance | `string` | `"READ_REPLICAS_DISABLED"` | yes |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `null` | no |
+| <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | n/a | `string` | `0` | no |
 | <a name="input_tier"></a> [tier](#input\_tier) | Service tier of the instance. Either BASIC or STANDARD\_HA | `string` | n/a | yes |
 | <a name="input_transit_encryption_mode"></a> [transit\_encryption\_mode](#input\_transit\_encryption\_mode) | Controls whether tls is enabled | `string` | `"DISABLED"` | no |
 
