@@ -59,7 +59,7 @@ variable "replica_count" {
 variable "read_replicas_mode" {
   default = "READ_REPLICAS_DISABLED"
   type    = string
-} 
+}
 
 variable "region" {
   default = null
