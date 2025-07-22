@@ -56,4 +56,6 @@ module "redis" {
 | <a name="output_host"></a> [host](#output\_host) | n/a |
 | <a name="output_persistence_iam_identity"></a> [persistence\_iam\_identity](#output\_persistence\_iam\_identity) | n/a |
 | <a name="output_port"></a> [port](#output\_port) | n/a |
+| <a name="output_read_endpoint"></a> [read\_endpoint](#output\_read\_endpoint) | n/a |
+| <a name="output_read_endpoint_port"></a> [read\_endpoint\_port](#output\_read\_endpoint\_port) | n/a |
 <!-- END_TF_DOCS -->
