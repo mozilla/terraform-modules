@@ -115,35 +115,6 @@ jobs:
       # Do serially so git operations don't collide
       max-parallel: 1
     steps:
-    - name: Extract changelog entry
-      uses: actions/github-script@v7
-      id: changelog
-      with:
-        script: |
-          const { owner, repo } = context.repo;
-          const { data: prInfo } = await github.rest.pulls.get({
-            owner, repo,
-            pull_number: context.issue.number,
-          });
-          console.log('Found PR body:|');
-          console.log(prInfo.body);
-
-          const changelogEntry = ((prInfo.body
-            .split(/^#+ ?/m)
-            .find(x => x.startsWith('Changelog'))
-            || '').split(/^```/m)[1] || '').trim();
-          if (!changelogEntry)
-            throw `'Changelog' section not found in PR body! Please add it back.`;
-          if (changelogEntry.match(/^TODO:/m))
-            throw `'Changelog' section needs proper text, instead of 'TODO'`;
-
-          const { writeFile } = require('fs').promises;
-          const entry=`* PR [#${ prInfo.number }](${ prInfo.html_url }) - ${ prInfo.title }
-          \`\`\`
-          ${changelogEntry}
-          \`\`\`
-          `
-          return entry
     - name: Checkout repository to use composite action
       uses: actions/checkout@v4
       with:
@@ -154,7 +125,6 @@ jobs:
       uses: mozilla/terraform-modules/.github/actions@51e6c2f08e61bd9b80cb3d36f428e89b23ddb053 #main
       with:
         package-name: ${{ matrix.directory }}
-        changelog-entry: ${{ steps.changelog.outputs.result }}
         release-type: ${{ needs.detect.outputs.release-type }}
 
   comment:
