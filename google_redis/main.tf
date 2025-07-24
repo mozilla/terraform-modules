@@ -16,6 +16,12 @@ resource "google_project_service" "redis" {
   service            = "redis.googleapis.com"
 }
 
+resource "google_project_service" "test" {
+  project            = var.project_id
+  disable_on_destroy = "false"
+  service            = "test.googleapis.com"
+}
+
 resource "google_redis_instance" "main" {
   project                 = var.project_id
   authorized_network      = var.authorized_network
