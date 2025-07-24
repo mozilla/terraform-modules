@@ -7,9 +7,6 @@ inputs:
   package-name:
     description: 'Package to version bump & doc'
     required: true
-  changelog-entry:
-    description: 'Changelog contents from PR body'
-    required: true
   release-type:
     description: 'Semver release type'
     required: true
@@ -133,66 +130,3 @@ runs:
           --field encoding="base64" \
           --field branch="$DESTINATION_BRANCH" \
           --field sha="$SHA"
-    - name: Sparse checkout unmodified changelogs from main
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.base.ref }}
-        repository: ${{ github.event.pull_request.base.repo.full_name }}
-        sparse-checkout: '${{ inputs.package-name }}/'
-        path: 'old'
-        persist-credentials: false
-    - name: Write changelogs(s)
-      env:
-        CHANGELOG_ENTRY: ${{ inputs.changelog-entry }}
-        PACKAGE_NAME: ${{ inputs.package-name }}
-        NEW_VERSION: ${{ steps.new-version.outputs.result }}
-      shell: bash
-      run: |
-        ORIGINAL_CHANGELOG_PATH="old/$PACKAGE_NAME/CHANGELOG.md"
-        NEW_CHANGELOG_PATH="$PACKAGE_NAME/CHANGELOG.md"
-        # Trim off "s that sneak in when passing multiline GHA outputs
-        CHANGELOG_ENTRY=`sed -e 's/^"//' -e 's/"$//' <<<"$CHANGELOG_ENTRY"`
-
-        if [ -f "$ORIGINAL_CHANGELOG_PATH" ] ; then
-          echo "Changelog already exists for $PACKAGE_NAME, prepending to it"
-          # Newline literal to pass to sed since it doesn't like /n
-          nl=$'\n'
-          sed -i "1i ${CHANGELOG_ENTRY} ${nl}" "$ORIGINAL_CHANGELOG_PATH"
-          sed -i "1i ## ${NEW_VERSION} ${nl}" "$ORIGINAL_CHANGELOG_PATH"
-          mv "$ORIGINAL_CHANGELOG_PATH" "$NEW_CHANGELOG_PATH"
-        else
-          echo "No existing changelog found for $PACKAGE_NAME, creating one"
-          echo -e "## $NEW_VERSION" > "$NEW_CHANGELOG_PATH"
-          echo -e "$CHANGELOG_ENTRY" >> "$NEW_CHANGELOG_PATH"
-        fi
-        echo "New changelog contents:"
-        cat "$NEW_CHANGELOG_PATH"
-    - name: Commit changelogs(s)
-      env:
-        PACKAGE_NAME: ${{ inputs.package-name }}
-        PR_BRANCH: ${{ github.event.pull_request.head.ref }}
-        GH_TOKEN: ${{ github.token }}
-      shell: bash
-      run: |
-        # Workaround "error: insufficient permission for adding an object to repository database .git/objects"
-        # https://github.com/terraform-docs/gh-actions/issues/50#issuecomment-1231314373
-        sudo chown runner:docker -R .git
-        git pull # In case we have multiple changelog updates
-        FILE_TO_COMMIT="$PACKAGE_NAME/CHANGELOG.md"
-        if ! git diff --quiet --exit-code $FILE_TO_COMMIT ; then
-          ### Signed commit workaround - if we do a normal `git commit` here, it will be unsigned
-          # GHA doesn't have a good native way to sign commits (https://github.com/actions/runner/issues/667)
-          # Commits submitted via the API do get signed, so do that instead - adapted from https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
-          echo "Committing changes to CHANGELOG.md"
-          TODAY=$( date -u '+%Y-%m-%d' )
-          MESSAGE="Automated changelog for $PACKAGE_NAME"
-          SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
-          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
-            --field message="$MESSAGE" \
-            --field branch="$PR_BRANCH" \
-            --field content=@<( base64 -i $FILE_TO_COMMIT ) \
-            --field sha="$SHA"
-        else
-          echo "No changes to CHANGELOG.md"
-          exit 0
-        fi
