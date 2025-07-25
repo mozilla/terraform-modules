@@ -43,7 +43,6 @@ variable "memory_size_gb" {
 variable "redis_configs" {
   description = "Redis configs https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs"
   type        = map(string)
-
 }
 
 variable "redis_version" {
@@ -52,12 +51,12 @@ variable "redis_version" {
 }
 
 variable "replica_count" {
-  default = 0
-  type    = string
+  default = null
+  type    = number
 }
 
 variable "read_replicas_mode" {
-  default = "READ_REPLICAS_DISABLED"
+  default = null
   type    = string
 }
 
