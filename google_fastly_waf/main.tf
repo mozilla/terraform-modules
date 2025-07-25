@@ -269,6 +269,7 @@ resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
     fastly_service_dynamic_snippet_content.ngwaf_config_miss,
     fastly_service_dynamic_snippet_content.ngwaf_config_pass,
     fastly_service_dynamic_snippet_content.ngwaf_config_deliver,
+    sigsci_site.ngwaf_edge_site,
   ]
 }
 
