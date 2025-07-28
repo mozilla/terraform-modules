@@ -5,7 +5,7 @@ resource "google_service_account" "gke-account" {
 }
 
 module "workload-identity-for-tenant-sa" {
-  source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=v2.6.1"
+  source = "../google_workload_identity"
 
   name                = "gha-${var.application}"
   namespace           = "${var.application}-${var.environment}"
@@ -16,7 +16,7 @@ module "workload-identity-for-tenant-sa" {
 }
 
 module "workload-identity-for-generic-tenant-sa" {
-  source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=v2.6.1"
+  source = "../google_workload_identity"
 
   name                = var.application
   namespace           = "${var.application}-${var.environment}"
@@ -27,7 +27,7 @@ module "workload-identity-for-generic-tenant-sa" {
 }
 
 module "workload-identity-for-tenant-external-secrets-sa" {
-  source = "github.com/mozilla/terraform-modules//google_workload_identity?ref=v2.6.1"
+  source = "../google_workload_identity"
 
   name                = "external-secrets"
   namespace           = "${var.application}-${var.environment}"
