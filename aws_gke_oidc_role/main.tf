@@ -40,6 +40,7 @@ module "iam_assumable_role_for_oidc" {
   version                       = "~> v5.9"
   create_role                   = true
   role_name                     = var.role_name
+  role_path                     = var.role_path
   role_description              = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} to assume"
   provider_url                  = replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", "")
   role_policy_arns              = var.iam_policy_arns

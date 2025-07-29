@@ -10,6 +10,12 @@ variable "role_name" {
   type        = string
 }
 
+variable "role_path" {
+  default     = null
+  description = "Path of IAM role"
+  type        = string
+}
+
 variable "aws_region" {
   description = "AWS region"
   type        = string
