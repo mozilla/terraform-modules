@@ -89,7 +89,7 @@ resource "fastly_service_vcl" "default" {
       content  = snippet.value.content
       name     = snippet.value.name
       type     = snippet.value.type
-      priority = lookup(snippet.value, "priority", "")
+      priority = lookup(snippet.value, "priority", null)
     }
   }
 
