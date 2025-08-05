@@ -43,7 +43,7 @@ locals {
   # Create the map with the hard-coded value and append the distinct principals
   entitlement_wg_map = var.app_code != "" ? merge(
     {
-      "default" : ["workgroup:${var.app_code}/developers"] # this the default value for the default system entitlement
+      "default" : var.developer_ids # this the default value for the default system entitlement
     },
     {
       for name, add_entitlement in try(local.additional_entitlements, []) : add_entitlement.key => add_entitlement.entitlement.principals
