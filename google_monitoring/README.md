@@ -222,9 +222,9 @@ In addition to HTTP uptime checks, you can deploy Cloud Functions as synthetic m
 
 ```hcl
 module "synthetic_monitors" {
-  source = "github.com/mozilla/terraform-modules//cloud_function_synthetic_monitor?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_monitoring?ref=main
 
-  functions = [
+  synthetic_monitors = [
     {
       name         = "login-check"
       location     = "us-central1"
@@ -248,13 +248,3 @@ module "synthetic_monitors" {
   ]
 }
 
-<!-- BEGIN_TF_DOCS -->
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_project_id"></a> [project_id](#input_project_id) | GCP project where all resources will be created | `string` | n/a | yes |
-| <a name="input_synthetic_monitors"></a> [synthetic_monitors](#input_synthetic_monitors) | List of synthetic monitoring function configurations | <pre>list(object({<br/>  name                  = string<br/>  location              = optional(list(string), ["EUROPE", "USA_OREGON", "USA_VIRGINIA"])<br/>  bucket_name           = string<br/>  object_name           = string<br/>  object_source         = string<br/>  function_name         = string<br/>  function_location     = optional(string, "us-central1")<br/>  function_description  = string<br/>  entry_point           = string<br/>  runtime               = optional(string, "nodejs22")<br/>  memory                = optional(string, "2Gi")<br/>  timeout               = optional(string, "60")<br/>  secret_key            = string<br/>  secret_name           = string<br/>}))</pre> | `[]` | yes |
-
-
-<!-- END_TF_DOCS -->
