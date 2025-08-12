@@ -200,3 +200,60 @@ module "uptime_checks" {
 |------|-------------|
 | <a name="output_uptime_checks"></a> [uptime\_checks](#output\_uptime\_checks) | n/a |
 <!-- END_TF_DOCS -->
+
+
+## Synthetic Monitoring with Cloud Functions
+
+In addition to HTTP uptime checks, you can deploy Cloud Functions as synthetic monitors using the `cloud_function_synthetic_monitor` module. Each function runs monitoring logic (e.g. Puppeteer) and is invoked by a Cloud Monitoring uptime check.
+
+### What This Module Does
+
+- Provisions a Cloud Function (2nd gen) per monitor
+- Uploads source code from a zip file
+- Injects a secret via environment variable
+- Creates a service account per monitor
+- Applies IAM bindings for:
+  - `roles/secretmanager.secretAccessor`
+  - `roles/cloudfunctions.invoker`
+- Configures an uptime check for each function
+
+### Usage
+
+```hcl
+module "synthetic_monitors" {
+  source = "github.com/mozilla/terraform-modules//cloud_function_synthetic_monitor?ref=main"
+
+  functions = [
+    {
+      name         = "login-check"
+      location     = "us-central1"
+      runtime      = "nodejs20"
+      source_zip   = "build/login-check.zip"
+      memory       = "256M"
+      timeout      = 60
+      secret_key   = "API_KEY"
+      secret_name  = "login-monitor-secret"
+    },
+    {
+      name         = "search-check"
+      location     = "us-central1"
+      runtime      = "nodejs20"
+      source_zip   = "build/search-check.zip"
+      memory       = "256M"
+      timeout      = 60
+      secret_key   = "API_KEY"
+      secret_name  = "search-monitor-secret"
+    }
+  ]
+}
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_project_id"></a> [project_id](#input_project_id) | GCP project where all resources will be created | `string` | n/a | yes |
+| <a name="input_synthetic_monitors"></a> [synthetic_monitors](#input_synthetic_monitors) | List of synthetic monitoring function configurations | <pre>list(object({<br/>  name                  = string<br/>  location              = optional(list(string), ["EUROPE", "USA_OREGON", "USA_VIRGINIA"])<br/>  bucket_name           = string<br/>  object_name           = string<br/>  object_source         = string<br/>  function_name         = string<br/>  function_location     = optional(string, "us-central1")<br/>  function_description  = string<br/>  entry_point           = string<br/>  runtime               = optional(string, "nodejs22")<br/>  memory                = optional(string, "2Gi")<br/>  timeout               = optional(string, "60")<br/>  secret_key            = string<br/>  secret_name           = string<br/>}))</pre> | `[]` | yes |
+
+
+<!-- END_TF_DOCS -->

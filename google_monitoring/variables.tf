@@ -61,3 +61,26 @@ variable "uptime_checks" {
   }))
   default = []
 }
+
+variable "synthetic_monitors" {
+  description = "List of synthetic monitoring function configurations"
+  type = list(object({
+    name                = string
+    location = optional(list(string), ["EUROPE", "USA_OREGON", "USA_VIRGINIA"])
+    bucket_name         = string
+    object_name         = string
+    object_source       = string
+    function_name       = string
+    function_location   = optional(string, "us-central1")
+    function_description = string
+    entry_point         = string
+    runtime             = optional(string, "nodejs22")
+    memory              = optional(string, "2Gi")
+    timeout     = optional(string, "60")
+    secret_key    = string
+    secret_name   = string
+
+  }))
+  default = []
+}
+
