@@ -121,7 +121,7 @@ resource "google_bigquery_table" "fastly" {
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "Size of body written to request"
-  },
+  }
 ]
 EOF
 }
