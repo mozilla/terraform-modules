@@ -1,26 +1,26 @@
 
 resource "google_storage_bucket" "bucket" {
-  for_each = { for fn in var.synthetic_monitors : fn.name => fn }
-  name     = each.value.bucket_name  # Every bucket name must be globally unique
-  location = "US"
+  for_each                    = { for fn in var.synthetic_monitors : fn.name => fn }
+  name                        = each.value.bucket_name # Every bucket name must be globally unique
+  location                    = "US"
   uniform_bucket_level_access = true
 }
 
 resource "google_storage_bucket_object" "object" {
   for_each = { for fn in var.synthetic_monitors : fn.name => fn }
-  name   = each.key
-  bucket = google_storage_bucket.bucket[each.key].name
-  source = each.value.object_source # Add path to the zipped function source code
+  name     = each.key
+  bucket   = google_storage_bucket.bucket[each.key].name
+  source   = each.value.object_source # Add path to the zipped function source code
 }
 
 resource "google_cloudfunctions2_function" "function" {
-  for_each = { for fn in var.synthetic_monitors : fn.name => fn }
-  name = each.key
-  location = each.value.function_location
+  for_each    = { for fn in var.synthetic_monitors : fn.name => fn }
+  name        = each.key
+  location    = each.value.function_location
   description = each.value.function_description
 
   build_config {
-    runtime = each.value.runtime
+    runtime     = each.value.runtime
     entry_point = each.value.entry_point
     source {
       storage_source {
@@ -31,9 +31,9 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   service_config {
-    max_instance_count  = 1
-    available_memory    = each.value.memory
-    timeout_seconds     = each.value.timeout
+    max_instance_count    = 1
+    available_memory      = each.value.memory
+    timeout_seconds       = each.value.timeout
     service_account_email = google_service_account.function_sa[each.key].email
 
     secret_environment_variables {
@@ -47,7 +47,7 @@ resource "google_cloudfunctions2_function" "function" {
 }
 
 resource "google_secret_manager_secret" "secret" {
-  for_each = { for fn in var.synthetic_monitors : fn.name => fn }
+  for_each  = { for fn in var.synthetic_monitors : fn.name => fn }
   secret_id = each.value.secret_name
 
   replication {
@@ -82,9 +82,9 @@ resource "google_project_iam_member" "cloudfunctions_invoker" {
 }
 
 resource "google_monitoring_uptime_check_config" "synthetic_monitor" {
-  for_each = { for fn in var.synthetic_monitors : fn.name => fn }
+  for_each     = { for fn in var.synthetic_monitors : fn.name => fn }
   display_name = "${each.key}-synthetic-monitor"
-  timeout = each.value.timeout
+  timeout      = each.value.timeout
 
   synthetic_monitor {
     cloud_function_v2 {
