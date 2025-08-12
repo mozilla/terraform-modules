@@ -117,7 +117,7 @@ resource "google_bigquery_table" "fastly" {
     "description": "Signals"
   },
   {
-    "name": "response_body_bytes_writen",
+    "name": "response_bytes_written",
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "Size of body written to request"
