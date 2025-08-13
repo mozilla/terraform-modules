@@ -65,13 +65,12 @@ resource "google_service_account" "function_sa" {
 }
 
 # IAM: allow service account to access secrets
-resource "google_project_iam_member" "secret_access" {
+esource "google_secret_manager_secret_iam_member" "secret_access" {
   for_each = { for fn in var.synthetic_monitors : fn.name => fn }
 
-  secret  = google_secret_manager_secret.secret[each.key].name
-  project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${google_service_account.function_sa[each.key].email}"
+  secret_id = google_secret_manager_secret.secret[each.key].id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.function_sa[each.key].email}"
 }
 
 resource "google_project_iam_member" "cloudfunctions_invoker" {
