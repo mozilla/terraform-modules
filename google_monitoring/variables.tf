@@ -66,7 +66,6 @@ variable "synthetic_monitors" {
   description = "List of synthetic monitoring function configurations"
   type = list(object({
     name                 = string
-    location             = optional(list(string), ["EUROPE", "USA_OREGON", "USA_VIRGINIA"])
     bucket_name          = string
     object_name          = string
     object_source        = string
