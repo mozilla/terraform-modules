@@ -65,7 +65,7 @@ resource "google_service_account" "function_sa" {
 }
 
 # IAM: allow service account to access secrets
-esource "google_secret_manager_secret_iam_member" "secret_access" {
+resource "google_secret_manager_secret_iam_member" "secret_access" {
   for_each = { for fn in var.synthetic_monitors : fn.name => fn }
 
   secret_id = google_secret_manager_secret.secret[each.key].id
