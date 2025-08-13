@@ -219,14 +219,13 @@ resource "google_container_cluster" "primary" {
   }
 
   dynamic "node_pool_defaults" {
-    for_each = var.enable_gcfs ? [1] : []
+    for_each = var.enable_gcfs || var.enable_high_throughput_logging ? [1] : []
     content {
-      # TODO: If we end up needing to configure more parts of `node_pool_defaults`
-      # we will need to make this more dynamic
       node_config_defaults {
         gcfs_config {
-          enabled = true
+          enabled = var.enable_gcfs
         }
+        logging_variant = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
       }
     }
   }
