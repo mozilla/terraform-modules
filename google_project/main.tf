@@ -27,6 +27,16 @@ resource "google_project_service" "project" {
   disable_on_destroy = false
 }
 
+# Sleep for 10 seconds to reduce transient failures when provisioning a new
+# project
+resource "time_sleep" "wait_10_seconds" {
+  create_duration = "10s"
+
+  depends_on = [
+    google_project.project
+  ]
+}
+
 resource "google_project_iam_audit_config" "data_access_high" {
   count = var.risk_level == "high" ? 1 : 0
 
@@ -41,6 +51,9 @@ resource "google_project_iam_audit_config" "data_access_high" {
   audit_log_config {
     log_type = "DATA_WRITE"
   }
+  depends_on = [
+    time_sleep.wait_10_seconds
+  ]
 }
 
 resource "google_logging_project_exclusion" "data_access_exclusions" {
@@ -53,6 +66,9 @@ log_id("cloudaudit.googleapis.com/data_access")
 AND NOT protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 ${local.data_access_logs_filter}
   EOT
+  depends_on = [
+    time_sleep.wait_10_seconds
+  ]
 }
 
 resource "google_logging_project_bucket_config" "project" {
@@ -60,6 +76,9 @@ resource "google_logging_project_bucket_config" "project" {
   location         = "global"
   bucket_id        = "_Default"
   enable_analytics = var.log_analytics
+  depends_on = [
+    time_sleep.wait_10_seconds
+  ]
 }
 
 resource "google_logging_linked_dataset" "default_linked_dataset" {
@@ -67,4 +86,7 @@ resource "google_logging_linked_dataset" "default_linked_dataset" {
   link_id     = replace("${local.display_name}-default-log-linked", "-", "_")
   bucket      = google_logging_project_bucket_config.project.id
   description = "Linked Dataset for Project Logging"
+  depends_on = [
+    time_sleep.wait_10_seconds
+  ]
 }
