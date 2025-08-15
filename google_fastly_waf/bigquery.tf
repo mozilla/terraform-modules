@@ -121,6 +121,18 @@ resource "google_bigquery_table" "fastly" {
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "Size of body written to request"
+  },
+  {
+    "name": "ja3",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "ja3 of client"
+  },
+  {
+    "name": "ja4",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "ja4 of client"
   }
 ]
 EOF
