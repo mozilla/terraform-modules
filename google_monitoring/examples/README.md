@@ -1,17 +1,22 @@
 ## Synthetic Monitoring with Cloud Functions
 
 In addition to HTTP uptime checks, you can deploy Cloud Functions as synthetic monitors using the `cloud_function_synthetic_monitor` module. Each function runs monitoring logic (e.g. Puppeteer) and is invoked by a Cloud Monitoring uptime check.
-
 ### What This Module Does
 
 - Provisions a Cloud Function (2nd gen) per monitor
 - Uploads source code from a zip file
 - Injects a secret via environment variable
 - Creates a service account per monitor
-- Applies IAM bindings for:
+- Applies IAM bindings for the runner service account:
   - `roles/secretmanager.secretAccessor`
   - `roles/cloudfunctions.invoker`
 - Configures an uptime check for each function
+- Create a service account for building the function
+- Applies IAM binding for the builder service account:
+  - 'roles/logging.logWriter'
+  - 'roles/artifactregistry.writer'
+  - 'roles/cloudbuild.builds.builder'
+  - 'roles/storage.objectViewer' with a condition to buckets which their names follows the format 'gcf-v2-sources-' , 'gcf-v2-uploads-' or 'run-soruces-'
 
 
 
@@ -55,19 +60,21 @@ Type:
 
 ```hcl
 list(object({
-    name                 = string
-    bucket_name          = string
-    object_name          = string
-    object_source        = string
-    function_name        = string
-    function_location    = optional(string, "us-central1")
-    function_description = string
-    entry_point          = string
-    runtime              = optional(string, "nodejs22")
-    memory               = optional(string, "2Gi")
-    timeout              = optional(string, "60")
-    secret_key           = string
-    secret_name          = string
+    name                          = string
+    bucket_name                   = string
+    object_name                   = string
+    object_source                 = string
+    function_name                 = string
+    function_location             = optional(string, "us-central1")
+    function_description          = string
+    entry_point                   = string
+    runtime                       = optional(string, "nodejs22")
+    memory                        = optional(string, "2Gi")
+    timeout                       = optional(string, "60")
+    secret_key                    = string
+    secret_name                   = string
+    runtime_service_account_email = optional(string)
+    build_service_account_email   = optional(string)
 
     alert_policy = optional(object({
       enabled                  = optional(bool, false)
