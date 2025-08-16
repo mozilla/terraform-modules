@@ -267,10 +267,12 @@ variable "node_pools_taints" {
 
 variable "node_pools_guest_accelerator" {
   description = "Map containing node pools guest accelerator. Each node pool's name is the key. See locals.tf for defaults."
-  type        = map(map(string))
-  default = {
-    tf-default-node-pool = {}
-  }
+  type = map(object({
+    type               = string
+    count              = number
+    gpu_driver_version = optional(string, "LATEST")
+  }))
+  default = {}
 }
 
 variable "node_pools_spot_enabled" {
