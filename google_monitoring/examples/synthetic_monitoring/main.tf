@@ -1,3 +1,17 @@
+/*
+the module has few inputs as optional
+
+    function_location    = optional(string, "us-central1")
+    runtime              = optional(string, "nodejs22")
+    memory               = optional(string, "2Gi")
+    timeout              = optional(string, "60")
+    runtime_service_account_email = optional(string)
+    build_service_account_email   = optional(string)
+
+*/
+
+
+
 
 # Synthetic Monitoring checks without Alert Policy
 
@@ -7,19 +21,21 @@ module "synthetic_monitors" {
 
   synthetic_monitors = [
     {
-      name                 = "login-check"
-      bucket_name          = "login-monitoring-bucket-unique-123"
-      object_name          = "login.zip"
-      object_source        = "src/login-check.zip"
-      function_name        = "login_function"
-      function_description = "test is a test"
-      function_location    = "us-central1"
-      entry_point          = "LoginCheck"
-      memory               = "256M"
-      runtime              = "nodejs20"
-      timeout              = 60
-      secret_key           = "API_KEY"
-      secret_name          = "login-monitor-secret"
+      name                          = "login-check"
+      bucket_name                   = "login-monitoring-bucket-unique-123"
+      object_name                   = "login.zip"
+      object_source                 = "src/login-check.zip"
+      function_name                 = "login_function"
+      function_description          = "test is a test"
+      function_location             = "us-central1"
+      entry_point                   = "LoginCheck"
+      memory                        = "256M"
+      runtime                       = "nodejs20"
+      timeout                       = 60
+      secret_key                    = "API_KEY"
+      secret_name                   = "login-monitor-secret"
+      runtime_service_account_email = "example@project-name.iam.gserviceaccount.com"
+      build_service_account_email   = "example@project-name.iam.gserviceaccount.com"
     },
     {
       name                 = "search-check"
@@ -57,19 +73,21 @@ module "synthetic_monitors" {
 
   synthetic_monitors = [
     {
-      name                 = "login-check"
-      bucket_name          = "login-monitoring-bucket-unique-123"
-      object_name          = "login.zip"
-      object_source        = "src/login-check.zip"
-      function_name        = "login_function"
-      function_description = "test is a test"
-      function_location    = "us-central1"
-      entry_point          = "LoginCheck"
-      memory               = "256M"
-      runtime              = "nodejs20"
-      timeout              = 60
-      secret_key           = "API_KEY"
-      secret_name          = "login-monitor-secret"
+      name                          = "login-check"
+      bucket_name                   = "login-monitoring-bucket-unique-123"
+      object_name                   = "login.zip"
+      object_source                 = "src/login-check.zip"
+      function_name                 = "login_function"
+      function_description          = "test is a test"
+      function_location             = "us-central1"
+      entry_point                   = "LoginCheck"
+      memory                        = "256M"
+      runtime                       = "nodejs20"
+      timeout                       = 60
+      secret_key                    = "API_KEY"
+      secret_name                   = "login-monitor-secret"
+      runtime_service_account_email = "example@project-name.iam.gserviceaccount.com"
+      build_service_account_email   = "example@project-name.iam.gserviceaccount.com"
 
       alert_policy = {
         enabled = true
@@ -98,19 +116,21 @@ module "synthetic_monitors" {
 
   synthetic_monitors = [
     {
-      name                 = "login-check"
-      bucket_name          = "login-monitoring-bucket-unique-123"
-      object_name          = "login.zip"
-      object_source        = "src/login-check.zip"
-      function_name        = "login_function"
-      function_description = "test is a test"
-      function_location    = "us-central1"
-      entry_point          = "LoginCheck"
-      memory               = "256M"
-      runtime              = "nodejs20"
-      timeout              = 60
-      secret_key           = "API_KEY"
-      secret_name          = "login-monitor-secret"
+      name                          = "login-check"
+      bucket_name                   = "login-monitoring-bucket-unique-123"
+      object_name                   = "login.zip"
+      object_source                 = "src/login-check.zip"
+      function_name                 = "login_function"
+      function_description          = "test is a test"
+      function_location             = "us-central1"
+      entry_point                   = "LoginCheck"
+      memory                        = "256M"
+      runtime                       = "nodejs20"
+      timeout                       = 60
+      secret_key                    = "API_KEY"
+      secret_name                   = "login-monitor-secret"
+      runtime_service_account_email = "example@project-name.iam.gserviceaccount.com"
+      build_service_account_email   = "example@project-name.iam.gserviceaccount.com"
 
       alert_policy = {
         enabled  = true
