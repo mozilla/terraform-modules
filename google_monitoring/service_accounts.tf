@@ -23,6 +23,8 @@ resource "google_secret_manager_secret_iam_member" "secret_access" {
   secret_id = google_secret_manager_secret.secret[each.key].id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${each.value.used_runtime_sa_email}"
+
+  depends_on = [google_service_account.runtime_function_sa]
 }
 
 # IAM: allow  run service account to invoke cloud function
@@ -32,6 +34,8 @@ resource "google_project_iam_member" "cloudfunctions_invoker" {
   project = var.project_id
   role    = "roles/cloudfunctions.invoker"
   member  = "serviceAccount:${each.value.used_runtime_sa_email}"
+
+  depends_on = [google_service_account.runtime_function_sa]
 }
 
 # IAM : add the roles needed for the build service account
@@ -42,6 +46,8 @@ resource "google_project_iam_member" "cloudbuild_builder" {
   project = var.project_id
   role    = "roles/cloudbuild.builds.builder"
   member  = "serviceAccount:${each.value.used_build_sa_email}"
+
+  depends_on = [google_service_account.build_sa]
 }
 
 resource "google_project_iam_member" "articfactregistry_writer" {
@@ -50,6 +56,8 @@ resource "google_project_iam_member" "articfactregistry_writer" {
   project = var.project_id
   role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${each.value.used_build_sa_email}"
+
+  depends_on = [google_service_account.build_sa]
 }
 
 resource "google_project_iam_member" "logging_logwriter" {
@@ -58,6 +66,8 @@ resource "google_project_iam_member" "logging_logwriter" {
   project = var.project_id
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${each.value.used_build_sa_email}"
+
+  depends_on = [google_service_account.build_sa]
 }
 
 
@@ -79,7 +89,7 @@ resource "google_project_iam_member" "build_sa_storage" {
     title       = "RestrictToFunctionStorageBuckets"
     description = "Restrict to Cloud Functions and Cloud Run source buckets"
     expression  = <<-EOT
-      resource.type == "storage.googleapis.com/Object" &&
+      resource.type == "storage.googleapis.com/Bucket" &&
       (
         resource.name.startsWith("projects/_/buckets/gcf-v2-sources-") ||
         resource.name.startsWith("projects/_/buckets/gcf-v2-uploads-") ||
@@ -87,4 +97,5 @@ resource "google_project_iam_member" "build_sa_storage" {
       )
     EOT
   }
+  depends_on = [google_service_account.build_sa]
 }
