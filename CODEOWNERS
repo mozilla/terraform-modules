@@ -1,4 +1,5 @@
 google_deployment_accounts/ @jasonthomas @jbuck @bkochendorfer @smarnach @whd
+google_fastly_waf/ @jasonthomas @jbuck @bkochendorfer @whd @tibap
 google_gke/ @jasonthomas @ahoneiser @mikaeld @jbuck @bkochendorfer
 google_gke_tenant/ @jasonthomas @jbuck @bkochendorfer
 google_tenant_project_bootstrap/ @jasonthomas @jbuck @bkochendorfer
