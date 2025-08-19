@@ -139,7 +139,7 @@ resource "google_bigquery_table" "fastly" {
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "client IP"
-  },
+  }
 ]
 EOF
 }
