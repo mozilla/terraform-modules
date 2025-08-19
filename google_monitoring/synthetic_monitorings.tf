@@ -79,7 +79,7 @@ resource "google_secret_manager_secret" "secret" {
 resource "google_monitoring_uptime_check_config" "synthetic_monitor" {
   for_each     = { for fn in var.synthetic_monitors : fn.name => fn }
   display_name = "${each.key}-synthetic-monitor"
-  timeout      = "${each.value.timeout}s"
+  timeout      = "60s"
 
   synthetic_monitor {
     cloud_function_v2 {
