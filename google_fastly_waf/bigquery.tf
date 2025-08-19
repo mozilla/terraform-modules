@@ -133,7 +133,13 @@ resource "google_bigquery_table" "fastly" {
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "ja4 of client"
-  }
+  },
+  {
+    "name": "request_client_ip",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "client IP"
+  },
 ]
 EOF
 }
