@@ -219,14 +219,13 @@ resource "google_container_cluster" "primary" {
   }
 
   dynamic "node_pool_defaults" {
-    for_each = var.enable_gcfs ? [1] : []
+    for_each = var.enable_gcfs || var.enable_high_throughput_logging ? [1] : []
     content {
-      # TODO: If we end up needing to configure more parts of `node_pool_defaults`
-      # we will need to make this more dynamic
       node_config_defaults {
         gcfs_config {
-          enabled = true
+          enabled = var.enable_gcfs
         }
+        logging_variant = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
       }
     }
   }
@@ -277,10 +276,11 @@ resource "google_container_node_pool" "pools" {
   }
 
   node_config {
-    disk_size_gb = each.value.disk_size_gb
-    disk_type    = each.value.disk_type
-    image_type   = "COS_CONTAINERD"
-    labels       = local.node_pools_labels[each.key]
+    disk_size_gb    = each.value.disk_size_gb
+    disk_type       = each.value.disk_type
+    image_type      = "COS_CONTAINERD"
+    labels          = local.node_pools_labels[each.key]
+    logging_variant = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
 
     dynamic "guest_accelerator" {
       for_each = length(local.node_pools_guest_accelerator[each.key]) != 0 ? [1] : []

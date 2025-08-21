@@ -281,6 +281,12 @@ variable "node_pools_spot_enabled" {
   }
 }
 
+variable "enable_high_throughput_logging" {
+  description = "Whether to enable high throughput logging for all node pools."
+  type        = bool
+  default     = false
+}
+
 #
 # Monitoring
 #
