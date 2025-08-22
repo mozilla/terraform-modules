@@ -26,7 +26,7 @@ resource "google_bigquery_dataset" "fastly" {
   labels = {
     env_code            = var.environment
     realm          = var.realm
-    application    = var.application
+    app_code    = var.application
     component_code = "fastly-logs"
   }
 }
