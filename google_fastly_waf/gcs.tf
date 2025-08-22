@@ -4,6 +4,13 @@ resource "google_storage_bucket" "fastly" {
   location      = "US"
   force_destroy = true
 
+  labels = {
+    env_code       = var.environment
+    realm          = var.realm
+    app_code       = var.application
+    component_code = "fastly-logs"
+  }
+
   lifecycle_rule {
     action {
       type = "Delete"
