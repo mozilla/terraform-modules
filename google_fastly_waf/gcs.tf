@@ -5,9 +5,9 @@ resource "google_storage_bucket" "fastly" {
   force_destroy = true
 
   labels = {
-    env            = var.environment
+    env_code       = var.environment
     realm          = var.realm
-    application    = var.application
+    app_code       = var.application
     component_code = "fastly-logs"
   }
 

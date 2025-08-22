@@ -24,9 +24,9 @@ resource "google_bigquery_dataset" "fastly" {
   }
 
   labels = {
-    env_code            = var.environment
+    env_code       = var.environment
     realm          = var.realm
-    app_code    = var.application
+    app_code       = var.application
     component_code = "fastly-logs"
   }
 }
@@ -43,9 +43,9 @@ resource "google_bigquery_table" "fastly" {
   }
 
   labels = {
-    env            = var.environment
+    env_code       = var.environment
     realm          = var.realm
-    application    = var.application
+    app_code       = var.application
     component_code = "fastly-logs"
   }
 
