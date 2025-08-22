@@ -22,6 +22,13 @@ resource "google_bigquery_dataset" "fastly" {
     role          = "WRITER"
     user_by_email = google_service_account.log_uploader.email
   }
+
+  labels = {
+    env_code       = var.environment
+    realm          = var.realm
+    app_code       = var.application
+    component_code = "fastly-logs"
+  }
 }
 
 resource "google_bigquery_table" "fastly" {
@@ -36,7 +43,10 @@ resource "google_bigquery_table" "fastly" {
   }
 
   labels = {
-    env = "default"
+    env_code       = var.environment
+    realm          = var.realm
+    app_code       = var.application
+    component_code = "fastly-logs"
   }
 
   schema = <<EOF
