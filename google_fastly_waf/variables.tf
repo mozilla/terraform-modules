@@ -78,6 +78,11 @@ variable "service_account" {
   default = null
 }
 
+variable "log_sampling_percent" {
+  type    = string
+  default = "10"
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string
