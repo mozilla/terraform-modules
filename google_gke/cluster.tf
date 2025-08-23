@@ -288,6 +288,10 @@ resource "google_container_node_pool" "pools" {
       content {
         type  = local.node_pools_guest_accelerator[each.key].type
         count = local.node_pools_guest_accelerator[each.key].count
+
+        gpu_driver_installation_config {
+          gpu_driver_version = local.node_pools_guest_accelerator[each.key].gpu_driver_version
+        }
       }
     }
 
