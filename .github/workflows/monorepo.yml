@@ -122,7 +122,7 @@ jobs:
         persist-credentials: false
       # Do the per-module steps in a composite action because matrixes can't handle dynamic outputs
     - name: Generate docs and version bump
-      uses: mozilla/terraform-modules/.github/actions@51e6c2f08e61bd9b80cb3d36f428e89b23ddb053 #main
+      uses: mozilla/terraform-modules/.github/actions@0cb335c202cd6f2d909598c1f16f7d6c7a89ac62 #main
       with:
         package-name: ${{ matrix.directory }}
         release-type: ${{ needs.detect.outputs.release-type }}

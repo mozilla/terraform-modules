@@ -58,7 +58,7 @@ module "oidc_role" {
   gcp_project_id      = "moz-fx-platform-mgmt-global"
   gke_namespace       = "atlantis-sandbox"
   gke_service_account = "atlantis-sandbox"
-  iam_policy_arns     = []
+  iam_policy_arns     = {}
 }
 ```
 
@@ -78,7 +78,10 @@ module "oidc_role" {
   gcp_project_id      = "example-project"
   gke_namespace       = "bar"
   gke_service_account = "foo"
-  iam_policy_arns     = [aws_iam_policy.example_policy.arn, data.aws_iam_policy.view_only.arn]
+  iam_policy_arns = {
+    example_policy = aws_iam_policy.example_policy.arn
+    ViewOnlyAccess = data.aws_iam_policy.view_only.arn
+  }
 }
 
 resource "aws_iam_policy" "example_policy" {
@@ -117,7 +120,7 @@ data "aws_iam_policy" "view_only" {
 | <a name="input_gke_cluster_name"></a> [gke\_cluster\_name](#input\_gke\_cluster\_name) | GKE cluster name | `string` | n/a | yes |
 | <a name="input_gke_namespace"></a> [gke\_namespace](#input\_gke\_namespace) | Namespace for GKE workload | `string` | n/a | yes |
 | <a name="input_gke_service_account"></a> [gke\_service\_account](#input\_gke\_service\_account) | GKE service account to grant role assumption privilleges | `string` | n/a | yes |
-| <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | One or more policy arns to attach to created AWS role | `list(string)` | n/a | yes |
+| <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | One or more policy arns to attach to created AWS role | `map(string)` | n/a | yes |
 | <a name="input_role_name"></a> [role\_name](#input\_role\_name) | Name to give the AWS role | `string` | n/a | yes |
 
 ## Outputs
@@ -125,4 +128,5 @@ data "aws_iam_policy" "view_only" {
 | Name | Description |
 |------|-------------|
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN for the GKE-AWS connector role |
+| <a name="output_role_name"></a> [role\_name](#output\_role\_name) | Name for the GKE-AWS connector role |
 <!-- END_TF_DOCS -->
