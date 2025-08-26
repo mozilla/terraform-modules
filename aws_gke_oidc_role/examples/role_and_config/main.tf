@@ -19,5 +19,5 @@ module "oidc_role" {
   gcp_project_id      = "moz-fx-platform-mgmt-global"
   gke_namespace       = "atlantis-sandbox"
   gke_service_account = "atlantis-sandbox"
-  iam_policy_arns     = []
+  iam_policy_arns     = {}
 }

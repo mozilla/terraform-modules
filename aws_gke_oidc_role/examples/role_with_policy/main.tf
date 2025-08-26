@@ -13,7 +13,10 @@ module "oidc_role" {
   gcp_project_id      = "example-project"
   gke_namespace       = "bar"
   gke_service_account = "foo"
-  iam_policy_arns     = [aws_iam_policy.example_policy.arn, data.aws_iam_policy.view_only.arn]
+  iam_policy_arns = {
+    example_policy = aws_iam_policy.example_policy.arn
+    ViewOnlyAccess = data.aws_iam_policy.view_only.arn
+  }
 }
 
 resource "aws_iam_policy" "example_policy" {
