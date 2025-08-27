@@ -102,6 +102,8 @@ module "postgres_database" {
 | <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `string` | n/a | yes |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | A list of authorized\_network maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list(any)` | `[]` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | high availability (REGIONAL) or single zone (ZONAL) | `string` | `"REGIONAL"` | no |
+| <a name="input_backup_configuration_enabled"></a> [backup\_configuration\_enabled](#input\_backup\_configuration\_enabled) | n/a | `bool` | `true` | no |
+| <a name="input_backup_configuration_location"></a> [backup\_configuration\_location](#input\_backup\_configuration\_location) | n/a | `string` | `"us"` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
 | <a name="input_connector_enforcement"></a> [connector\_enforcement](#input\_connector\_enforcement) | Enables the enforcement of Cloud SQL Auth Proxy or Cloud SQL connectors for all the connections. If enabled, all the direct connections are rejected. | `string` | `null` | no |
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |
@@ -130,6 +132,7 @@ module "postgres_database" {
 | <a name="input_password_validation_policy_min_length"></a> [password\_validation\_policy\_min\_length](#input\_password\_validation\_policy\_min\_length) | Min length for password | `number` | `0` | no |
 | <a name="input_password_validation_policy_password_change_interval"></a> [password\_validation\_policy\_password\_change\_interval](#input\_password\_validation\_policy\_password\_change\_interval) | Specifies the minimum duration after which you can change the password in hours | `string` | `"0s"` | no |
 | <a name="input_password_validation_policy_reuse_interval"></a> [password\_validation\_policy\_reuse\_interval](#input\_password\_validation\_policy\_reuse\_interval) | Specifies the number of previous passwords that can't be reused | `number` | `0` | no |
+| <a name="input_point_in_time_recovery_enabled"></a> [point\_in\_time\_recovery\_enabled](#input\_point\_in\_time\_recovery\_enabled) | n/a | `bool` | `true` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP Project ID | `string` | `null` | no |
 | <a name="input_psc_allowed_consumer_projects"></a> [psc\_allowed\_consumer\_projects](#input\_psc\_allowed\_consumer\_projects) | List of consumer projects that are allow-listed for PSC connections to this instance | `list(string)` | `[]` | no |
 | <a name="input_psc_auto_connections"></a> [psc\_auto\_connections](#input\_psc\_auto\_connections) | List of consumer networks and projects to automatically create PSC connections in. Requires a service connection policy in the consumer network project to work | `list(object({ consumer_network = string, consumer_service_project_id = string }))` | `[]` | no |
@@ -148,6 +151,7 @@ module "postgres_database" {
 | <a name="input_replica_region_override"></a> [replica\_region\_override](#input\_replica\_region\_override) | This OVERRIDES var.region for replicas (replicas use var.region per default). | `string` | `null` | no |
 | <a name="input_replica_tier_override"></a> [replica\_tier\_override](#input\_replica\_tier\_override) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.replica\_db\_cpu and var.replica\_db\_mem\_gb | `string` | `null` | no |
 | <a name="input_tier_override"></a> [tier\_override](#input\_tier\_override) | See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.db\_cpu and var.db\_mem\_gb | `string` | `""` | no |
+| <a name="input_user_labels"></a> [user\_labels](#input\_user\_labels) | Additional user\_labels | `map(string)` | `{}` | no |
 
 ## Outputs
 
