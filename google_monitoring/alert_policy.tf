@@ -89,7 +89,7 @@ resource "google_monitoring_alert_policy" "synth_mon_alert_policies" {
 
     condition_threshold {
       filter = format(
-        "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.\"check_id\"=\"%s\" AND resource.type=\"uptime_url\"",
+        "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.\"check_id\"=\"%s\" AND resource.type=\"cloud_run_revision\"",
         google_monitoring_uptime_check_config.synthetic_monitor[each.key].uptime_check_id
       )
       comparison      = "COMPARISON_LT"
