@@ -20,6 +20,18 @@ variable "availability_type" {
   type        = string
 }
 
+variable "backup_configuration_enabled" {
+  default     = true
+  description = ""
+  type        = bool
+}
+
+variable "backup_configuration_location" {
+  default     = "us"
+  description = ""
+  type        = string
+}
+
 variable "component" {
   default     = "db"
   description = "A logical component of an application"
@@ -198,6 +210,12 @@ variable "password_validation_policy_reuse_interval" {
   type        = number
 }
 
+variable "point_in_time_recovery_enabled" {
+  default     = true
+  description = ""
+  type        = bool
+}
+
 variable "project_id" {
   default     = null
   description = "GCP Project ID"
@@ -303,4 +321,10 @@ variable "tier_override" {
   default     = ""
   description = "See: https://cloud.google.com/sql/pricing#2nd-gen-pricing. This OVERRIDES var.db_cpu and var.db_mem_gb"
   type        = string
+}
+
+variable "user_labels" {
+  default     = {}
+  description = "Additional user_labels"
+  type        = map(string)
 }
