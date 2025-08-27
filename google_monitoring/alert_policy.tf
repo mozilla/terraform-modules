@@ -16,7 +16,7 @@ resource "google_monitoring_alert_policy" "uptime_alert_policies" {
         "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.\"check_id\"=\"%s\" AND resource.type=\"uptime_url\"",
         google_monitoring_uptime_check_config.https[each.key].uptime_check_id
       )
-      comparison      = "COMPARISON_GT"
+      comparison      = "COMPARISON_LT"
       duration        = each.value.alert_policy.alert_threshold_duration
       threshold_value = 1
 
@@ -27,7 +27,7 @@ resource "google_monitoring_alert_policy" "uptime_alert_policies" {
       aggregations {
         alignment_period     = each.value.alert_policy.alignment_period
         per_series_aligner   = "ALIGN_NEXT_OLDER"
-        cross_series_reducer = "REDUCE_COUNT_FALSE"
+        cross_series_reducer = "REDUCE_COUNT_TRUE"
         group_by_fields      = ["resource.label.*"]
       }
     }
@@ -92,7 +92,7 @@ resource "google_monitoring_alert_policy" "synth_mon_alert_policies" {
         "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.\"check_id\"=\"%s\" AND resource.type=\"uptime_url\"",
         google_monitoring_uptime_check_config.synthetic_monitor[each.key].uptime_check_id
       )
-      comparison      = "COMPARISON_GT"
+      comparison      = "COMPARISON_LT"
       duration        = each.value.alert_policy.alert_threshold_duration
       threshold_value = 1
 
@@ -103,7 +103,7 @@ resource "google_monitoring_alert_policy" "synth_mon_alert_policies" {
       aggregations {
         alignment_period     = each.value.alert_policy.alignment_period
         per_series_aligner   = "ALIGN_NEXT_OLDER"
-        cross_series_reducer = "REDUCE_COUNT_FALSE"
+        cross_series_reducer = "REDUCE_COUNT_TRUE"
         group_by_fields      = ["resource.label.*"]
       }
     }
