@@ -1,5 +1,6 @@
 locals {
-  domains = setunion(var.domains, var.subscription_domains)
+  domains         = setunion(var.domains, var.subscription_domains)
+  log_sample_name = "log_sampling"
 }
 
 resource "fastly_service_vcl" "default" {
@@ -173,6 +174,13 @@ resource "fastly_service_vcl" "default" {
     type      = "REQUEST"
   }
 
+  dynamic "condition" {
+    for_each  = var.log_sampling_enabled ? 0 : 1
+    name      = local.log_sample_name
+    statement = "randombool(${var.log_sampling_percent},100)"
+    type      = "RESPONSE"
+  }
+
   vcl {
     name = "main"
     content = templatefile("${path.module}/vcl/main.vcl.tftpl",
@@ -184,21 +192,23 @@ resource "fastly_service_vcl" "default" {
   default_ttl = 0
 
   logging_bigquery {
-    dataset      = google_bigquery_dataset.fastly.dataset_id
-    name         = "bigquery-default"
-    project_id   = var.project_id
-    table        = google_bigquery_table.fastly.table_id
-    account_name = google_service_account.log_uploader.account_id
-    format       = file("${path.module}/logging/bq_format.txt")
+    dataset            = google_bigquery_dataset.fastly.dataset_id
+    name               = "bigquery-default"
+    project_id         = var.project_id
+    table              = google_bigquery_table.fastly.table_id
+    account_name       = google_service_account.log_uploader.account_id
+    format             = file("${path.module}/logging/bq_format.txt")
+    response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 
   logging_gcs {
-    bucket_name  = google_storage_bucket.fastly.name
-    name         = "gcs-default"
-    project_id   = var.project_id
-    account_name = google_service_account.log_uploader.account_id
-    gzip_level   = 9
-    period       = 300 # 5 minutes
+    bucket_name        = google_storage_bucket.fastly.name
+    name               = "gcs-default"
+    project_id         = var.project_id
+    account_name       = google_service_account.log_uploader.account_id
+    gzip_level         = 9
+    period             = 300 # 5 minutes
+    response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 }
 
