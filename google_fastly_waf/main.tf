@@ -174,7 +174,8 @@ resource "fastly_service_vcl" "default" {
     type      = "REQUEST"
   }
 
-  condition {
+  dynamic "condition" {
+    for_each  = var.log_sampling_enabled ? 0 : 1
     name      = local.log_sample_name
     statement = "randombool(${var.log_sampling_percent},100)"
     type      = "RESPONSE"
@@ -197,7 +198,7 @@ resource "fastly_service_vcl" "default" {
     table              = google_bigquery_table.fastly.table_id
     account_name       = google_service_account.log_uploader.account_id
     format             = file("${path.module}/logging/bq_format.txt")
-    response_condition = local.log_sample_name
+    response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 
   logging_gcs {
@@ -207,7 +208,7 @@ resource "fastly_service_vcl" "default" {
     account_name       = google_service_account.log_uploader.account_id
     gzip_level         = 9
     period             = 300 # 5 minutes
-    response_condition = local.log_sample_name
+    response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 }
 

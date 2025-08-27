@@ -83,6 +83,11 @@ variable "log_sampling_percent" {
   default = "10"
 }
 
+variable "log_sampling_enabled" {
+  type    = bool
+  default = false
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string
