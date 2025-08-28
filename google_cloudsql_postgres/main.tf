@@ -19,6 +19,12 @@ locals {
   tier                  = coalesce(var.tier_override, "db-custom-${var.db_cpu}-${var.db_mem_gb * 1024}")
   replica_tier          = coalesce(var.replica_tier_override, "db-custom-${var.replica_db_cpu}-${var.replica_db_mem_gb * 1024}")
   ip_addresses          = google_sql_database_instance.primary.ip_address
+  user_labels = merge({
+    app_code       = var.application
+    component_code = format("%s-%s", var.application, var.component)
+    env_code       = var.environment
+    realm          = var.realm
+  }, var.user_labels)
 }
 
 resource "google_sql_database_instance" "primary" {
@@ -49,9 +55,9 @@ resource "google_sql_database_instance" "primary" {
     tier                        = local.tier
 
     backup_configuration {
-      enabled                        = true
-      point_in_time_recovery_enabled = true
-      location                       = "us"
+      enabled                        = var.backup_configuration_enabled
+      point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
+      location                       = var.backup_configuration_location
 
       backup_retention_settings {
         retained_backups = 30
@@ -128,16 +134,7 @@ resource "google_sql_database_instance" "primary" {
       update_track = var.maintenance_window_update_track
     }
 
-    user_labels = {
-      app_code       = var.application
-      component_code = format("%s-%s", var.application, var.component)
-      env_code       = var.environment
-      realm          = var.realm
-    }
-  }
-
-  lifecycle {
-    ignore_changes = [settings.0.backup_configuration.0.point_in_time_recovery_enabled]
+    user_labels = local.user_labels
   }
 
   deletion_protection = var.deletion_protection
@@ -219,10 +216,6 @@ resource "google_sql_database_instance" "replica" {
       env_code       = var.environment
       realm          = var.realm
     }
-  }
-
-  lifecycle {
-    ignore_changes = [settings.0.backup_configuration.0.point_in_time_recovery_enabled]
   }
 
   deletion_protection = var.deletion_protection
