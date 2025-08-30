@@ -86,20 +86,16 @@ resource "google_sql_database_instance" "primary" {
       ssl_mode                                      = var.ip_configuration_ssl_mode
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
 
-      dynamic "psc_config" {
-        for_each = var.psc_enabled ? [1] : []
+      psc_config {
+        allowed_consumer_projects = var.psc_allowed_consumer_projects
+        psc_enabled               = var.psc_enabled
 
-        content {
-          allowed_consumer_projects = var.psc_allowed_consumer_projects
-          psc_enabled               = var.psc_enabled
+        dynamic "psc_auto_connections" {
+          for_each = var.psc_auto_connections
 
-          dynamic "psc_auto_connections" {
-            for_each = var.psc_auto_connections
-
-            content {
-              consumer_network            = psc_auto_connections.value.consumer_network
-              consumer_service_project_id = psc_auto_connections.value.consumer_service_project_id
-            }
+          content {
+            consumer_network            = psc_auto_connections.value.consumer_network
+            consumer_service_project_id = psc_auto_connections.value.consumer_service_project_id
           }
         }
       }
