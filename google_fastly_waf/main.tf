@@ -175,7 +175,7 @@ resource "fastly_service_vcl" "default" {
   }
 
   dynamic "condition" {
-    for_each = var.log_sampling_enabled ? 0 : 1
+    for_each = var.log_sampling_enabled ? { "enabled" = true } : {}
     content {
       name      = local.log_sample_name
       statement = "randombool(${var.log_sampling_percent},100)"
