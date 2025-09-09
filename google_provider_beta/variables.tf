@@ -47,22 +47,6 @@ variable "env_code" {
   default     = "notset"
 }
 
-variable "risk_level" {
-  description = "The risk level (alias for data_risk_level for backwards compatibility)"
-  type        = string
-  default     = null
-  validation {
-    condition     = var.risk_level == null || contains(["low", "medium", "high"], "high")
-    error_message = "Risk level must be one of: low, medium, high."
-  }
-}
-
-variable "is_external" {
-  description = "Whether this component is external-facing"
-  type        = bool
-  default     = false
-}
-
 # Provider credentials (optional - can use environment variables instead)
 variable "credentials" {
   description = "Path to service account key file or JSON string"

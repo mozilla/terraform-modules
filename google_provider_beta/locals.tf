@@ -7,8 +7,6 @@ locals {
     component_code = var.component_code
     realm          = var.realm
     env_code       = var.env_code
-    risk_level     = var.risk_level
-    is_external    = tostring(var.is_external)
 
     # Metadata labels
     managed_by   = "terraform"
