@@ -1,13 +1,3 @@
-terraform {
-  required_providers {
-    google_beta = {
-      source  = "hashicorp/google-beta"
-      # need to provide for an override here
-      version = "~> 6.0"
-    }
-  }
-}
-
 provider "google_beta" {
   project     = var.project_id
   region      = var.region
