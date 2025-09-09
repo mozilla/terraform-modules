@@ -2,7 +2,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_google_beta"></a> [google\_beta](#requirement\_google\_beta) | ~> 6.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 6.0 |
 
 ## Providers
 
@@ -25,12 +26,10 @@ No resources.
 | <a name="input_domain"></a> [domain](#input\_domain) | The domain name | `string` | `null` | no |
 | <a name="input_env_code"></a> [env\_code](#input\_env\_code) | The environment code (e.g., dev, staging, prod) | `string` | `"notset"` | no |
 | <a name="input_impersonate_service_account"></a> [impersonate\_service\_account](#input\_impersonate\_service\_account) | Service account to impersonate | `string` | `null` | no |
-| <a name="input_is_external"></a> [is\_external](#input\_is\_external) | Whether this component is external-facing | `bool` | `false` | no |
 | <a name="input_override_current_tf_version"></a> [override\_current\_tf\_version](#input\_override\_current\_tf\_version) | Override the current Terraform version | `string` | `null` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The GCP project ID | `string` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | The realm (e.g., sandbox, production) | `string` | `"notset"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The default GCP region | `string` | `"us-central1"` | no |
-| <a name="input_risk_level"></a> [risk\_level](#input\_risk\_level) | The risk level (alias for data\_risk\_level for backwards compatibility) | `string` | `null` | no |
 | <a name="input_system"></a> [system](#input\_system) | The system/application name | `string` | `null` | no |
 | <a name="input_zone"></a> [zone](#input\_zone) | The default GCP zone | `string` | `null` | no |
 
