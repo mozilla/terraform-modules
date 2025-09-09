@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    google_beta = {
+    google = {
       source = "hashicorp/google"
       # need to provide for an override here
       version = "~> 6.0"
