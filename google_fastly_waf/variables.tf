@@ -67,6 +67,18 @@ variable "response_objects" {
   default = []
 }
 
+variable "cache_settings" {
+  description = "List of cache settings for the Fastly service."
+  type = list(object({
+    name            = string
+    action          = optional(string)
+    cache_condition = optional(string)
+    stale_ttl       = optional(number)
+    ttl             = optional(number)
+  }))
+  default = []
+}
+
 variable "stage" {
   description = "Determine if something should be deployed to stage"
   type        = bool
