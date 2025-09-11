@@ -26,7 +26,7 @@ jobs:
          && github.event.action == 'closed'
          && github.event.pull_request.merged == true }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.ref }}
         # I'm getting the labels from the API and not the context("contains(github.event.pull_request.labels.*.name, 'Env Promote')") as the labels
@@ -116,7 +116,7 @@ jobs:
       max-parallel: 1
     steps:
     - name: Checkout repository to use composite action
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: main # Only use composite action from main to prevent malicious PRs
         persist-credentials: false
