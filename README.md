@@ -20,7 +20,7 @@ This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run sta
 
 ### Versioning and Releases
 
-Versioning is automated based on [Semantic Versioning](https://semver.org/), and PR labels. The `patch` `minor` and `major` labels will trigger the respective version bump. `no-release` will not generate a new tag and will skip most CI steps - **Use no-release at your own risk**. 
+Versioning is automated based on [Semantic Versioning](https://semver.org/), and PR labels. The `patch` `minor` and `major` labels will trigger the respective version bump. `no-release` will not generate a new tag and will skip most CI steps - **Use no-release at your own risk**.
 If your PR contains [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/), it will label itself appropriately.
 
 Release changelogs are generated based off of the contents of your PR description.
