@@ -121,6 +121,18 @@ resource "fastly_service_vcl" "default" {
     }
   }
 
+  dynamic "cache_setting" {
+    for_each = var.cache_settings
+    iterator = cs
+    content {
+      name            = cs.value.name
+      action          = try(cs.value.action, null)
+      cache_condition = try(cs.value.cache_condition, null)
+      stale_ttl       = try(cs.value.stale_ttl, null)
+      ttl             = try(cs.value.ttl, null)
+    }
+  }
+
   # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
   #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
   dynamicsnippet {
