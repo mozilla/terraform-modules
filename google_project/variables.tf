@@ -118,7 +118,7 @@ variable "log_analytics" {
 
 variable "log_retention_days" {
   type        = number
-  description = "Log Retention in days."
+  description = "Log Retention in days. Defaults to 30 days."
   default     = 30
 }
 
