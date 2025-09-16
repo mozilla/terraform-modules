@@ -166,8 +166,8 @@ jobs:
 
               lines.push('| '+[
                 `\`${folder.name}\``,
-                `${await readText(`outputs/${folder.name}/previous-version.txt`)}`,
-                `**${await readText(`outputs/${folder.name}/new-version.txt`)}**`,
+                `${await readText(`outputs/previous-version.txt`)}`,
+                `**${await readText(`outputs/new-version.txt`)}**`,
               ].join(' | ')+' |');
 
             }
