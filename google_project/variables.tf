@@ -116,6 +116,12 @@ variable "log_analytics" {
   default     = false
 }
 
+variable "log_retention_days" {
+  type        = number
+  description = "Log Retention in days."
+  default     = 30
+}
+
 variable "deletion_policy" {
   default     = "PREVENT"
   description = "The deletion policy for the Project."

@@ -15,6 +15,7 @@ Sets up a single GCP project linked to a billing account plus management metadat
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the project. Defaults to project\_name | `string` | `""` | no |
 | <a name="input_extra_project_labels"></a> [extra\_project\_labels](#input\_extra\_project\_labels) | Extra project labels (a map of key/value pairs) to be applied to the Project. | `map(string)` | `{}` | no |
 | <a name="input_log_analytics"></a> [log\_analytics](#input\_log\_analytics) | Enable log analytics for \_Default log bucket | `bool` | `false` | no |
+| <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | Log Retention in days. | `number` | `30` | no |
 | <a name="input_parent_id"></a> [parent\_id](#input\_parent\_id) | Parent folder (with GCP). | `string` | n/a | yes |
 | <a name="input_program_code"></a> [program\_code](#input\_program\_code) | Program Code of the project or resource: https://mana.mozilla.org/wiki/display/FINArchive/Program+Codes. Drop the `PC - `, lowercase the string and substitute spaces for dashes. | `string` | `"firefox-services"` | no |
 | <a name="input_program_name"></a> [program\_name](#input\_program\_name) | Name of the Firefox program being one of: ci, data, infrastructure, services, web. | `string` | `"services"` | no |

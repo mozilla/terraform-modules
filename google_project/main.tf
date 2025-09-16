@@ -76,6 +76,7 @@ resource "google_logging_project_bucket_config" "project" {
   location         = "global"
   bucket_id        = "_Default"
   enable_analytics = var.log_analytics
+  retention_days   = var.log_retention_days
   depends_on = [
     time_sleep.wait_10_seconds
   ]
