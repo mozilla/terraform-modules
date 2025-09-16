@@ -7,7 +7,7 @@ Sets up a single GCP project linked to a billing account plus management metadat
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_data_access_logs"></a> [additional\_data\_access\_logs](#input\_additional\_data\_access\_logs) | Additional services that data access logs should be included for. Google Cloud services with audit logs: https://cloud.google.com/logging/docs/audit/services . | `list(string)` | `[]` | no |
-| <a name="input_app_code"></a> [app\_code](#input\_app\_code) | Defaults to project\_name. Used for labels and metadata on application-related resources. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv. | `string` | `""` | no |
+| <a name="input_app_code"></a> [app\_code](#input\_app\_code) | Defaults to project\_name. Used for labels and metadata on application-related resources. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv | `string` | `""` | no |
 | <a name="input_billing_account_id"></a> [billing\_account\_id](#input\_billing\_account\_id) | Associated billing account | `string` | n/a | yes |
 | <a name="input_component_code"></a> [component\_code](#input\_component\_code) | Defaults to app\_code-uncat. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv | `string` | `""` | no |
 | <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | Cost center of the project or resource. Default is 5650 (Services Engineering) | `string` | `"5650"` | no |
