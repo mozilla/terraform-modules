@@ -24,3 +24,4 @@ resource "google_service_account_iam_member" "allow-fastly-to-assume" {
   role               = "roles/iam.serviceAccountTokenCreator"
   member             = "serviceAccount:fastly-logging@datalog-bulleit-9e86.iam.gserviceaccount.com"
 }
+
