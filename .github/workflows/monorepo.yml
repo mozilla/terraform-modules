@@ -76,7 +76,7 @@ jobs:
             gh pr edit $PR_ID --add-label "$LABEL"
           fi
       - name: Get changed files
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 #v46
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62
         id: raw-files
         with:
           json: "true"
