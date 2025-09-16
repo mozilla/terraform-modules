@@ -1,6 +1,6 @@
 variable "app_code" {
   default     = ""
-  description = "Defaults to project_name. Used for labels and metadata on application-related resources. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv."
+  description = "Defaults to project_name. Used for labels and metadata on application-related resources. See https://github.com/mozilla-services/inventory/blob/master/application_component_registry.csv"
   type        = string
 }
 
