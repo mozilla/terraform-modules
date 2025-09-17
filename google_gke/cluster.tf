@@ -21,6 +21,35 @@ resource "google_container_cluster" "primary" {
 
   cluster_autoscaling {
     autoscaling_profile = var.autoscaling_profile
+
+    dynamic "auto_provisioning_defaults" {
+      for_each = var.enable_node_auto_provisioning ? [1] : []
+      content {
+        service_account = google_service_account.cluster_service_account.email
+        oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
+      }
+    }
+
+    dynamic "resource_limits" {
+      for_each = var.enable_node_auto_provisioning ? [
+        {
+          resource_type = "cpu"
+          min           = var.nap_min_cpu
+          max           = var.nap_max_cpu
+        },
+        {
+          resource_type = "memory"
+          min           = var.nap_min_memory
+          max           = var.nap_max_memory
+        }
+      ] : []
+
+      content {
+        resource_type = resource_limits.value.resource_type
+        minimum       = resource_limits.value.min
+        maximum       = resource_limits.value.max
+      }
+    }
   }
 
   release_channel {
