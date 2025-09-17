@@ -430,3 +430,39 @@ variable "autoscaling_profile" {
   type        = string
   default     = "BALANCED"
 }
+
+variable "enable_node_auto_provisioning" {
+  description = "Enable GKE Node Auto-Provisioning (NAP)"
+  type        = bool
+  default     = false
+}
+
+variable "nap_min_cpu" {
+  description = "Minimum vCPU for NAP-created node pools"
+  type        = number
+  default     = 0.5
+}
+
+variable "nap_max_cpu" {
+  description = "Maximum vCPU for NAP-created node pools"
+  type        = number
+  default     = 8
+}
+
+variable "nap_min_memory" {
+  description = "Minimum memory (e.g. 2Gi) for NAP-created node pools"
+  type        = string
+  default     = "2Gi"
+}
+
+variable "nap_max_memory" {
+  description = "Maximum memory (e.g. 16Gi) for NAP-created node pools"
+  type        = string
+  default     = "16Gi"
+}
+
+variable "nap_allowed_machine_types" {
+  description = "Optional list of allowed machine types for NAP"
+  type        = list(string)
+  default     = []
+}
