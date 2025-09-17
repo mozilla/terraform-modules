@@ -27,17 +27,6 @@ resource "google_container_cluster" "primary" {
       content {
         service_account = google_service_account.cluster_service_account.email
         oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
-        min_cpu         = var.nap_min_cpu
-        max_cpu         = var.nap_max_cpu
-        min_memory      = var.nap_min_memory
-        max_memory      = var.nap_max_memory
-
-        dynamic "allowed_machine_types" {
-          for_each = length(var.nap_allowed_machine_types) > 0 ? [1] : []
-          content {
-            allowed_machine_types = var.nap_allowed_machine_types
-          }
-        }
       }
     }
 
