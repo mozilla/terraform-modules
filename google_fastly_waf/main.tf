@@ -26,6 +26,7 @@ resource "fastly_service_vcl" "default" {
       "application/javascript",
       "text/javascript",
       "application/json",
+      "application/geo+json",
       "application/wasm",
       "application/vnd.ms-fontobject",
       "application/x-font-opentype",
