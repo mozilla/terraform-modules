@@ -53,6 +53,12 @@ variable "subscription_domains" {
   default     = []
 }
 
+variable "subscription_domains_force_update" {
+  default     = false
+  description = "Force update the subscription even if it has active domains. Warning: this can disable production traffic if used incorrectly."
+  type        = bool
+}
+
 variable "response_objects" {
   description = "List of synthetic response objects to attach to the Fastly service."
   type = list(object({
