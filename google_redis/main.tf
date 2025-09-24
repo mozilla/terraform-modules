@@ -60,6 +60,6 @@ resource "google_redis_instance" "main" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = var.lifecycle_prevent_destroy
   }
 }

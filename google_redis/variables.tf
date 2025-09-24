@@ -104,3 +104,9 @@ variable "auth_enabled" {
   default     = false
   type        = bool
 }
+
+variable "lifecycle_prevent_destroy" {
+  description = "Prevents accidentally destroying the instance"
+  default     = true
+  type        = bool
+}

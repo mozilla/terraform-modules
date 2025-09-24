@@ -37,6 +37,7 @@ module "redis" {
 | <a name="input_custom_name"></a> [custom\_name](#input\_custom\_name) | Use this field to set a custom name for the redis instance | `string` | `""` | no |
 | <a name="input_enable_persistence"></a> [enable\_persistence](#input\_enable\_persistence) | Controls whether persistence features are enabled | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. | `string` | n/a | yes |
+| <a name="input_lifecycle_prevent_destroy"></a> [lifecycle\_prevent\_destroy](#input\_lifecycle\_prevent\_destroy) | Prevents accidentally destroying the instance | `bool` | `true` | no |
 | <a name="input_maintenance_window_day"></a> [maintenance\_window\_day](#input\_maintenance\_window\_day) | Day of the week maintenance should occur | `string` | `"TUESDAY"` | no |
 | <a name="input_maintenance_window_hour"></a> [maintenance\_window\_hour](#input\_maintenance\_window\_hour) | The hour (from 0-23) when maintenance should start | `number` | `16` | no |
 | <a name="input_memory_size_gb"></a> [memory\_size\_gb](#input\_memory\_size\_gb) | Memory size in GiB | `number` | `1` | no |
