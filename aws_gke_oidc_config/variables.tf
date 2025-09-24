@@ -1,4 +1,4 @@
-### Required 
+### Required
 
 variable "gcp_region" {
   description = "GKE cluster's GCP region"

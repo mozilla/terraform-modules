@@ -1,4 +1,4 @@
-### Required 
+### Required
 
 variable "iam_policy_arns" {
   description = "One or more policy arns to attach to created AWS role"

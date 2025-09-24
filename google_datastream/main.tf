@@ -1,6 +1,6 @@
 /**
  * # google_datastream
- * 
+ *
  * ## WARNING! This is module only does part of the work. Because setting up postgresql as a source (the only thing I've tested) requires a valid database username and password, and we don't want to store passwords in Terraform, this module will only create a Private Connectivity Connection and a BigQuery Destination profile.
  * ### Prework
  * - Pick a new /29 network for Datastream to use. This is the datastream_subnet under Inputs below. Add the subnet to https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/27920489/GCP+Subnet+Allocations for tracking
@@ -56,7 +56,7 @@ resource "google_datastream_private_connection" "default" {
 #      hostname = postgresql_profile.value.hostname
 #      username = postgresql_profile.value.username
 #      database = postgresql_profile.value.database
-#      password = "thisisnotarealpassword"
+#      password = "thisisnotarealpassword"  # pragma: allowlist secret
 #    }
 #  }
 #

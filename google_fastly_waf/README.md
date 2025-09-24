@@ -55,7 +55,7 @@ module "fastly_maintenance_page" {
   #    here if you only want to have maintenance on a particular route or
   #    api endpoint. Setting it to "true" matches all requests
   # 2. A `response_object` which binds to your `condition` and can serve any
-  #    static content. Here we have a very basic static HTML page but this could 
+  #    static content. Here we have a very basic static HTML page but this could
   #    be json or an error page etc.
 
   conditions = [
@@ -100,8 +100,8 @@ EOF
 # Fastly supports deploying your VCL to a "staging" environment. This environment
 # has a different IP that requires you to override your local `/etc/hosts` to test
 # https://docs.fastly.com/products/staging
-# 
-# The workflow to deploy stage would be to add the `stage = true` arguement for
+#
+# The workflow to deploy stage would be to add the `stage = true` argument for
 # the module, verify your changes look correct, then remove (or comment out) the
 # `stage` argument and apply again. This will promote your changes to production.
 module "fastly_stage" {

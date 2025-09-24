@@ -2,7 +2,7 @@
 # has a different IP that requires you to override your local `/etc/hosts` to test
 # https://docs.fastly.com/products/staging
 #
-# The workflow to deploy stage would be to add the `stage = true` arguement for
+# The workflow to deploy stage would be to add the `stage = true` argument for
 # the module, verify your changes look correct, then remove (or comment out) the
 # `stage` argument and apply again. This will promote your changes to production.
 module "fastly_stage" {

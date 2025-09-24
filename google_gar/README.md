@@ -26,7 +26,7 @@ module "gar" {
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm, e.g. nonprod. | `string` | n/a | yes |
 | <a name="input_repository_id"></a> [repository\_id](#input\_repository\_id) | n/a | `string` | `null` | no |
-| <a name="input_repository_readers"></a> [repository\_readers](#input\_repository\_readers) | List of principals that should be granted read access to the respository. | `list(string)` | `[]` | no |
+| <a name="input_repository_readers"></a> [repository\_readers](#input\_repository\_readers) | List of principals that should be granted read access to the repository. | `list(string)` | `[]` | no |
 | <a name="input_writer_service_account_id"></a> [writer\_service\_account\_id](#input\_writer\_service\_account\_id) | n/a | `string` | `"artifact-writer"` | no |
 
 ## Outputs
