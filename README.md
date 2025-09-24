@@ -9,6 +9,8 @@ These modules are intended for Mozilla usage internally. They are not built or s
 ### Pre-commit Checks
 This repository uses [pre-commit](https://pre-commit.com/) for running some pre-git-commit checks. Install pre-commit locally (see link for instructions) for your own workspace to also run these checks on every git commit. Pipenv files are included optionally if you use such tooling for managing your pre-commit (or other Python packages) installation.
 
+To run documentation checks, you will need to install [terraform-docs](https://terraform-docs.io/).
+
 This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run stateless (e.g. no Terraform state or provider connections required) automated checks, including the following:
 * terraform fmt --recursive & terraform validate for each module directory;
 * for each module (top level subdirectory):
