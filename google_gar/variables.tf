@@ -37,7 +37,7 @@ variable "project" {
 variable "repository_readers" {
   type        = list(string)
   default     = []
-  description = "List of principals that should be granted read access to the respository."
+  description = "List of principals that should be granted read access to the repository."
 }
 
 variable "writer_service_account_id" {

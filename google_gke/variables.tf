@@ -183,31 +183,31 @@ variable "master_authorized_networks" {
 
 variable "master_ipv4_cidr_block" {
   default     = null
-  description = "The IP range in CIDR notation to use for the hosted master network. Overidden by shared_vpc_outputs."
+  description = "The IP range in CIDR notation to use for the hosted master network. Overridden by shared_vpc_outputs."
   type        = string
 }
 
 variable "network" {
   default     = null
-  description = "Shared VPC Network (formulated as a URL) wherein the cluster will be created. Overidden by shared_vpc_outputs."
+  description = "Shared VPC Network (formulated as a URL) wherein the cluster will be created. Overridden by shared_vpc_outputs."
   type        = string
 }
 
 variable "pods_ip_cidr_range_name" {
   default     = null
-  description = "The Name of the IP address range for cluster pods IPs. Overidden by shared_vpc_outputs."
+  description = "The Name of the IP address range for cluster pods IPs. Overridden by shared_vpc_outputs."
   type        = string
 }
 
 variable "services_ip_cidr_range_name" {
   default     = null
-  description = "The Name of the IP address range for cluster services IPs. Overidden by shared_vpc_outputs."
+  description = "The Name of the IP address range for cluster services IPs. Overridden by shared_vpc_outputs."
   type        = string
 }
 
 variable "subnetwork" {
   default     = null
-  description = "Shared VPC Subnetwork (formulated as a URL) wherein the cluster will be created. Overidden by shared_vpc_outputs."
+  description = "Shared VPC Subnetwork (formulated as a URL) wherein the cluster will be created. Overridden by shared_vpc_outputs."
   type        = string
 }
 

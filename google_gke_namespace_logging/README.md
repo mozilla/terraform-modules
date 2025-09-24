@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Terraform Module: GKE Tenant Namepsace Logging
+# Terraform Module: GKE Tenant Namespace Logging
 Creates a logging bucket and grants access to the logging service account so that
 GKE Logs associated with the tenant namespace are available in the tenant project.
 The log routing configuration happens as part of the GKE tenant bootstrapping.

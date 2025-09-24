@@ -16,7 +16,7 @@ In addition to HTTP uptime checks, you can deploy Cloud Functions as synthetic m
   - 'roles/logging.logWriter'
   - 'roles/artifactregistry.writer'
   - 'roles/cloudbuild.builds.builder'
-  - 'roles/storage.objectViewer' with a condition to buckets which their names follows the format 'gcf-v2-sources-' , 'gcf-v2-uploads-' or 'run-soruces-'
+  - 'roles/storage.objectViewer' with a condition to buckets which their names follows the format 'gcf-v2-sources-' , 'gcf-v2-uploads-' or 'run-sources-'
 
 
 
