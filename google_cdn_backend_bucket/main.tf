@@ -1,6 +1,6 @@
 /*
  * # google_cdn_backend_bucket
- * 
+ *
  * this module builds a GCP Load Balancer with a backend bucket
  */
 

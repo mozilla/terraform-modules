@@ -169,5 +169,5 @@ module "postgres_database" {
 | <a name="output_replica_public_ip_address"></a> [replica\_public\_ip\_address](#output\_replica\_public\_ip\_address) | n/a |
 | <a name="output_self_link"></a> [self\_link](#output\_self\_link) | n/a |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
-| <a name="output_tier"></a> [tier](#output\_tier) | n/a |  
+| <a name="output_tier"></a> [tier](#output\_tier) | n/a |
 <!-- END_TF_DOCS -->

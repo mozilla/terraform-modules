@@ -1,5 +1,5 @@
-/* 
- * # AWS-GKE OIDC Config 
+/*
+ * # AWS-GKE OIDC Config
  * This module will create an AWS OIDC config that creates a trust relationship between a GKE cluster & AWS account.
  *
  * Once this module has been invoked for a given account + GKE cluster, the `aws_gke_oidc_role` module can be used

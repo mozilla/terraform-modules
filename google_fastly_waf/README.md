@@ -55,7 +55,7 @@ module "fastly_maintenance_page" {
   #    here if you only want to have maintenance on a particular route or
   #    api endpoint. Setting it to "true" matches all requests
   # 2. A `response_object` which binds to your `condition` and can serve any
-  #    static content. Here we have a very basic static HTML page but this could 
+  #    static content. Here we have a very basic static HTML page but this could
   #    be json or an error page etc.
 
   conditions = [

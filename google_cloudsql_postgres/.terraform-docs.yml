@@ -15,5 +15,5 @@ content: |-
 
   {{ .Inputs }}
 
-  {{ .Outputs }}  
+  {{ .Outputs }}
 
