@@ -19,7 +19,7 @@ module "fastly" {
   backends = [
     {
       address           = "my_cool_app.net"
-      name              = "my_cool_app_net"
+      name              = "my-cool-app-net"
       port              = 443
       ssl_cert_hostname = "my_cool_app.net"
       ssl_sni_hostname  = "my_cool_app.net"
