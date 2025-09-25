@@ -1,0 +1,58 @@
+# GHA does not support dynamic outputs for matrix jobs https://github.com/orgs/community/discussions/26639
+# This composite action is a workaround to allow modules to docgen separately w/o a bunch of hacks
+name: 'doc-gen'
+description: 'doc generation for TF modules monorepo'
+inputs:
+  package-name:
+    description: 'Target dir for doc-gen'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        persist-credentials: false
+    - name: Check for terraform-docs.yml
+      id: tf_docs
+      shell: bash
+      env:
+        PACKAGE_NAME: ${{ inputs.package-name }}
+      run: |
+        TF_DOCS_PATH="$PACKAGE_NAME/.terraform-docs.yml"
+        if [ -f $TF_DOCS_PATH ] ; then
+          echo "tf_docs=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "tf_docs=false" >> "$GITHUB_OUTPUT"
+        fi
+    - name: Render terraform docs inside the README.md
+      if: ${{ steps.tf_docs.outputs.tf_docs == 'true' }}
+      id: terraform_docs
+      uses: terraform-docs/gh-actions@aeae0038ed47a547e0c0fca5c059d3335f48fb25 #v1.3.0
+      with:
+        working-dir: ${{ inputs.package-name }}
+        output-file: README.md
+        config-file: .terraform-docs.yml
+    - name: If documentation is updated, push to PR branch with a signed commit
+      if: ${{ steps.terraform_docs.outputs.num_changed != '0' }}
+      env:
+        DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
+        FILE_TO_COMMIT: ${{ inputs.package-name }}/README.md
+        GITHUB_TOKEN: ${{ github.token }}
+      shell: bash
+      run: |
+        ### Signed commit workaround - if we do a normal `git commit` here, it will be unsigned
+        # GHA doesn't have a good native way to sign commits (https://github.com/actions/runner/issues/667)
+        # Commits submitted via the API do get signed, so do that instead - adapted from https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
+        export TODAY=$( date -u '+%Y-%m-%d' )
+        export MESSAGE="chore(docs): ${FILE_TO_COMMIT}"
+        export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+        export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+        gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+          --field message="$MESSAGE" \
+          --field content="$CONTENT" \
+          --field encoding="base64" \
+          --field branch="$DESTINATION_BRANCH" \
+          --field sha="$SHA"

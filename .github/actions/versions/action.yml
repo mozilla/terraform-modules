@@ -1,0 +1,84 @@
+# GHA does not support dynamic outputs for matrix jobs https://github.com/orgs/community/discussions/26639
+# This composite action is a workaround to allow modules to be separately versioned w/o a bunch of hacks
+name: 'version-bump'
+description: 'handle version bumps for TF modules monorepo'
+inputs:
+  package-name:
+    description: 'Package to version bump'
+    required: true
+  release-type:
+    description: 'Semver release type'
+    required: true
+outputs:
+  new-version:
+    description: "Version after bumping"
+    value: ${{ steps.new-version.outputs.result }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout all tags
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+        persist-credentials: true
+    - name: Detect previous version number
+      id: prev-version
+      env:
+        PACKAGE_NAME: ${{ inputs.package-name }}
+      shell: bash
+      run: |
+        git fetch --tags
+        TAG=$(git tag -l "$PACKAGE_NAME-*" --sort=-v:refname | head -n 1)
+
+        if [ -z "$TAG" ] ; then
+          echo "No git tag found for $PACKAGE_NAME, using 0.0.0 as previous version"
+          echo "result=0.0.0" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        TAG_VERSION="${TAG#$PACKAGE_NAME-}"
+        echo "TAG_VERSION = $TAG_VERSION"
+        SEMVER_REGEX="^[0-9]+.[0-9]+.[0-9]+$"
+        if [[ $TAG_VERSION =~ $SEMVER_REGEX ]] ; then
+          echo "$TAG is valid semver, using it"
+          echo "result=${TAG_VERSION}" >> "$GITHUB_OUTPUT"
+          exit 0
+        else
+          echo "Error: $TAG does not end in a valid semver"
+          exit 1
+        fi
+    - name: Determine new version number
+      uses: actions/github-script@v8
+      id: new-version
+      env:
+        PREV_VERSION: ${{ steps.prev-version.outputs.result }}
+        RELEASE_TYPE: ${{ inputs.release-type }}
+      with:
+        script: |
+          const { PREV_VERSION, RELEASE_TYPE } = process.env;
+          console.log('Previous version was', PREV_VERSION);
+          console.log('Release type is', RELEASE_TYPE);
+
+          const numbers = PREV_VERSION.split('.');
+          const numberIdx = ['major', 'minor', 'patch'].indexOf(RELEASE_TYPE);
+          numbers[numberIdx] = parseInt(numbers[numberIdx]) + 1;
+          for (let i = numberIdx + 1; i < numbers.length; i++) {
+            numbers[i] = 0;
+          }
+          return numbers.join('.');
+        result-encoding: string
+    - name: Store version numbers
+      shell: bash
+      run: |
+        mkdir output
+        echo "${PREV_VERSION}" > output/previous-version.txt
+        echo "${NEW_VERSION}" > output/new-version.txt
+      env:
+        PREV_VERSION: "${{ steps.prev-version.outputs.result }}"
+        NEW_VERSION: "${{ steps.new-version.outputs.result }}"
+    - name: Upload version artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.package-name }}
+        path: output
+        retention-days: 5
