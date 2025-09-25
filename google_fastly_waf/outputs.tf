@@ -5,3 +5,7 @@ output "ngwaf_edgesite_short_name" {
 output "certificate_verification_information" {
   value = fastly_tls_subscription.fastly.*.managed_dns_challenges
 }
+
+output "foo" {
+  value = "foo"
+}
