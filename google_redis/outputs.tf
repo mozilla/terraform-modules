@@ -21,3 +21,6 @@ output "read_endpoint" {
 output "read_endpoint_port" {
   value = google_redis_instance.main.read_endpoint_port
 }
+output "foo" {
+  value = "foo"
+}
