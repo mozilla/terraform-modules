@@ -55,6 +55,7 @@ module "redis" {
 | Name | Description |
 |------|-------------|
 | <a name="output_current_location_id"></a> [current\_location\_id](#output\_current\_location\_id) | n/a |
+| <a name="output_foo"></a> [foo](#output\_foo) | n/a |
 | <a name="output_host"></a> [host](#output\_host) | n/a |
 | <a name="output_persistence_iam_identity"></a> [persistence\_iam\_identity](#output\_persistence\_iam\_identity) | n/a |
 | <a name="output_port"></a> [port](#output\_port) | n/a |
