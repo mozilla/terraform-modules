@@ -28,10 +28,51 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-        # I'm getting the labels from the API and not the context("contains(github.event.pull_request.labels.*.name, 'Env Promote')") as the labels
-        # are added in 2nd API call so they aren't included in the PR context
-          persist-credentials: false
+          persist-credentials: true
+          fetch-depth: 0
+      - name: Autolabel PR
+        if: github.event.pull_request.merged != true
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          PR_ID: ${{ github.event.pull_request.number }}
+          PR_BRANCH: ${{ github.head_ref || github.ref_name }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          git checkout "$PR_BRANCH"
+          LABELS=$(gh pr view $PR_URL --json labels --jq '.labels[] | select((.name=="minor") or (.name=="major") or (.name=="patch") or (.name=="no-release")) |.name')
+          NUMBER_OF_LABELS=$(echo "$LABELS" | wc -w)
+          if [ "$NUMBER_OF_LABELS" -eq "1" ] ; then
+            echo "Found: $LABELS"
+          elif [ "$NUMBER_OF_LABELS" -gt "1" ] ; then
+            echo "::error ::Too many release type labels: $( echo $LABELS | tr '\n' ' ' )"
+            exit 1
+          else
+            echo "::warn ::No release type labels found(patch/minor/major/no-release)"
+            echo "Checking commit messages for semantic labels"
+
+            # fetch all commits
+            PR_COMMITS=`gh pr view $PR_ID --json commits | jq '.commits | length'`
+            git fetch --no-tags --prune --progress --no-recurse-submodules --deepen=$PR_COMMITS
+
+            # retrive the commit messages of the PR
+            COMMIT_MESSAGES="$(gh pr view $PR_ID --json commits --jq '.[].[].messageHeadline')"
+
+            # Check all commits in PR for conventional commit messages - add appropriate label if found
+            # Follows https://www.conventionalcommits.org/en/v1.0.0/
+
+            # If there's conflicting messages take the largest semver change
+            if echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'breaking change.*:\|.*!:'; then
+              LABEL="major"
+            elif echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'feat.*:' ; then
+              LABEL="minor"
+            elif echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'fix.*:' ; then
+              LABEL="patch"
+            else
+              echo "::error No release label found, and no conventional commit messages found. Label your PR with major/minor/patch"
+              exit 2
+            fi
+            gh pr edit "$PR_ID" --add-label "$LABEL"
+          fi
       - name: Check PR labels for semver
         id: check_pr_label
         env:
@@ -47,33 +88,6 @@ jobs:
           elif [ "$NUMBER_OF_LABELS" -gt "1" ] ; then
             echo "::error ::Too many release type labels: $( echo $LABELS | tr '\n' ' ' )"
             exit 1
-          else
-            echo "::warn ::No release type labels found(patch/minor/major/no-release)"
-            echo "Checking commit messages for semantic labels"
-
-            # fetch all commits
-            PR_COMMITS=`gh pr view $PR_ID --json commits | jq '.commits | length'`
-            git fetch --no-tags --prune --progress --no-recurse-submodules --deepen=$PR_COMMITS
-
-            # retrive the commit messages of the PR
-            COMMIT_MESSAGES="$(gh pr view $prId --json commits --jq '.[].[].messageHeadline')"
-
-            # Check all commits in PR for conventional commit messages - add appropriate label if found
-            # Follows https://www.conventionalcommits.org/en/v1.0.0/
-
-            # If there's conflicting messages take the largest semver change
-            if echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'breaking change:'; then
-              LABEL="major"
-            elif echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'feat:' ; then
-              LABEL="minor"
-            elif echo "$COMMIT_MESSAGES" | grep --quiet --ignore-case 'fix:' ; then
-              LABEL="patch"
-            else
-              echo "::error No release label found, and no conventional commit messages found. Label your PR with major/minor/patch"
-              exit 2
-            fi
-            echo "release-type=$LABEL" >> "$GITHUB_OUTPUT"
-            gh pr edit $PR_ID --add-label "$LABEL"
           fi
       - name: Get changed files
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62
@@ -121,11 +135,16 @@ jobs:
         ref: main # Only use composite action from main to prevent malicious PRs
         persist-credentials: false
       # Do the per-module steps in a composite action because matrixes can't handle dynamic outputs
-    - name: Generate docs and version bump
-      uses: mozilla/terraform-modules/.github/actions@0cb335c202cd6f2d909598c1f16f7d6c7a89ac62 #main
+    - name: Version bump
+      uses: mozilla/terraform-modules/.github/actions@e5fc38a939be3df68dca237d2b4ed4d535addd59
       with:
         package-name: ${{ matrix.directory }}
         release-type: ${{ needs.detect.outputs.release-type }}
+    - name: Generate docs
+      if: needs.detect.outputs.is-merge-event == 'false' && needs.detect.outputs.release-type != 'no-release'
+      uses: mozilla/terraform-modules/.github/actions@e5fc38a939be3df68dca237d2b4ed4d535addd59
+      with:
+        package-name: ${{ matrix.directory }}
 
   comment:
     needs: [detect, plan]
