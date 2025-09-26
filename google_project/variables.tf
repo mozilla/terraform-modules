@@ -63,8 +63,47 @@ variable "extra_project_labels" {
 
 variable "risk_level" {
   default     = ""
-  description = "Level of risk the project poses, usually obtained from an RRA"
+  description = "DEPRECATED - Level of risk the project poses, usually obtained from an RRA"
   type        = string
+}
+
+variable "risk_profile" {
+  description = "Risk profile of the project, used by the Wiz security platform"
+  type = object({
+    has_authentication    = string
+    has_exposed_api       = string
+    is_actively_developed = string
+    is_customer_facing    = string
+    is_internet_facing    = string
+    is_regulated          = string
+    regulatory_standards  = list(string)
+    sensitive_data_types  = list(string)
+    stores_data           = string
+  })
+
+  default = {
+    has_authentication    = "UNKNOWN"
+    has_exposed_api       = "UNKNOWN"
+    is_actively_developed = "UNKNOWN"
+    is_customer_facing    = "UNKNOWN"
+    is_internet_facing    = "UNKNOWN"
+    is_regulated          = "UNKNOWN"
+    regulatory_standards  = []
+    sensitive_data_types  = []
+    stores_data           = "UNKNOWN"
+  }
+
+  // need this so we use default values when not set or set to null
+  nullable = false
+
+  validation {
+    condition = alltrue([
+      for key, value in var.risk_profile :
+      key == "regulatory_standards" || key == "sensitive_data_types" ? true :
+      contains(["UNKNOWN", "YES", "NO"], upper(value))
+    ])
+    error_message = "String values must be one of: UNKNOWN, YES, NO. Lists (regulatory_standards, sensitive_data_types) can contain any strings."
+  }
 }
 
 #
