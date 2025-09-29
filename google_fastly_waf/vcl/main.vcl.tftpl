@@ -1,5 +1,10 @@
 sub vcl_recv {
 #FASTLY recv
+%{- if https_redirect_enabled }
+if (req.protocol != "https") {
+  error 601 "Moved permanently";
+}
+%{- endif }
 
 if (fastly.ff.visits_this_service == 0 && req.restarts == 0) {
   set req.http.Client-JA3 = tls.client.ja3_md5;
@@ -77,6 +82,13 @@ sub vcl_fetch {
 
 sub vcl_error {
 #FASTLY error
+%{- if https_redirect_enabled }
+if (obj.status == 601) {
+  set obj.status = 301;
+  set obj.http.Location = "https://" req.http.host req.url;
+  return (deliver);
+}
+%{- endif }
   return(deliver);
 }
 
