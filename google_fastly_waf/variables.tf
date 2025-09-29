@@ -106,6 +106,11 @@ variable "log_sampling_enabled" {
   default = false
 }
 
+variable "https_redirect_enabled" {
+  type    = bool
+  default = true
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string

@@ -199,7 +199,11 @@ resource "fastly_service_vcl" "default" {
   vcl {
     name = "main"
     content = templatefile("${path.module}/vcl/main.vcl.tftpl",
-      { realm = var.realm, environment = var.environment }
+      {
+        realm                  = var.realm,
+        environment            = var.environment,
+        https_redirect_enabled = var.https_redirect_enabled
+      }
     )
     main = true
   }
