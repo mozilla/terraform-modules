@@ -136,13 +136,13 @@ jobs:
         persist-credentials: false
       # Do the per-module steps in a composite action because matrixes can't handle dynamic outputs
     - name: Version bump
-      uses: mozilla/terraform-modules/.github/actions/versions@e5fc38a939be3df68dca237d2b4ed4d535addd59
+      uses: mozilla/terraform-modules/.github/actions/versions@1825d5a882117d869176412c2c77a0cfe8055114
       with:
         package-name: ${{ matrix.directory }}
         release-type: ${{ needs.detect.outputs.release-type }}
     - name: Generate docs
       if: needs.detect.outputs.is-merge-event == 'false' && needs.detect.outputs.release-type != 'no-release'
-      uses: mozilla/terraform-modules/.github/actions/docs@e5fc38a939be3df68dca237d2b4ed4d535addd59
+      uses: mozilla/terraform-modules/.github/actions/docs@1825d5a882117d869176412c2c77a0cfe8055114
       with:
         package-name: ${{ matrix.directory }}
 
