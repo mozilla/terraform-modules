@@ -27,6 +27,16 @@ resource "google_project_service" "project" {
   disable_on_destroy = false
 }
 
+// The project feed requires that cloudasset API is not only set up but also that the service account is created
+// Create a service account for the cloudasset API
+// ref: https://stackoverflow.com/questions/63785247/gcp-managed-service-account-is-not-created-for-cloud-asset-api
+//
+resource "google_project_service_identity" "cloud_asset_sa" {
+  provider = google-beta
+  project  = local.project_id
+  service  = "cloudasset.googleapis.com"
+}
+
 # Sleep for 10 seconds to reduce transient failures when provisioning a new
 # project
 resource "time_sleep" "wait_10_seconds" {
