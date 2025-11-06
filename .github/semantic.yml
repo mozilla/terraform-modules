@@ -1,0 +1,5 @@
+# Validate the PR title, and ignore all commit messages
+titleOnly: true
+
+# Allow revert commits (e.g. 'Revert "fix: delete all tests"')
+allowRevertCommits: true
