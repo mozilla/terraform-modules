@@ -18,6 +18,7 @@ data "google_compute_network" "default" {
 data "google_compute_subnetwork" "default" {
   name    = var.subnetwork_name
   project = var.project_id_for_network != "" ? var.project_id_for_network : data.google_project.project.project_id
+  region  = var.gcp_region
 }
 
 resource "google_compute_address" "default" {
@@ -30,7 +31,8 @@ resource "google_compute_address" "default" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name = local.name
+  name   = local.name
+  region = var.gcp_region
 
   ip_address            = google_compute_address.default.id
   load_balancing_scheme = ""
