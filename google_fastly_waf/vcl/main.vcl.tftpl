@@ -6,6 +6,13 @@ if (req.protocol != "https") {
 }
 %{ endif }
 
+# Require authentication for URL purging
+# See https://docs.fastly.com/en/guides/authenticating-api-purge-requests and
+# https://www.fastly.com/documentation/guides/concepts/edge-state/cache/purging/#url-purge
+if (req.method == "FASTLYPURGE") {
+  set req.http.Fastly-Purge-Requires-Auth = "1";
+}
+
 if (fastly.ff.visits_this_service == 0 && req.restarts == 0) {
   set req.http.Client-JA3 = tls.client.ja3_md5;
   set req.http.Client-JA4 = tls.client.ja4;
