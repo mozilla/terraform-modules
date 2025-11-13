@@ -24,7 +24,7 @@ variable "subnetwork_name" {
   type        = string
 }
 
-variable "allow_global_access" {
+variable "allow_psc_global_access" {
   description = "Allow global access to the PSC endpoint"
   type        = bool
   default     = false
