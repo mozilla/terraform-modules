@@ -5,6 +5,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_allow_global_access"></a> [allow\_global\_access](#input\_allow\_global\_access) | Allow global access to the PSC endpoint | `bool` | `false` | no |
 | <a name="input_gcp_region"></a> [gcp\_region](#input\_gcp\_region) | GCP region | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | GCP project name | `string` | n/a | yes |
 | <a name="input_network_name"></a> [network\_name](#input\_network\_name) | VPC network name | `string` | n/a | yes |
