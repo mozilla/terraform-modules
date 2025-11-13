@@ -23,3 +23,9 @@ variable "subnetwork_name" {
   description = "VPC subnetwork name"
   type        = string
 }
+
+variable "allow_global_access" {
+  description = "Allow global access to the PSC endpoint"
+  type        = bool
+  default     = false
+}

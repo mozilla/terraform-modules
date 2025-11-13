@@ -34,6 +34,7 @@ resource "google_compute_forwarding_rule" "default" {
   name   = local.name
   region = var.gcp_region
 
+  allow_global_access   = var.allow_global_access
   ip_address            = google_compute_address.default.id
   load_balancing_scheme = ""
   network               = data.google_compute_network.default.id
