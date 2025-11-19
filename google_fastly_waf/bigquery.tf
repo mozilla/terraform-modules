@@ -1,6 +1,6 @@
 resource "google_bigquery_dataset" "fastly" {
   project    = var.project_id
-  dataset_id = "${replace(var.application, "-", "_")}_${var.realm}_${var.environment}_fastly_cdn_logs"
+  dataset_id = "${replace(var.application, "-", "_")}_${var.realm}_${replace(var.environment, "-", "_")}_fastly_cdn_logs"
   location   = "US"
 
   access {
