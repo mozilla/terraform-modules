@@ -18,4 +18,5 @@
 |------|-------------|
 | <a name="output_certificate_map"></a> [certificate\_map](#output\_certificate\_map) | n/a |
 | <a name="output_dns_authorizations"></a> [dns\_authorizations](#output\_dns\_authorizations) | n/a |
+| <a name="output_dns_authorizations_by_domain"></a> [dns\_authorizations\_by\_domain](#output\_dns\_authorizations\_by\_domain) | n/a |
 <!-- END_TF_DOCS -->
