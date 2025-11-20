@@ -20,6 +20,7 @@ module "gar" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Application, e.g. bouncer. | `string` | n/a | yes |
+| <a name="input_cleanup_policies"></a> [cleanup\_policies](#input\_cleanup\_policies) | n/a | <pre>map(object({<br/>    id     = string<br/>    action = string<br/>    condition = optional(object({<br/>      tag_state             = string<br/>      tag_prefixes          = string<br/>      version_name_prefixes = any<br/>      package_name_prefixes = any<br/>      older_than            = any<br/>      newer_than            = any<br/>    }))<br/>    most_recent_versions = optional(object({<br/>      package_name_prefixes = any<br/>      keep_count            = any<br/>    }))<br/>  }))</pre> | n/a | yes |
 | <a name="input_description"></a> [description](#input\_description) | n/a | `string` | `null` | no |
 | <a name="input_format"></a> [format](#input\_format) | n/a | `string` | `"DOCKER"` | no |
 | <a name="input_location"></a> [location](#input\_location) | Location of the repository. Should generally be set to a multi-region location like 'us' or 'europe'. | `string` | `"us"` | no |
