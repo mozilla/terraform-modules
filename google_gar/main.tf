@@ -11,13 +11,43 @@ resource "google_project_service" "gar" {
 }
 
 resource "google_artifact_registry_repository" "repository" {
-  provider      = google-beta
   depends_on    = [google_project_service.gar]
   repository_id = local.repository_id
   format        = var.format
   location      = var.location
   description   = var.description
   project       = var.project
+
+  dynamic "cleanup_policies" {
+    for_each = var.cleanup_policies
+
+    content {
+      id     = cleanup_policies.value.id
+      action = cleanup_policies.value.action
+
+      dynamic "condition" {
+        for_each = cleanup_policies.value.condition
+
+        content {
+          tag_state             = condition.value.tag_state
+          tag_prefixes          = condition.value.tag_prefixes
+          version_name_prefixes = condition.value.version_name_prefixes
+          package_name_prefixes = condition.value.package_name_prefixes
+          older_than            = condition.value.older_than
+          newer_than            = condition.value.newer_than
+        }
+      }
+
+      dynamic "most_recent_versions" {
+        for_each = cleanup_policies.value.most_recent_versions
+
+        content {
+          package_name_prefixes = most_recent_versions.value.package_name_prefixes
+          keep_count            = most_recent_versions.value.keep_count
+        }
+      }
+    }
+  }
 
   labels = {
     app_code = var.application
@@ -26,7 +56,6 @@ resource "google_artifact_registry_repository" "repository" {
 }
 
 resource "google_artifact_registry_repository_iam_member" "reader" {
-  provider   = google-beta
   for_each   = toset(var.repository_readers)
   project    = var.project
   location   = var.location
@@ -42,7 +71,6 @@ resource "google_service_account" "writer_service_account" {
 }
 
 resource "google_artifact_registry_repository_iam_member" "writer" {
-  provider   = google-beta
   project    = var.project
   location   = var.location
   repository = google_artifact_registry_repository.repository.name
