@@ -44,3 +44,22 @@ variable "writer_service_account_id" {
   type    = string
   default = "artifact-writer"
 }
+
+variable "cleanup_policies" {
+  type = map(object({
+    id     = string
+    action = string
+    condition = optional(object({
+      tag_state             = string
+      tag_prefixes          = string
+      version_name_prefixes = any
+      package_name_prefixes = any
+      older_than            = any
+      newer_than            = any
+    }))
+    most_recent_versions = optional(object({
+      package_name_prefixes = any
+      keep_count            = any
+    }))
+  }))
+}
