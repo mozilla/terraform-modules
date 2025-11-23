@@ -26,7 +26,7 @@ resource "google_artifact_registry_repository" "repository" {
       action = cleanup_policies.value.action
 
       dynamic "condition" {
-        for_each = cleanup_policies.value.condition
+        for_each = cleanup_policies.value.condition != null ? { condition = cleanup_policies.value.condition } : {}
 
         content {
           tag_state             = condition.value.tag_state
@@ -39,7 +39,7 @@ resource "google_artifact_registry_repository" "repository" {
       }
 
       dynamic "most_recent_versions" {
-        for_each = cleanup_policies.value.most_recent_versions
+        for_each = cleanup_policies.value.most_recent_versions != null ? { most_recent_versions = cleanup_policies.value.most_recent_versions } : {}
 
         content {
           package_name_prefixes = most_recent_versions.value.package_name_prefixes
