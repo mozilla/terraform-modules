@@ -50,16 +50,18 @@ variable "cleanup_policies" {
     id     = string
     action = string
     condition = optional(object({
-      tag_state             = string
-      tag_prefixes          = string
-      version_name_prefixes = any
-      package_name_prefixes = any
-      older_than            = any
-      newer_than            = any
+      tag_state             = optional(string)
+      tag_prefixes          = optional(list(string))
+      version_name_prefixes = optional(list(string))
+      package_name_prefixes = optional(list(string))
+      older_than            = optional(string)
+      newer_than            = optional(string)
     }))
     most_recent_versions = optional(object({
-      package_name_prefixes = any
-      keep_count            = any
+      package_name_prefixes = optional(list(string))
+      keep_count            = optional(number)
     }))
   }))
+  default     = {}
+  description = "Map of Cleanup Policies https://cloud.google.com/artifact-registry/docs/repositories/cleanup-policy-overview ."
 }
