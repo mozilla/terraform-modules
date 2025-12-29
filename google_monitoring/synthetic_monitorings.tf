@@ -13,7 +13,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "object" {
   for_each = { for fn in var.synthetic_monitors : fn.name => fn }
-  name     = each.key
+  name     = each.value.object_name
   bucket   = google_storage_bucket.bucket[each.key].name
   source   = each.value.object_source
 }
