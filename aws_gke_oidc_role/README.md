@@ -1,4 +1,3 @@
-<!-- BEGIN_TF_DOCS -->
 # AWS-GKE OIDC Role
 This module will create an AWS role that will allow a specified GKE service account to assume it.
 
@@ -122,6 +121,8 @@ data "aws_iam_policy" "view_only" {
 | <a name="input_gke_service_account"></a> [gke\_service\_account](#input\_gke\_service\_account) | GKE service account to grant role assumption privilleges | `string` | n/a | yes |
 | <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | One or more policy arns to attach to created AWS role | `map(string)` | n/a | yes |
 | <a name="input_role_name"></a> [role\_name](#input\_role\_name) | Name to give the AWS role | `string` | n/a | yes |
+| <a name="input_space_prefix"></a> [space\_prefix](#input\_space\_prefix) | Prefix for Spacelift spaces that are allowed to assume role. Spacelift role will not be created if not set | `string` | `""` | no |
+| <a name="input_spacelift_instance"></a> [spacelift\_instance](#input\_spacelift\_instance) | Spacelift instance to grant role assumption privilleges | `string` | `"mozilla.app.spacelift.io"` | no |
 
 ## Outputs
 
@@ -129,4 +130,3 @@ data "aws_iam_policy" "view_only" {
 |------|-------------|
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN for the GKE-AWS connector role |
 | <a name="output_role_name"></a> [role\_name](#output\_role\_name) | Name for the GKE-AWS connector role |
-<!-- END_TF_DOCS -->
