@@ -14,3 +14,9 @@ variable "gke_cluster_name" {
   description = "GKE cluster name"
   type        = string
 }
+
+variable "spacelift_instance" {
+  description = "Spacelift instance to establish OIDC trust relationship"
+  default     = "mozilla.app.spacelift.io"
+  type        = string
+}

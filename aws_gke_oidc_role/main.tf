@@ -39,13 +39,16 @@ module "iam_assumable_role_for_oidc" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role"
   version = "~> v6.2.1"
 
-  description        = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} to assume"
+  description        = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} and Spacelift to assume"
   enable_oidc        = true
   name               = var.role_name
-  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", "")]
-  oidc_subjects      = ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"]
-  policies           = var.iam_policy_arns
-  use_name_prefix    = false
+  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), "https://${var.spacelift_instance}/"]
+  oidc_subjects = setunion(
+    ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
+    var.space_prefix == "" ? [] : ["space:${var.space_prefix}"],
+  )
+  policies        = var.iam_policy_arns
+  use_name_prefix = false
 }
 
 data "aws_iam_openid_connect_provider" "gke_oidc" {
