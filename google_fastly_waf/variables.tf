@@ -127,3 +127,16 @@ variable "ngwaf_percent_enabled" {
   type    = number
   default = 100
 }
+
+## Image Optimizer
+variable "image_optimizer_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable Fastly Image Optimizer. Requires shielding to be configured on backends."
+}
+
+variable "image_optimizer_shield" {
+  type        = string
+  default     = ""
+  description = "Shield location for Image Optimizer fallback (e.g., 'sea-wa-us', 'pdx-or-us'). Required when image_optimizer_enabled is true and backends don't have shielding configured."
+}

@@ -134,6 +134,42 @@ module "fastly_stage" {
     },
   ]
 }
+# To enable Fastly Image Optimizer for on-the-fly image transformation,
+# set `image_optimizer_enabled = true`. This requires shielding to be
+# configured - either on individual backends or via `image_optimizer_shield`.
+# See: https://docs.fastly.com/en/guides/about-fastly-image-optimizer
+module "fastly_with_image_optimizer" {
+  source      = "github.com/mozilla/terraform-modules//google_fastly_waf?ref=main"
+  application = glab
+  environment = foo
+  project_id  = bar
+  realm       = bar
+
+  waf_enabled       = true
+  ngwaf_agent_level = "block"
+
+  image_optimizer_enabled = true
+  image_optimizer_shield  = "sea-wa-us"
+
+  subscription_domains = [
+    { name = "my-app.mozilla.org" }
+  ]
+
+  domains = [
+    { name = "my-cool-app.global.ssl.fastly.net" },
+  ]
+
+  backends = [
+    {
+      address           = "my_cool_app.net"
+      name              = "my_cool_app_net"
+      port              = 443
+      ssl_cert_hostname = "my_cool_app.net"
+      ssl_sni_hostname  = "my_cool_app.net"
+      use_ssl           = true
+    },
+  ]
+}
 ```
 
 ## Inputs
@@ -145,6 +181,8 @@ module "fastly_stage" {
 | <a name="input_conditions"></a> [conditions](#input\_conditions) | List of Fastly conditions to create (REQUEST, RESPONSE or CACHE). | <pre>list(object({<br/>    name      = string           # required, unique<br/>    statement = string           # VCL conditional expression<br/>    type      = string           # one of: REQUEST, RESPONSE, CACHE<br/>    priority  = optional(number) # lower runs first, default 10<br/>  }))</pre> | `[]` | no |
 | <a name="input_domains"></a> [domains](#input\_domains) | A list of domains | `list(any)` | `[]` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment this module is deployed into | `string` | n/a | yes |
+| <a name="input_image_optimizer_enabled"></a> [image\_optimizer\_enabled](#input\_image\_optimizer\_enabled) | Enable Fastly Image Optimizer. Requires shielding to be configured on backends. | `bool` | `false` | no |
+| <a name="input_image_optimizer_shield"></a> [image\_optimizer\_shield](#input\_image\_optimizer\_shield) | Shield location for Image Optimizer fallback (e.g., 'sea-wa-us', 'pdx-or-us'). Required when image_optimizer_enabled is true and backends don't have shielding configured. | `string` | `""` | no |
 | <a name="input_ngwaf_agent_level"></a> [ngwaf\_agent\_level](#input\_ngwaf\_agent\_level) | This is the site wide blocking level | `string` | `"log"` | no |
 | <a name="input_ngwaf_immediate_block"></a> [ngwaf\_immediate\_block](#input\_ngwaf\_immediate\_block) | n/a | `bool` | `true` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The GCP project\_ id for BigQuery logging | `string` | n/a | yes |
