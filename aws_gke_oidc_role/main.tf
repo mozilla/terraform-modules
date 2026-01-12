@@ -1,6 +1,6 @@
 /*
  * # AWS-GKE OIDC Role
- * This module will create an AWS role that will allow a specified GKE service account to assume it.
+ * This module will create an AWS role that will allow a specified GKE service account & Spacelift space(s) to assume it.
  *
  * Requires that `../aws_gke_oidc_config` has been applied for a given AWS account + GKE cluster combination
  * if you get an error about the `aws_iam_openid_connect_provider` data source being missing, apply that module.
