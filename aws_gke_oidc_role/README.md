@@ -122,8 +122,8 @@ data "aws_iam_policy" "view_only" {
 | <a name="input_gke_service_account"></a> [gke\_service\_account](#input\_gke\_service\_account) | GKE service account to grant role assumption privilleges | `string` | n/a | yes |
 | <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | One or more policy arns to attach to created AWS role | `map(string)` | n/a | yes |
 | <a name="input_role_name"></a> [role\_name](#input\_role\_name) | Name to give the AWS role | `string` | n/a | yes |
-| <a name="input_space_prefix"></a> [space\_prefix](#input\_space\_prefix) | Prefix for Spacelift spaces that are allowed to assume role. Spacelift role will not be created if not set | `string` | `""` | no |
 | <a name="input_spacelift_instance"></a> [spacelift\_instance](#input\_spacelift\_instance) | Spacelift instance to grant role assumption privilleges | `string` | `"mozilla.app.spacelift.io"` | no |
+| <a name="input_spacelift_prefixes"></a> [spacelift\_prefixes](#input\_spacelift\_prefixes) | List of prefixes for Spacelift spaces/stacks that are allowed to assume role. See sub claim at https://docs.spacelift.io/integrations/cloud-providers/oidc#standard-claims for format | `list(string)` | `[]` | no |
 
 ## Outputs
 
