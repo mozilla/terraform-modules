@@ -45,7 +45,7 @@ module "iam_assumable_role_for_oidc" {
   oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), "https://${var.spacelift_instance}/"]
   oidc_subjects = setunion(
     ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
-    var.space_prefix == "" ? [] : ["space:${var.space_prefix}"],
+    var.spacelift_prefixes == "" ? [] : var.spacelift_prefixes,
   )
   policies        = var.iam_policy_arns
   use_name_prefix = false

@@ -46,8 +46,8 @@ variable "spacelift_instance" {
   type        = string
 }
 
-variable "space_prefix" {
-  description = "Prefix for Spacelift spaces that are allowed to assume role. Spacelift role will not be created if not set"
-  default     = ""
-  type        = string
+variable "spacelift_prefixes" {
+  description = "List of prefixes for Spacelift spaces/stacks that are allowed to assume role. See sub claim at https://docs.spacelift.io/integrations/cloud-providers/oidc#standard-claims for format"
+  default     = []
+  type        = list(string)
 }
