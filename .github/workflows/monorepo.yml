@@ -26,7 +26,7 @@ jobs:
          && github.event.action == 'closed'
          && github.event.pull_request.merged == true }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd #v5
         with:
           persist-credentials: true
           fetch-depth: 0
@@ -96,7 +96,7 @@ jobs:
           json: "true"
           escape_json: "false"
       - name: Condense to directory list
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd #v8
         id: condense
         env:
           RAW_FILES: ${{ steps.raw-files.outputs.all_changed_files }}
@@ -130,7 +130,7 @@ jobs:
       max-parallel: 1
     steps:
     - name: Checkout repository to use composite action
-      uses: actions/checkout@v5
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd #v5
       with:
         ref: main # Only use composite action from main to prevent malicious PRs
         persist-credentials: false
@@ -156,14 +156,14 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: actions/download-artifact@v4.3.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 #v4.3.0
         with:
           path: outputs
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: outputs
 
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd #v8
         id: comment
         with:
           script: |
@@ -222,12 +222,12 @@ jobs:
       actions: write
       contents: write
     steps:
-      - uses: actions/download-artifact@v4.3.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 #v4.3.0
         with:
           path: outputs
       - name: Combine version information
         id: extract-releases
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd #v8
         with:
           script: |
             const { readdir, readFile } = require('fs').promises;
@@ -243,7 +243,7 @@ jobs:
                 newVersion: await readText(`outputs/${folder.name}/new-version.txt`),
               })));
       - name: Dispatch monorepo_release event
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd #v8
         env:
           RELEASE_LIST: ${{ steps.extract-releases.outputs.result }}
         with:
