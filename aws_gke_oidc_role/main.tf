@@ -43,7 +43,7 @@ module "iam_assumable_role_for_oidc" {
   enable_oidc        = true
   name               = var.role_name
   oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), data.aws_iam_openid_connect_provider.spacelift.url]
-  oidc_subjects = setunion(
+  oidc_wildcard_subjects = setunion(
     ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
     var.spacelift_prefixes
   )
