@@ -43,6 +43,8 @@ module "iam_assumable_role_for_oidc" {
   enable_oidc        = true
   name               = var.role_name
   oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), data.aws_iam_openid_connect_provider.spacelift.url]
+  # TODO - look into using https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest/submodules/iam-role#input_trust_policy_conditions for the Spacelift subject
+  # GKE subject doesn't need wildcards so it can be an `oidc_subject`, but setting both `oidc_subjects` and `wilcard_subjects` results in an AND
   oidc_wildcard_subjects = setunion(
     ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
     var.spacelift_prefixes
