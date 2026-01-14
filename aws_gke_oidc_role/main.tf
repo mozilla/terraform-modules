@@ -56,5 +56,5 @@ data "aws_iam_openid_connect_provider" "gke_oidc" {
 }
 
 data "aws_iam_openid_connect_provider" "spacelift" {
-  url = "https://${var.spacelift_instance}/"
+  url = "https://${var.spacelift_instance}"
 }
