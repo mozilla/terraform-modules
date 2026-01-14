@@ -22,6 +22,7 @@ locals {
     "roles/cloudsql.studioUser",
     "roles/cloudsql.viewer",
     "roles/cloudtranslate.editor",
+    "roles/datamigration.admin",
     "roles/editor",
     "roles/monitoring.uptimeCheckConfigEditor",
     "roles/storage.admin",
