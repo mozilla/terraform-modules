@@ -42,10 +42,10 @@ module "iam_assumable_role_for_oidc" {
   description        = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} and Spacelift to assume"
   enable_oidc        = true
   name               = var.role_name
-  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), "https://${var.spacelift_instance}/"]
+  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), data.aws_iam_openid_connect_provider.spacelift.url]
   oidc_subjects = setunion(
     ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
-    var.spacelift_prefixes == "" ? [] : var.spacelift_prefixes,
+    var.spacelift_prefixes
   )
   policies        = var.iam_policy_arns
   use_name_prefix = false
@@ -53,4 +53,8 @@ module "iam_assumable_role_for_oidc" {
 
 data "aws_iam_openid_connect_provider" "gke_oidc" {
   url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
+}
+
+data "aws_iam_openid_connect_provider" "spacelift" {
+  url = "https://${var.spacelift_instance}/"
 }
