@@ -3,9 +3,9 @@ output "team_id" {
 }
 
 output "schedule_ids" {
-  value = { for k, v in pagerduty_schedule.this : k => v.id }
+  value = { for k, v in pagerduty_schedule.schedule : k => v.id }
 }
 
 output "escalation_policy_ids" {
-  value = { for k, v in pagerduty_escalation_policy.this : k => v.id }
+  value = { for k, v in pagerduty_escalation_policy.escalation_policy : k => v.id }
 }
