@@ -39,3 +39,15 @@ variable "gke_service_account" {
   description = "GKE service account to grant role assumption privilleges"
   type        = string
 }
+
+variable "spacelift_instance" {
+  description = "Spacelift instance to grant role assumption privilleges"
+  default     = "mozilla.app.spacelift.io"
+  type        = string
+}
+
+variable "spacelift_prefixes" {
+  description = "List of prefixes for Spacelift spaces/stacks that are allowed to assume role. See sub claim at https://docs.spacelift.io/integrations/cloud-providers/oidc#standard-claims for format"
+  default     = []
+  type        = list(string)
+}
