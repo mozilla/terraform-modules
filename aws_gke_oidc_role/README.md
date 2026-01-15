@@ -1,6 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
 # AWS-GKE OIDC Role
-This module will create an AWS role that will allow a specified GKE service account to assume it.
+This module will create an AWS role that will allow a specified GKE service account & Spacelift space(s) to assume it.
 
 Requires that `../aws_gke_oidc_config` has been applied for a given AWS account + GKE cluster combination
 if you get an error about the `aws_iam_openid_connect_provider` data source being missing, apply that module.
@@ -122,6 +122,8 @@ data "aws_iam_policy" "view_only" {
 | <a name="input_gke_service_account"></a> [gke\_service\_account](#input\_gke\_service\_account) | GKE service account to grant role assumption privilleges | `string` | n/a | yes |
 | <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | One or more policy arns to attach to created AWS role | `map(string)` | n/a | yes |
 | <a name="input_role_name"></a> [role\_name](#input\_role\_name) | Name to give the AWS role | `string` | n/a | yes |
+| <a name="input_spacelift_instance"></a> [spacelift\_instance](#input\_spacelift\_instance) | Spacelift instance to grant role assumption privilleges | `string` | `"mozilla.app.spacelift.io"` | no |
+| <a name="input_spacelift_prefixes"></a> [spacelift\_prefixes](#input\_spacelift\_prefixes) | List of prefixes for Spacelift spaces/stacks that are allowed to assume role. See sub claim at https://docs.spacelift.io/integrations/cloud-providers/oidc#standard-claims for format | `list(string)` | `[]` | no |
 
 ## Outputs
 

@@ -1,6 +1,6 @@
 /*
  * # AWS-GKE OIDC Role
- * This module will create an AWS role that will allow a specified GKE service account to assume it.
+ * This module will create an AWS role that will allow a specified GKE service account & Spacelift space(s) to assume it.
  *
  * Requires that `../aws_gke_oidc_config` has been applied for a given AWS account + GKE cluster combination
  * if you get an error about the `aws_iam_openid_connect_provider` data source being missing, apply that module.
@@ -39,15 +39,24 @@ module "iam_assumable_role_for_oidc" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role"
   version = "~> v6.2.1"
 
-  description        = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} to assume"
+  description        = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} and Spacelift to assume"
   enable_oidc        = true
   name               = var.role_name
-  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", "")]
-  oidc_subjects      = ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"]
-  policies           = var.iam_policy_arns
-  use_name_prefix    = false
+  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), data.aws_iam_openid_connect_provider.spacelift.url]
+  # TODO - look into using https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest/submodules/iam-role#input_trust_policy_conditions for the Spacelift subject
+  # GKE subject doesn't need wildcards so it can be an `oidc_subject`, but setting both `oidc_subjects` and `wilcard_subjects` results in an AND
+  oidc_wildcard_subjects = setunion(
+    ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
+    var.spacelift_prefixes
+  )
+  policies        = var.iam_policy_arns
+  use_name_prefix = false
 }
 
 data "aws_iam_openid_connect_provider" "gke_oidc" {
   url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
+}
+
+data "aws_iam_openid_connect_provider" "spacelift" {
+  url = "https://${var.spacelift_instance}"
 }
