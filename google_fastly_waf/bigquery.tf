@@ -149,6 +149,36 @@ resource "google_bigquery_table" "fastly" {
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "client IP"
+  },
+  {
+    "name": "h2fp",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "HTTP/2 implementation details"
+  },
+  {
+    "name": "asn",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Autonomous System Number"
+  },
+  {
+    "name": "ohfp",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "order and structure of HTTP headers"
+  },
+  {
+    "name": "proxy_type",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "proxy type"
+  },
+  {
+    "name": "proxy_desc",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "proxy description"
   }
 ]
 EOF
