@@ -67,7 +67,7 @@ resource "fastly_service_vcl" "default" {
       override_host      = lookup(backend.value, "override_host", "")
       port               = lookup(backend.value, "port", 443)
       request_condition  = lookup(backend.value, "request_condition", "False")
-      shield             = lookup(backend.value, "shield", "")
+      shield             = lookup(backend.value, "shield", "BFI")
       ssl_sni_hostname   = lookup(backend.value, "ssl_sni_hostname", "")
       use_ssl            = lookup(backend.value, "use_ssl", false)
 
