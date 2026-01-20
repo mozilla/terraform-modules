@@ -81,6 +81,10 @@ resource "fastly_service_vcl" "default" {
       # don't fail early, "terraform apply" will fail when it calls Fastly API.
       ssl_check_cert    = lookup(backend.value, "use_ssl", false) ? true : false
       ssl_cert_hostname = lookup(backend.value, "use_ssl", false) ? backend.value.ssl_cert_hostname : ""
+
+      # For using MTLS
+      ssl_client_cert = lookup(backend.value, "ssl_client_cert", "")
+      ssl_client_key  = lookup(backend.value, "ssl_client_key", "")
     }
   }
 
