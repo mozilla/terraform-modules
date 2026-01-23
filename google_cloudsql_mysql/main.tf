@@ -12,7 +12,7 @@ locals {
   replica_availability_type = coalesce(var.replica_availability_type_override, var.availability_type)
 
   default_replica_name = "${local.database_name}-replica"
-  replica_name         = coalesce(var.custom_replica_name, local.default_replica_name)
+  replica_names        = coalescelist(var.custom_replica_name, [for index in range(var.replica_count) : "${local.default_replica_name}-${index}"])
 
   ip_addresses = google_sql_database_instance.primary.ip_address
 
@@ -129,7 +129,7 @@ resource "google_sql_database_instance" "primary" {
 
 resource "google_sql_database_instance" "replica" {
   count                = var.replica_count
-  name                 = "${local.replica_name}-${count.index}"
+  name                 = local.replica_names[count.index]
   project              = var.project_id
   region               = local.replica_region
   database_version     = var.database_version

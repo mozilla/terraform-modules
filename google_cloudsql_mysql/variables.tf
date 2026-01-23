@@ -39,9 +39,14 @@ variable "custom_database_name" {
 }
 
 variable "custom_replica_name" {
-  default     = ""
+  default     = []
   description = "Custom database replica name."
-  type        = string
+  type        = list(string)
+
+  validation {
+    condition     = length(var.custom_replica_name) == 0 || length(var.custom_replica_name) == var.replica_count
+    error_message = "Replicas must use default replica name or define a replica name for every replica."
+  }
 }
 
 variable "data_cache_enabled" {
