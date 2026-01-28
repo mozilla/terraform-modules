@@ -179,6 +179,12 @@ resource "google_bigquery_table" "fastly" {
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "proxy description"
+  },
+  {
+    "name": "fastly_request_id",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Fastly Request ID"
   }
 ]
 EOF
