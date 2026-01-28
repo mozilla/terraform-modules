@@ -105,7 +105,16 @@ if (obj.status == 601) {
   return(deliver);
 }
 
+
 sub vcl_deliver {
+# To remove after debugging
+if ( req.http.Fastly-Debug ) {
+    set resp.http.X-Log-Fastly-RequestId = req.http.x-sigsci-requestid;
+    set resp.http.X-Log-Fastly-ResponseId = resp.http.x-sigsci-requestid;
+    set resp.http.X-Log-Fastly-AgentResponseReq = req.http.x-sigsci-agentresponse;
+    set resp.http.X-Log-Fastly-AgentResponseResp = resp.http.x-sigsci-agentresponse;    
+}
+
 #FASTLY deliver
   return(deliver);
 }
