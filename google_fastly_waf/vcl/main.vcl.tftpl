@@ -109,8 +109,8 @@ if (obj.status == 601) {
 sub vcl_deliver {
 # To remove after debugging
 if ( req.http.Fastly-Debug ) {
-    set resp.http.X-Log-Fastly-RequestId = req.http.x-sigsci-requestid;
-    set resp.http.X-Log-Fastly-ResponseId = resp.http.x-sigsci-requestid;
+    set resp.http.X-Log-Fastly-RequestId = req.http.x-fastly-ngwaf:requestid;
+    set resp.http.X-Log-Fastly-ResponseId = resp.http.x-fastly-ngwaf:requestid;
     set resp.http.X-Log-Fastly-AgentResponseReq = req.http.x-sigsci-agentresponse;
     set resp.http.X-Log-Fastly-AgentResponseResp = resp.http.x-sigsci-agentresponse;    
 }
