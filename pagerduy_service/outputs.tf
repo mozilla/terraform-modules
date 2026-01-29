@@ -1,3 +1,3 @@
 output "service_id" {
-  value = pagerduty_service.service
+  value = pagerduty_service.service.id
 }
