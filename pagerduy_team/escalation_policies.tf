@@ -8,7 +8,7 @@ locals {
 resource "pagerduty_escalation_policy" "escalation_policy" {
   for_each = local.escalation_policies_by_name
 
-  name        = "${each.key}"
+  name        = each.key
   description = try(each.value.description, "")
   num_loops   = each.value.num_loops
   teams       = [pagerduty_team.team.id]

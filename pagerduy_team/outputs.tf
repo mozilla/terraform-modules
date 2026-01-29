@@ -1,5 +1,5 @@
 output "team_id" {
-  value = pagerduty_team.this.id
+  value = pagerduty_team.team.id
 }
 
 output "schedule_ids" {

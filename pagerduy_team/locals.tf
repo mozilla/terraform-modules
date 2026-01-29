@@ -9,8 +9,8 @@ locals {
 
   # Flatten memberships into one map keyed by "role:user_id"
   memberships = merge(
-    { for u in var.observer_members  : "group:${u}"  => { user_id = u, role = "observer"  } },
+    { for u in var.observer_members : "group:${u}" => { user_id = u, role = "observer" } },
     { for u in var.responder_members : "group:${u}" => { user_id = u, role = "responder" } },
-    { for u in var.manager_members   : "group:${u}"   => { user_id = u, role = "manager"   } },
+    { for u in var.manager_members : "group:${u}" => { user_id = u, role = "manager" } },
   )
 }

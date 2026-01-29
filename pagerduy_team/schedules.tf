@@ -1,7 +1,7 @@
 resource "pagerduty_schedule" "schedule" {
   for_each = local.schedules_by_name
 
-  name      = "${each.key}"
+  name      = each.key
   time_zone = try(each.value.time_zone, "UTC")
 
   layer {
