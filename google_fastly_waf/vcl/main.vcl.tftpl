@@ -28,7 +28,12 @@ if (fastly.ff.visits_this_service == 0 && req.restarts == 0) {
   set req.http.ohfp = fastly_info.oh_fingerprint;
 }
 
-# pass through no caching
+# If a header is set return caching
+if (req.http.X-Cache-Request == "true") {
+  return(lookup);
+}
+
+# Default: pass through no caching
 return(pass);
 }
 
