@@ -142,17 +142,25 @@ module "fastly_stage" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Application name | `string` | n/a | yes |
 | <a name="input_backends"></a> [backends](#input\_backends) | A list of backends | `list(any)` | `[]` | no |
+| <a name="input_cache_header"></a> [cache\_header](#input\_cache\_header) | A cache header to check to toggle cache lookup | `string` | `""` | no |
+| <a name="input_cache_settings"></a> [cache\_settings](#input\_cache\_settings) | List of cache settings for the Fastly service. | <pre>list(object({<br/>    name            = string<br/>    action          = optional(string)<br/>    cache_condition = optional(string)<br/>    stale_ttl       = optional(number)<br/>    ttl             = optional(number)<br/>  }))</pre> | `[]` | no |
 | <a name="input_conditions"></a> [conditions](#input\_conditions) | List of Fastly conditions to create (REQUEST, RESPONSE or CACHE). | <pre>list(object({<br/>    name      = string           # required, unique<br/>    statement = string           # VCL conditional expression<br/>    type      = string           # one of: REQUEST, RESPONSE, CACHE<br/>    priority  = optional(number) # lower runs first, default 10<br/>  }))</pre> | `[]` | no |
 | <a name="input_domains"></a> [domains](#input\_domains) | A list of domains | `list(any)` | `[]` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment this module is deployed into | `string` | n/a | yes |
+| <a name="input_https_redirect_enabled"></a> [https\_redirect\_enabled](#input\_https\_redirect\_enabled) | n/a | `bool` | `true` | no |
+| <a name="input_log_sampling_enabled"></a> [log\_sampling\_enabled](#input\_log\_sampling\_enabled) | n/a | `bool` | `false` | no |
+| <a name="input_log_sampling_percent"></a> [log\_sampling\_percent](#input\_log\_sampling\_percent) | n/a | `string` | `"10"` | no |
 | <a name="input_ngwaf_agent_level"></a> [ngwaf\_agent\_level](#input\_ngwaf\_agent\_level) | This is the site wide blocking level | `string` | `"log"` | no |
 | <a name="input_ngwaf_immediate_block"></a> [ngwaf\_immediate\_block](#input\_ngwaf\_immediate\_block) | n/a | `bool` | `true` | no |
+| <a name="input_ngwaf_percent_enabled"></a> [ngwaf\_percent\_enabled](#input\_ngwaf\_percent\_enabled) | n/a | `number` | `100` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The GCP project\_ id for BigQuery logging | `string` | n/a | yes |
 | <a name="input_realm"></a> [realm](#input\_realm) | The realm this module is deployed into | `string` | n/a | yes |
 | <a name="input_response_objects"></a> [response\_objects](#input\_response\_objects) | List of synthetic response objects to attach to the Fastly service. | <pre>list(object({<br/>    name              = string           # required<br/>    status            = optional(number) # e.g. 503<br/>    response          = optional(string) # e.g. "Ok"<br/>    content           = optional(string)<br/>    content_type      = optional(string)<br/>    request_condition = optional(string) # name of an existing REQUEST condition<br/>    cache_condition   = optional(string) # name of an existing CACHE   condition<br/>  }))</pre> | `[]` | no |
+| <a name="input_service_account"></a> [service\_account](#input\_service\_account) | n/a | `string` | `null` | no |
 | <a name="input_snippets"></a> [snippets](#input\_snippets) | snippets | `list(any)` | `[]` | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | Determine if something should be deployed to stage | `bool` | `false` | no |
 | <a name="input_subscription_domains"></a> [subscription\_domains](#input\_subscription\_domains) | Domains to issue SSL certificates for | `list(any)` | `[]` | no |
+| <a name="input_subscription_domains_force_update"></a> [subscription\_domains\_force\_update](#input\_subscription\_domains\_force\_update) | Force update the subscription even if it has active domains. Warning: this can disable production traffic if used incorrectly. | `bool` | `false` | no |
 
 ## Outputs
 

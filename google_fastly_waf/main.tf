@@ -202,7 +202,8 @@ resource "fastly_service_vcl" "default" {
       {
         realm                  = var.realm,
         environment            = var.environment,
-        https_redirect_enabled = var.https_redirect_enabled
+        https_redirect_enabled = var.https_redirect_enabled,
+        cache_header           = var.cache_header
       }
     )
     main = true
