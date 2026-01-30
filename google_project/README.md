@@ -23,7 +23,8 @@ Sets up a single GCP project linked to a billing account plus management metadat
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of project e.g., autopush | `string` | n/a | yes |
 | <a name="input_project_services"></a> [project\_services](#input\_project\_services) | List of google\_project\_service APIs to enable. | `list(string)` | `[]` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm is a grouping of environments being one of: global, nonprod, prod | `string` | `""` | no |
-| <a name="input_risk_level"></a> [risk\_level](#input\_risk\_level) | Level of risk the project poses, usually obtained from an RRA | `string` | `""` | no |
+| <a name="input_risk_level"></a> [risk\_level](#input\_risk\_level) | DEPRECATED - Level of risk the project poses, usually obtained from an RRA | `string` | `""` | no |
+| <a name="input_risk_profile"></a> [risk\_profile](#input\_risk\_profile) | Risk profile of the project, used by the Wiz security platform | <pre>object({<br/>    has_authentication    = string<br/>    has_exposed_api       = string<br/>    is_actively_developed = string<br/>    is_customer_facing    = string<br/>    is_internet_facing    = string<br/>    is_regulated          = string<br/>    regulatory_standards  = list(string)<br/>    sensitive_data_types  = list(string)<br/>    stores_data           = string<br/>  })</pre> | <pre>{<br/>  "has_authentication": "UNKNOWN",<br/>  "has_exposed_api": "UNKNOWN",<br/>  "is_actively_developed": "UNKNOWN",<br/>  "is_customer_facing": "UNKNOWN",<br/>  "is_internet_facing": "UNKNOWN",<br/>  "is_regulated": "UNKNOWN",<br/>  "regulatory_standards": [],<br/>  "sensitive_data_types": [],<br/>  "stores_data": "UNKNOWN"<br/>}</pre> | no |
 
 ## Outputs
 
