@@ -111,6 +111,12 @@ variable "https_redirect_enabled" {
   default = true
 }
 
+variable "cache_header" {
+  type        = string
+  default     = ""
+  description = "A cache header to check to toggle cache lookup"
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string
