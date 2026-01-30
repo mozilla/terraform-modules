@@ -1,0 +1,30 @@
+formatter: markdown
+
+header-from: .header.md
+
+sections:
+  show:
+    - header
+    - requirements
+    - providers
+    - inputs
+    - outputs
+
+sort:
+  enabled: true
+  by: required
+
+output:
+  file: README.md
+  mode: replace
+
+content: |-
+  {{ .Header }}
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}

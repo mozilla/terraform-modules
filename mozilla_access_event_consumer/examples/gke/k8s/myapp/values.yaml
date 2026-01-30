@@ -1,0 +1,20 @@
+projectId: "PROJECT_ID"
+
+employeeExitsImage:
+  repository: us-docker.pkg.dev/PROJECT_ID/MYAPP/employee-exits
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# https://mozilla-hub.atlassian.net/browse/MZCLD-1407
+employeeExitsSubscriptionId: FIXME
+
+employeeExits:
+  secrets:
+    # Enable syncing secrets from Google Secret Manager
+    enabled: false
+    # How often to refresh secrets from GSM
+    refreshInterval: "1h"
+    # Version of the secret to use (use "latest" or a specific version number)
+    version: "latest"
+    # Secret will be synced from GSM with key: {environment}-employee-exits-secrets
+    # Example: prod-employee-exits-secrets, stage-employee-exits-secrets
