@@ -5,3 +5,5 @@ google_gke_tenant/ @jasonthomas @jbuck @bkochendorfer
 google_tenant_project_bootstrap/ @jasonthomas @jbuck @bkochendorfer
 google_workgroup/ @jasonthomas @jbuck @bkochendorfer
 google_workload_identity/ @jasonthomas @jbuck @bkochendorfer
+pagerduy_service/ @jasonthomas @jbuck @bkochendorfer @whd
+pagerduy_team/ @jasonthomas @jbuck @bkochendorfer @whd

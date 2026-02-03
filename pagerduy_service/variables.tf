@@ -36,7 +36,6 @@ variable "escalation_policy_ids" {
   description = "Map of escalation policy names to IDs (from pagerduty_team module)."
 }
 
-
 variable "integrations" {
   description = "Which integrations to create/enabled for this service."
   type = object({
