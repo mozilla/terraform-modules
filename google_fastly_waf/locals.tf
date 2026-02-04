@@ -6,4 +6,6 @@ locals {
     priority = 1
   }
   snippets = concat(var.snippets, var.stage ? [local.waf_bypass_snippet] : [])
+
+  pull_request_url = try(env("PULL_REQUEST_URL"), null)
 }
