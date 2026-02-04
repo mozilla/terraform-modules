@@ -12,7 +12,7 @@ resource "fastly_service_vcl" "default" {
   activate = !var.stage
   stage    = var.stage
 
-  version_comment = "Applied via Atlantis at ${local.pull_request_url}"
+  version_comment = "Applied via Atlantis at: ${local.pull_request_url}"
 
   product_enablement {
     brotli_compression = true
@@ -231,12 +231,6 @@ resource "fastly_service_vcl" "default" {
     gzip_level         = 9
     period             = 300 # 5 minutes
     response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
-  }
-
-  lifecycle {
-    ignore_changes = [
-      version_comment
-    ]
   }
 }
 
