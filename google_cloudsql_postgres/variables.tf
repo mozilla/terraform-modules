@@ -336,7 +336,7 @@ variable "final_backup_enabled" {
 }
 
 variable "final_backup_retention_days" {
-  default     = 0
+  default     = 365
   description = "Retention days for final backup. See: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#retention_days-1"
   type        = number
 }
