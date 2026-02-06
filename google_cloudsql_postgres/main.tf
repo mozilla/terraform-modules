@@ -35,7 +35,6 @@ resource "google_sql_database_instance" "primary" {
 
   database_version = var.database_version
 
-
   settings {
     dynamic "password_validation_policy" {
       for_each = var.password_validation_policy_enable ? range(1) : []
@@ -48,6 +47,7 @@ resource "google_sql_database_instance" "primary" {
         password_change_interval    = var.password_validation_policy_password_change_interval
       }
     }
+
     availability_type           = var.availability_type
     connector_enforcement       = var.connector_enforcement
     deletion_protection_enabled = var.deletion_protection_enabled
@@ -135,6 +135,15 @@ resource "google_sql_database_instance" "primary" {
     }
 
     user_labels = local.user_labels
+  }
+
+  dynamic "final_backup_config" {
+    for_each = var.final_backup_enabled ? [1] : []
+
+    content {
+      enabled        = var.final_backup_enabled
+      retention_days = var.final_backup_retention_days
+    }
   }
 
   deletion_protection = var.deletion_protection
