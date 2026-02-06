@@ -328,3 +328,15 @@ variable "user_labels" {
   description = "Additional user_labels"
   type        = map(string)
 }
+
+variable "final_backup_enabled" {
+  default     = false
+  description = "Enable final backup creation after instance deletion. See: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#enabled-1"
+  type        = bool
+}
+
+variable "final_backup_retention_days" {
+  default     = 30
+  description = "Retention days for final backup. See: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#retention_days-1"
+  type        = number
+}

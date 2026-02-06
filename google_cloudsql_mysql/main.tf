@@ -123,6 +123,11 @@ resource "google_sql_database_instance" "primary" {
         record_client_address   = var.psc_enabled ? false : var.record_client_address
       }
     }
+
+    final_backup_config {
+      enabled        = var.final_backup_enabled
+      retention_days = var.final_backup_retention_days
+    }
   }
 
   deletion_protection = var.deletion_protection
