@@ -136,13 +136,9 @@ resource "google_sql_database_instance" "primary" {
 
     user_labels = local.user_labels
 
-    dynamic "final_backup_config" {
-      for_each = var.final_backup_enabled ? [1] : []
-
-      content {
-        enabled        = var.final_backup_enabled
-        retention_days = var.final_backup_retention_days
-      }
+    final_backup_config {
+      enabled        = var.final_backup_enabled
+      retention_days = var.final_backup_retention_days
     }
   }
 
