@@ -4,7 +4,7 @@ variable "project_id" {
 }
 
 variable "application" {
-  description = "Name of the application consuming exit notifications (used for resource naming)"
+  description = "Name of the application consuming access event notifications (used for resource naming)"
   type        = string
 }
 
@@ -19,10 +19,11 @@ variable "environment" {
 }
 
 variable "central_topic_id" {
-  description = "Full resource ID of the central employee exit topic. Automatically retrieved from remote state. Only override for testing purposes."
+  description = "Full resource ID of the central access event topic. Automatically retrieved from remote state. Only override for testing purposes."
   type        = string
   default     = null
 }
+
 
 variable "function_source_dir" {
   description = "Path to the directory containing Cloud Function source code. If provided, deploys a Cloud Function. If not specified, only creates a subscription for GKE usage."
@@ -37,7 +38,7 @@ variable "function_source_dir" {
 
 # Service Account Configuration
 variable "service_account_name" {
-  description = "Service account ID (defaults to {application}-{environment}-exit)"
+  description = "Service account ID (defaults to {application}-{environment}-access)"
   type        = string
   default     = null
 }
@@ -50,7 +51,7 @@ variable "service_account_display_name" {
 
 # Pub/Sub Subscription Configuration
 variable "subscription_name" {
-  description = "Name of the Pub/Sub subscription (defaults to {application}-{environment}-employee-exits)"
+  description = "Name of the Pub/Sub subscription (defaults to {application}-{environment}-access-events)"
   type        = string
   default     = null
 }
@@ -92,14 +93,14 @@ variable "max_delivery_attempts" {
 }
 
 variable "subscription_filter" {
-  description = "Filter expression for the subscription (e.g., 'attributes.notification_type = \"exit\"')"
+  description = "Filter expression for the subscription (e.g., 'attributes.event_type = \"employee_exit\"')"
   type        = string
   default     = null
 }
 
 # Cloud Function Configuration
 variable "function_name" {
-  description = "Name of the Cloud Function (defaults to {application}-{environment}-exit-processor)"
+  description = "Name of the Cloud Function (defaults to {application}-{environment}-access-event-processor)"
   type        = string
   default     = null
 }
@@ -130,7 +131,7 @@ variable "function_runtime" {
 variable "function_entry_point" {
   description = "Entry point function name"
   type        = string
-  default     = "process_exit"
+  default     = "process_access_event"
 }
 
 variable "function_memory" {
@@ -163,12 +164,6 @@ variable "function_concurrency" {
   default     = 1
 }
 
-variable "function_retry_policy" {
-  description = "Retry policy for the event trigger (RETRY_POLICY_RETRY or RETRY_POLICY_DO_NOT_RETRY)"
-  type        = string
-  default     = "RETRY_POLICY_RETRY"
-}
-
 variable "function_environment_variables" {
   description = "Environment variables for the Cloud Function"
   type        = map(string)
@@ -185,13 +180,8 @@ variable "function_gsm_environment_variables" {
 }
 
 # Alternative Service Account (for GKE mode)
-variable "service_account" {
+variable "service_account_email" {
   description = "Service account email to use instead of creating one. Required for GKE mode with GKE Workload Identity (e.g., gke-prod@project.iam.gserviceaccount.com). Only used if function_source_dir is null."
   type        = string
   default     = null
-
-  validation {
-    condition     = var.service_account == null || (var.service_account != null && var.service_account != "")
-    error_message = "service_account must be either null or a non-empty string. Empty string is not allowed."
-  }
 }

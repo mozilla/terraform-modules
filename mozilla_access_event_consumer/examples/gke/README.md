@@ -1,6 +1,6 @@
 # Kubernetes Example
 
-This example shows how to consume employee exit notifications from Kubernetes. The example uses a CronJob for batch processing, but you can adapt it to use any Kubernetes workload type (Deployment, Job, etc.).
+This example shows how to consume access event notifications from Kubernetes. The example uses a CronJob for batch processing, but you can adapt it to use any Kubernetes workload type (Deployment, Job, etc.).
 
 ## Prerequisites
 
@@ -22,11 +22,11 @@ code and copy it to your application repo.
 
 See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/1676935173/Standards+Container+Images and https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/1923448980/CI+with+GitHub+Actions+GA.
 
-Edit `app/main.py` and implement your application-specific logic in the `process_exit_event()` function:
+Edit `app/main.py` and implement your application-specific logic in the `process_access_event()` function:
 
 ```python
-def process_exit_event(exit_data: Dict[str, Any]) -> None:
-    employee_email = exit_data.get("employee_email")
+def process_access_event(access_event: Dict[str, Any]) -> None:
+    employee_email = access_event.get("employee_email")
 
     # Your logic here:
     disable_user_in_database(employee_email)

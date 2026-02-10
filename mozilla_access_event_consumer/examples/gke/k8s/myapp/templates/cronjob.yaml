@@ -1,8 +1,9 @@
+{{- if .Values.accessEventsImage }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "application.fullname" . }}-employee-exits
+  name: {{ include "application.fullname" . }}-access-events
   labels:
     {{- include "application.labels" . | nindent 4 }}
 spec:
@@ -12,24 +13,24 @@ spec:
     spec:
       template:
         metadata:
-          name: {{ include "application.fullname" . }}-employee-exits
+          name: {{ include "application.fullname" . }}-access-events
         spec:
           serviceAccountName: {{ include "application.fullname" . }}
           containers:
-            - name: employee-exits
+            - name: access-events
               imagePullPolicy: Always
-              image: "{{ .Values.employeeExitsImage.repository }}:{{ .Values.employeeExitsImage.tag }}"
+              image: "{{ .Values.accessEventsImage.repository }}:{{ .Values.accessEventsImage.tag }}"
               env:
                 - name: PROJECT_ID
                   value: {{ .Values.projectId }}
                 - name: SUBSCRIPTION_ID
-                  value: {{ .Values.employeeExitsSubscriptionId }}
+                  value: {{ .Values.accessEventsSubscriptionId }}
                 - name: LOG_LEVEL
                   value: "INFO"
-              {{- if .Values.employeeExits.secrets.enabled }}
+              {{- if .Values.accessEvents.secrets.enabled }}
               envFrom:
                 - secretRef:
-                    name: {{ include "application.fullname" . }}-employee-exits-secrets
+                    name: {{ include "application.fullname" . }}-access-events-secrets
               {{- end }}
               resources:
                 requests:
@@ -48,3 +49,4 @@ spec:
                 capabilities:
                   drop: ["ALL"]
           restartPolicy: OnFailure
+{{- end }}
