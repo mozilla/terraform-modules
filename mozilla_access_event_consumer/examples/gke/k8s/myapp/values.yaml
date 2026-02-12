@@ -16,5 +16,3 @@ accessEvents:
     refreshInterval: "1h"
     # Version of the secret to use (use "latest" or a specific version number)
     version: "latest"
-    # Secret will be synced from GSM with key: {environment}-access-events-secrets
-    # Example: prod-access-events-secrets, stage-access-events-secrets

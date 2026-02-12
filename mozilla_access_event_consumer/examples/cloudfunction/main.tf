@@ -27,14 +27,12 @@ module "access_consumer" {
   }
 
   # Example: Expose a secret as an environment variable
-  function_secret_environment_variables = [
-    {
-      key        = "DATABASE_PASSWORD"
-      project_id = local.project_id
-      secret     = google_secret_manager_secret.db_password.secret_id
-      version    = "latest"
+  function_gsm_environment_variables = {
+    DATABASE_PASSWORD = {
+      name    = google_secret_manager_secret.db_password.secret_id
+      version = "latest"
     }
-  ]
+  }
 }
 
 # Example secret

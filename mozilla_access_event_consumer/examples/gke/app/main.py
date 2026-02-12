@@ -21,9 +21,12 @@ logger.add_handler(handlers.StreamHandler(sys.stdout, formatters.JSONFormatter()
 
 # Configuration from environment variables
 PROJECT_ID = os.getenv("PROJECT_ID")
-SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")  # Full path: projects/{project}/subscriptions/{name}
+SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")
 MAX_MESSAGES = int(os.getenv("MAX_MESSAGES", "100"))
 ACK_DEADLINE_SECONDS = int(os.getenv("ACK_DEADLINE_SECONDS", "60"))
+
+# Secrets from Secret Manager are exposed as environment variables, see the k8s config
+# DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD", "")
 
 
 def process_access_event(access_event: Dict[str, Any]) -> None:
@@ -60,16 +63,6 @@ def process_access_event(access_event: Dict[str, Any]) -> None:
     )
 
     # TODO: Implement your application-specific access event logic here:
-    # - Disable user in your application
-    # - Revoke database access
-    # - Delete user-specific resources
-    # - Send notifications
-    # - Update audit logs
-
-    # Example: Call your application's user management API
-    # disable_user(employee_email)
-    # revoke_database_access(employee_email)
-    # delete_user_resources(employee_email)
 
     logger.info(f"Successfully processed access event for {employee_email}")
 

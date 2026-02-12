@@ -22,21 +22,11 @@ code and copy it to your application repo.
 
 See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/1676935173/Standards+Container+Images and https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/1923448980/CI+with+GitHub+Actions+GA.
 
-Edit `app/main.py` and implement your application-specific logic in the `process_access_event()` function:
-
-```python
-def process_access_event(access_event: Dict[str, Any]) -> None:
-    employee_email = access_event.get("employee_email")
-
-    # Your logic here:
-    disable_user_in_database(employee_email)
-    revoke_api_keys(employee_email)
-    delete_user_resources(employee_email)
-```
+Edit `app/main.py` and implement your application-specific logic in the `process_access_event()` function.
 
 ### 3. Deploy to Kubernetes
 
-See the [k8s/](./k8s/myapp/) directory for an example Helm chart that deploys a CronJob. You can adapt this to use any Kubernetes workload type that suits your needs. You may need to set additional values in your `values.yaml` files.
+See the [k8s/](./k8s/myapp/) directory for an example Helm chart that deploys a CronJob. You may need to set additional values in your `values.yaml` files.
 
 ## Configuration
 

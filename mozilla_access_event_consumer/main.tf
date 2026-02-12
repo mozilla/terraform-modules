@@ -21,6 +21,22 @@ resource "google_service_account" "consumer" {
   description  = "Service account for processing access event notifications via Cloud Function in ${var.environment}"
 }
 
+resource "google_service_account" "builder" {
+  count   = local.deploy_cloud_function ? 1 : 0
+  project = var.project_id
+
+  account_id   = "${var.application}-${var.environment}-access-build"
+  display_name = "${var.application} ${var.environment} access build"
+  description  = "Service account for building Cloud Function artifacts for ${var.application} in ${var.environment}"
+}
+
+resource "google_project_iam_member" "builder" {
+  count   = local.deploy_cloud_function ? 1 : 0
+  project = var.project_id
+  role    = data.terraform_remote_state.org[0].outputs.iam_custom_roles["CloudFunctionBuilder"]
+  member  = "serviceAccount:${google_service_account.builder[0].email}"
+}
+
 # Pub/Sub Subscription
 # In Cloud Function mode: push subscription delivers messages to the function's HTTP endpoint
 # In GKE mode: pull subscription for the GKE workload to consume
@@ -54,14 +70,6 @@ resource "google_pubsub_subscription" "access_consumer" {
     }
   }
 
-  dynamic "dead_letter_policy" {
-    for_each = var.dead_letter_topic != null ? [1] : []
-    content {
-      dead_letter_topic     = var.dead_letter_topic
-      max_delivery_attempts = var.max_delivery_attempts
-    }
-  }
-
   expiration_policy {
     ttl = ""
   }
@@ -91,11 +99,15 @@ resource "google_pubsub_subscription_iam_binding" "consumer_viewer" {
 resource "google_storage_bucket" "function_source" {
   count   = local.deploy_cloud_function ? 1 : 0
   project = var.project_id
-  name    = "${var.project_id}-${var.application}-${var.environment}-access-function-source"
+  # max 63 characters so truncate if necessary
+  name = "${substr("${var.project_id}-${var.application}-${var.environment}", 0, 48)}-access-fn-src"
 
   location      = var.function_region
   storage_class = "STANDARD"
 
+  # Make deleting the bucket during
+  # https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/870645965/Deleting+a+Tenant+Project easier
+  force_destroy               = true
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
 }
@@ -119,7 +131,7 @@ data "archive_file" "function_source" {
 # Upload to GCS with hash in filename - when source changes, new object is created
 resource "google_storage_bucket_object" "function_source" {
   count  = local.deploy_cloud_function ? 1 : 0
-  name   = "${var.application}-${var.environment}-access-function-${filesha256(data.archive_file.function_source[0].output_path)}.zip"
+  name   = "${var.application}-${var.environment}-access-function-${data.archive_file.function_source[0].output_sha256}.zip"
   bucket = google_storage_bucket.function_source[0].name
   source = data.archive_file.function_source[0].output_path
 
@@ -136,8 +148,9 @@ resource "google_cloudfunctions2_function" "access_consumer" {
   description = coalesce(var.function_description, "Processes access event notifications for ${var.application} in ${var.environment}")
 
   build_config {
-    runtime     = var.function_runtime
-    entry_point = var.function_entry_point
+    runtime         = var.function_runtime
+    entry_point     = var.function_entry_point
+    service_account = google_service_account.builder[0].id
 
     source {
       storage_source {

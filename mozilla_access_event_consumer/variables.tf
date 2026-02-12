@@ -9,36 +9,36 @@ variable "application" {
 }
 
 variable "environment" {
-  description = "Environment name. Used to differentiate resources when deploying multiple environments in the same project."
+  description = "Environment name. Used to differentiate resources when deploying multiple environments in the same project"
   type        = string
 
   validation {
     condition     = contains(["dev", "stage", "prod"], var.environment)
-    error_message = "environment must be one of: dev, stage, or prod."
+    error_message = "environment must be one of: dev, stage, or prod"
   }
 }
 
 variable "central_topic_id" {
-  description = "Full resource ID of the central access event topic. Automatically retrieved from remote state. Only override for testing purposes."
+  description = "Full resource ID of the central access event topic. Automatically retrieved from remote state. Only override for testing purposes"
   type        = string
   default     = null
 }
 
 
 variable "function_source_dir" {
-  description = "Path to the directory containing Cloud Function source code. If provided, deploys a Cloud Function. If not specified, only creates a subscription for GKE usage."
+  description = "Path to the directory containing Cloud Function source code. If provided, deploys a Cloud Function. If not specified, only creates a subscription for GKE usage"
   type        = string
   default     = null
 
   validation {
     condition     = var.function_source_dir == null || var.function_source_dir != ""
-    error_message = "function_source_dir must be either null (for GKE mode) or a non-empty string (for Cloud Function mode). Empty string is not allowed."
+    error_message = "function_source_dir must be either null (for GKE mode) or a non-empty string (for Cloud Function mode). Empty string is not allowed"
   }
 }
 
 # Service Account Configuration
 variable "service_account_name" {
-  description = "Service account ID (defaults to {application}-{environment}-access)"
+  description = "Service account ID, defaults to {application}-{environment}-access"
   type        = string
   default     = null
 }
@@ -51,13 +51,13 @@ variable "service_account_display_name" {
 
 # Pub/Sub Subscription Configuration
 variable "subscription_name" {
-  description = "Name of the Pub/Sub subscription (defaults to {application}-{environment}-access-events)"
+  description = "Name of the Pub/Sub subscription, defaults to {application}-{environment}-access-events"
   type        = string
   default     = null
 }
 
 variable "message_retention_duration" {
-  description = "How long to retain unacknowledged messages (default: 7 days)"
+  description = "How long to retain unacknowledged messages, default 7 days"
   type        = string
   default     = "604800s"
 }
@@ -80,27 +80,15 @@ variable "retry_maximum_backoff" {
   default     = "600s"
 }
 
-variable "dead_letter_topic" {
-  description = "Pub/Sub topic for dead letter messages (optional)"
-  type        = string
-  default     = null
-}
-
-variable "max_delivery_attempts" {
-  description = "Maximum number of delivery attempts for dead letter policy"
-  type        = number
-  default     = 5
-}
-
 variable "subscription_filter" {
-  description = "Filter expression for the subscription (e.g., 'attributes.event_type = \"employee_exit\"')"
+  description = "Filter expression for the subscription e.g., 'attributes.event_type = \"employee_exit\"'"
   type        = string
   default     = null
 }
 
 # Cloud Function Configuration
 variable "function_name" {
-  description = "Name of the Cloud Function (defaults to {application}-{environment}-access-event-processor)"
+  description = "Name of the Cloud Function, defaults to {application}-{environment}-access-event-processor"
   type        = string
   default     = null
 }
@@ -118,14 +106,14 @@ variable "function_region" {
 
   validation {
     condition     = contains(["us-west1", "us-central1", "europe-west1"], var.function_region)
-    error_message = "function_region must be one of: us-west1, us-central1, or europe-west1. See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/1286176831/GCP+Regions for approved regions."
+    error_message = "function_region must be one of: us-west1, us-central1, or europe-west1. See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/1286176831/GCP+Regions for approved regions"
   }
 }
 
 variable "function_runtime" {
-  description = "Runtime for the Cloud Function (e.g., python312, nodejs20)"
+  description = "Runtime for the Cloud Function e.g., python314, nodejs20"
   type        = string
-  default     = "python312"
+  default     = "python314"
 }
 
 variable "function_entry_point" {
@@ -171,7 +159,7 @@ variable "function_environment_variables" {
 }
 
 variable "function_gsm_environment_variables" {
-  description = "Environment variables sourced from Google Secret Manager for the Cloud Function. References existing GSM resources. The consumer is responsible for granting the service account access via roles/secretmanager.secretAccessor. Map of environment variable name to {name = GSM resource name, version = 'latest' or version number}"
+  description = "Map of environment variable name to version e.g. {name = GSM_resource_name, version = 'latest'}. The consumer is responsible for granting the service account access via roles/secretmanager.secretAccessor"
   type = map(object({
     name    = string
     version = string
@@ -179,9 +167,9 @@ variable "function_gsm_environment_variables" {
   default = {}
 }
 
-# Alternative Service Account (for GKE mode)
+# Alternative Service Account for GKE mode
 variable "service_account_email" {
-  description = "Service account email to use instead of creating one. Required for GKE mode with GKE Workload Identity (e.g., gke-prod@project.iam.gserviceaccount.com). Only used if function_source_dir is null."
+  description = "Service account email to use instead of creating one. Required for GKE mode with GKE Workload Identity (e.g., gke-prod@project.iam.gserviceaccount.com). Only used if function_source_dir is null"
   type        = string
   default     = null
 }

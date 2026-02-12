@@ -1,2 +1,2 @@
 google-cloud-pubsub==2.*
-mozlog
+mozlog==8.*

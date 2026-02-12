@@ -21,3 +21,13 @@ data "google_project" "project" {
   count      = local.deploy_cloud_function ? 1 : 0
   project_id = var.project_id
 }
+
+data "terraform_remote_state" "org" {
+  count   = local.deploy_cloud_function ? 1 : 0
+  backend = "gcs"
+
+  config = {
+    bucket = "moz-fx-platform-mgmt-global-tf"
+    prefix = "projects/org"
+  }
+}
