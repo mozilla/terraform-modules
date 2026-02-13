@@ -1,3 +1,60 @@
+/**
+ * # Mozilla Access Event Consumer Module
+ *
+ * This Terraform module creates the infrastructure needed for a tenant application to consume access event notifications from a centrally-managed Pub/Sub topic.
+ *
+ * ## Deployment Modes
+ *
+ * 1. **Cloud Function Mode** automatically triggered by Pub/Sub events
+ * - Prefer **Cloud Functions** if you don't have GKE resources or in cases where your access event flows don't have any dependencies on your tenant's GKE resources
+ * 2. **GKE Mode** to pull messages from your tenant GKE setup
+ * - Use **GKE Mode** if you prefer to manage your access event logic along with the rest of your application and GKE deployment
+ *
+ * ## Message Format
+ *
+ * Access event messages have this structure:
+ *
+ * ```json
+ * {
+ *   "event_type": "employee_exit",
+ *   "event_time": "2026-01-26T00:00:00Z",
+ *   "employee_email": "user@mozilla.com",
+ *   "employee_name": "Jane Doe",
+ *   "publish_time": "2026-01-28T19:02:25.123456Z",
+ *   "event_data": {
+ *     "manager_name": "Jane Manager",
+ *     "manager_email": "jmanager@mozilla.com"
+ *   }
+ * }
+ * ```
+ *
+ * ## IAM Role Management
+ *
+ * **Cloud Function mode (push subscription):**
+ *
+ * The module creates two service accounts:
+ * - **Consumer SA** (`{app}-{env}-access`) - SA the Cloud Function runs as
+ * - **Build SA** (`{app}-{env}-access-build`) - SA used by Cloud Build to build the Cloud Function artifact
+ *
+ * Consumer SA permissions (resource-level):
+ * - `roles/run.invoker` on the Cloud Run service to allow Pub/Sub to invoke the function
+ * - `roles/iam.serviceAccountTokenCreator` on the consumer SA to allow the Pub/Sub service agent to mint OIDC tokens for authenticated push delivery
+ *
+ * Build SA permissions (project-level, noncanonical via `google_project_iam_member`):
+ * - `CloudFunctionBuilder` (org custom role) - grants the subset of `roles/logging.logWriter`, `roles/storage.objectViewer`, and `roles/artifactregistry.writer` permissions needed to build Cloud Function artifacts
+ *
+ * **GKE mode (pull subscription):**
+ * - `roles/pubsub.subscriber` - To pull messages from the subscription
+ * - `roles/pubsub.viewer` - To view subscription metadata
+ *
+ * **Additional IAM roles you must manage:**
+ * - `roles/secretmanager.secretAccessor` - Required for each GSM resource referenced in `function_gsm_environment_variables`
+ * - Database access roles (e.g., Cloud SQL, Firestore)
+ * - Any other application-specific permissions
+ *
+ * Use the `service_account_email` output to grant these permissions in your own Terraform code.
+ */
+
 locals {
   central_topic_id = coalesce(var.central_topic_id, data.terraform_remote_state.global_shared[0].outputs.access_events_topic_id)
 
@@ -16,7 +73,8 @@ resource "google_service_account" "consumer" {
   count   = local.deploy_cloud_function ? 1 : 0
   project = var.project_id
 
-  account_id   = coalesce(var.service_account_name, "${var.application}-${var.environment}-access")
+  # max 30 characters so truncate if necessary
+  account_id   = coalesce(var.service_account_name, "${substr("${var.application}-${var.environment}", 0, min(23, length("${var.application}-${var.environment}")))}-access")
   display_name = coalesce(var.service_account_display_name, "${var.application} ${var.environment} access")
   description  = "Service account for processing access event notifications via Cloud Function in ${var.environment}"
 }
@@ -25,7 +83,8 @@ resource "google_service_account" "builder" {
   count   = local.deploy_cloud_function ? 1 : 0
   project = var.project_id
 
-  account_id   = "${var.application}-${var.environment}-access-build"
+  # max 30 characters so truncate if necessary
+  account_id   = "${substr("${var.application}-${var.environment}", 0, min(17, length("${var.application}-${var.environment}")))}-access-build"
   display_name = "${var.application} ${var.environment} access build"
   description  = "Service account for building Cloud Function artifacts for ${var.application} in ${var.environment}"
 }
