@@ -206,6 +206,8 @@ resource "google_cloudfunctions2_function" "access_consumer" {
 
   description = coalesce(var.function_description, "Processes access event notifications for ${var.application} in ${var.environment}")
 
+  depends_on = [google_project_iam_member.builder]
+
   build_config {
     runtime         = var.function_runtime
     entry_point     = var.function_entry_point
