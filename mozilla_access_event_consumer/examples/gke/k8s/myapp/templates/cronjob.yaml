@@ -1,0 +1,52 @@
+{{- if .Values.accessEventsImage }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "application.fullname" . }}-access-events
+  labels:
+    {{- include "application.labels" . | nindent 4 }}
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ include "application.fullname" . }}-access-events
+        spec:
+          serviceAccountName: {{ include "application.fullname" . }}
+          containers:
+            - name: access-events
+              imagePullPolicy: Always
+              image: "{{ .Values.accessEventsImage.repository }}:{{ .Values.accessEventsImage.tag }}"
+              env:
+                - name: PROJECT_ID
+                  value: {{ .Values.projectId }}
+                - name: SUBSCRIPTION_ID
+                  value: {{ .Values.accessEventsSubscriptionId }}
+                - name: LOG_LEVEL
+                  value: "INFO"
+              {{- if .Values.accessEvents.secrets.enabled }}
+              envFrom:
+                - secretRef:
+                    name: {{ include "application.fullname" . }}-access-events-secrets
+              {{- end }}
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "250m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "500m"
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                runAsNonRoot: true
+                capabilities:
+                  drop: ["ALL"]
+          restartPolicy: OnFailure
+{{- end }}

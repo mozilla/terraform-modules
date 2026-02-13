@@ -1,0 +1,36 @@
+content: |-
+  {{ .Header }}
+
+  ## Cloud Function Example
+
+  Full source: [examples/cloudfunction](examples/cloudfunction)
+
+  ### Prerequisites
+  
+  The following APIs must be enabled in your project:
+  
+  - `cloudbuild.googleapis.com`
+  - `cloudfunctions.googleapis.com`
+  - `run.googleapis.com`
+  
+  These should be specified in e.g. `webservices-infra/projects/tf/global/locals.tf` for your projects.
+
+  Deploy a Cloud Function that processes Pub/Sub events via push subscription:
+
+  ```hcl
+  {{ include "examples/cloudfunction/main.tf" }}
+  ```
+
+  ## GKE Example
+
+  Full source: [examples/gke](examples/gke)
+
+  Create a Pub/Sub subscription for pull-based processing from GKE:
+
+  ```hcl
+  {{ include "examples/gke/main.tf" }}
+  ```
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}

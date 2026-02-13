@@ -1,0 +1,18 @@
+projectId: "PROJECT_ID"
+
+accessEventsImage:
+  repository: us-docker.pkg.dev/PROJECT_ID/MYAPP/access-events
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# https://mozilla-hub.atlassian.net/browse/MZCLD-1407
+accessEventsSubscriptionId: FIXME
+
+accessEvents:
+  secrets:
+    # Enable syncing secrets from Google Secret Manager
+    enabled: false
+    # How often to refresh secrets from GSM
+    refreshInterval: "1h"
+    # Version of the secret to use (use "latest" or a specific version number)
+    version: "latest"
