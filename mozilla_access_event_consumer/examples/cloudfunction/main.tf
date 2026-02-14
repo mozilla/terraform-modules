@@ -8,6 +8,7 @@ locals {
 }
 
 module "access_consumer" {
+  # Use the latest version of this module from https://github.com/mozilla/terraform-modules/tags
   source = "github.com/mozilla/terraform-modules//mozilla_access_event_consumer?ref=main"
 
   project_id  = local.project_id
