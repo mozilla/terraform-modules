@@ -37,10 +37,10 @@ resource "google_project_service_identity" "cloud_asset_sa" {
   service  = "cloudasset.googleapis.com"
 }
 
-# Sleep for 10 seconds to reduce transient failures when provisioning a new
+# Sleep for 60 seconds to reduce transient failures when provisioning a new
 # project
-resource "time_sleep" "wait_10_seconds" {
-  create_duration = "10s"
+resource "time_sleep" "wait_60_seconds" {
+  create_duration = "60s"
 
   depends_on = [
     google_project.project
@@ -62,7 +62,7 @@ resource "google_project_iam_audit_config" "data_access_high" {
     log_type = "DATA_WRITE"
   }
   depends_on = [
-    time_sleep.wait_10_seconds
+    time_sleep.wait_60_seconds
   ]
 }
 
@@ -77,7 +77,7 @@ AND NOT protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.Bi
 ${local.data_access_logs_filter}
   EOT
   depends_on = [
-    time_sleep.wait_10_seconds
+    time_sleep.wait_60_seconds
   ]
 }
 
@@ -88,7 +88,7 @@ resource "google_logging_project_bucket_config" "project" {
   enable_analytics = var.log_analytics
   retention_days   = var.log_retention_days
   depends_on = [
-    time_sleep.wait_10_seconds
+    time_sleep.wait_60_seconds
   ]
 }
 
@@ -98,6 +98,6 @@ resource "google_logging_linked_dataset" "default_linked_dataset" {
   bucket      = google_logging_project_bucket_config.project.id
   description = "Linked Dataset for Project Logging"
   depends_on = [
-    time_sleep.wait_10_seconds
+    time_sleep.wait_60_seconds
   ]
 }
