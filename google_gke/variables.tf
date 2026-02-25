@@ -430,3 +430,21 @@ variable "autoscaling_profile" {
   type        = string
   default     = "BALANCED"
 }
+
+variable "enable_ray_operator" {
+  description = "enable the ray operator addon"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ray_cluster_logging" {
+  description = "enable ray operator logging"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ray_cluster_monitoring" {
+  description = "enable ray operator monitoring"
+  type        = bool
+  default     = true
+}

@@ -168,6 +168,22 @@ resource "google_container_cluster" "primary" {
     dns_cache_config {
       enabled = var.dns_cache
     }
+
+    dynamic "ray_operator_config" {
+      for_each = var.enable_ray_operator ? [1] : []
+
+      content {
+        enabled = var.enable_ray_operator
+
+        ray_cluster_logging_config {
+          enabled = var.enable_ray_cluster_logging
+        }
+
+        ray_cluster_monitoring_config {
+          enabled = var.enable_ray_cluster_monitoring
+        }
+      }
+    }
   }
 
   # Gateway-api
