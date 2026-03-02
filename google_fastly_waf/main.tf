@@ -323,3 +323,11 @@ resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sy
     sigsci_edge_deployment_service.ngwaf_edge_service_link,
   ]
 }
+
+### Slack Alerting Integration for WAF Events
+resource "sigsci_site_integration" "slack_logging_mode_alerts" {
+  site_short_name = var.sigsci_site_short_name
+  type            = "slack"
+  url             = var.slack_logging_webhook_url
+  events          = ["loggingModeChanged"]
+}
