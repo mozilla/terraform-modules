@@ -141,6 +141,5 @@ variable "sigsci_site_short_name" {
 
 variable "slack_logging_webhook_url" {
   type      = string
-  sensitive = true
   default   = "https://hooks.slack.com/services/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"
 }
