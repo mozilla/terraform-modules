@@ -7,5 +7,5 @@ output "certificate_verification_information" {
 }
 
 output "slack_logging_integration_id" {
-  value = sigsci_site_integration.slack_logging_mode_alerts.id
+  value = var.enable_slack_logging_mode_alerts ? sigsci_site_integration.slack_logging_mode_alerts[0].id : null
 }
