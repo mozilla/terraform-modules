@@ -134,13 +134,14 @@ variable "ngwaf_percent_enabled" {
   default = 100
 }
 
-variable "sigsci_site_short_name" {
-  type    = string
-  default = ""
-}
-
 variable "slack_logging_webhook_url" {
   type      = string
   sensitive = true
   default   = "TBD"
+}
+
+variable "enable_slack_logging_mode_alerts" {
+  description = "Enable or disable the Slack integration for logging mode change alerts"
+  type        = bool
+  default     = true
 }
