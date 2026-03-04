@@ -38,10 +38,10 @@ module "workgroup" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_ids"></a> [ids](#input\_ids) | List of workgroup identifiers to look up access for | `set(string)` | n/a | yes |
-| <a name="input_roles"></a> [roles](#input\_roles) | List of roles to generate bigquery acls for | `map(string)` | `{}` | no |
+| <a name="input_roles"></a> [roles](#input\_roles) | List of roles to generate bigquery acls for | `map(string)` | <pre>{<br/>  "metadata_viewer": "roles/bigquery.metadataViewer",<br/>  "read": "READER",<br/>  "write": "WRITER"<br/>}</pre> | no |
 | <a name="input_terraform_remote_state_bucket"></a> [terraform\_remote\_state\_bucket](#input\_terraform\_remote\_state\_bucket) | The GCS bucket used for terraform state that contains the expected workgroups output | `string` | `"moz-fx-platform-mgmt-global-tf"` | no |
 | <a name="input_terraform_remote_state_prefix"></a> [terraform\_remote\_state\_prefix](#input\_terraform\_remote\_state\_prefix) | The path prefix where the terraform state file is located | `string` | `"projects/google-workspace-management"` | no |
-| <a name="input_workgroup_outputs"></a> [workgroup\_outputs](#input\_workgroup\_outputs) | Expected outputs from workgroup output definition | `list(any)` | <pre>[<br/>  "members",<br/>  "google_groups"<br/>]</pre> | no |
+| <a name="input_workgroup_outputs"></a> [workgroup\_outputs](#input\_workgroup\_outputs) | Expected outputs from workgroup output definition | `list(any)` | <pre>[<br/>  "bigquery_acls",<br/>  "members",<br/>  "service_accounts",<br/>  "google_groups"<br/>]</pre> | no |
 ## Outputs
 
 | Name | Description |
