@@ -79,7 +79,7 @@ locals {
   subgroups_test = [for subgroup in local.normalized_subgroups : index(local.subgroups_all, subgroup[1])]
 
   access = { for k in local.outputs : k => distinct(flatten(concat(
-    [for workgroup in local.expanded_workgroups : lookup(local.workgroups[workgroup[0]][k], workgroup[1], [])],
+    [for workgroup in local.expanded_workgroups : lookup(lookup(local.workgroups[workgroup[0]], k, {}), workgroup[1], [])],
   ))) }
 
 
