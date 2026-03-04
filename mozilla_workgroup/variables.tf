@@ -8,19 +8,18 @@ variable "ids" {
   }
 }
 
-/* roles can be BigQuery roles and/or basic  roles for dataset"
-  https://cloud.google.com/bigquery/docs/access-control-basic-roles
-  https://cloud.google.com/bigquery/docs/access-control#bigquery
-  example
-    metadata_viewer = "roles/bigquery.metadataViewer"
-    read            = "READER"
-    write           = "WRITER"
-  */
-
+# roles can be BigQuery roles and/or basic roles for dataset
+# https://cloud.google.com/bigquery/docs/access-control-basic-roles
+# https://cloud.google.com/bigquery/docs/access-control#bigquery
+# custom roles can also be passed in if necessary
 variable "roles" {
   type        = map(string)
   description = "List of roles to generate bigquery acls for"
-  default     = {}
+  default = {
+    metadata_viewer = "roles/bigquery.metadataViewer"
+    read            = "READER"
+    write           = "WRITER"
+  }
 }
 
 variable "terraform_remote_state_bucket" {
@@ -36,8 +35,7 @@ variable "terraform_remote_state_prefix" {
 }
 
 variable "workgroup_outputs" {
-  default     = ["members", "google_groups"]
+  default     = ["bigquery_acls", "members", "service_accounts", "google_groups"]
   type        = list(any)
   description = "Expected outputs from workgroup output definition"
-  # output can be ["bigquery_acls", "members", "service_accounts", "google_groups"]
 }
