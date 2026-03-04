@@ -83,11 +83,16 @@ locals {
   ))) }
 
 
+  # Compute bigquery dataset ACLs from service_accounts and google_groups
+  bigquery_acl_entries = concat(
+    [for sa in lookup(local.access, "service_accounts", []) : { user_by_email = sa }],
+    [for group in lookup(local.access, "google_groups", []) : { group_by_email = group }],
+  )
+
   bigquery_acls = { for output, role in var.roles :
-    "${output}_acls" =>
-    toset([
-      for k, v in local.access["bigquery_acls"] :
-      merge(v, { "role" : role })
+    "${output}_acls" => toset([
+      for entry in local.bigquery_acl_entries :
+      merge(entry, { role = role })
     ])
   }
 }
