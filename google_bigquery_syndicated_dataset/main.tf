@@ -99,15 +99,15 @@ data "terraform_remote_state" "org" {
 # Currently Jenkins with plans to move to Airflow, see https://mozilla-hub.atlassian.net/browse/SVCSE-3005
 module "syndication_workgroup" {
   source = "github.com/mozilla/terraform-modules//mozilla_workgroup?ref=main"
-
-  ids               = var.syndication_workgroup_ids
-  workgroup_outputs = ["service_accounts"]
-
+  ids    = var.syndication_workgroup_ids
+  # TODO this config will need to be removed when SVCSE-4008 is complete
   terraform_remote_state_bucket = "moz-fx-data-terraform-state-global"
   terraform_remote_state_prefix = "projects/data-shared/global/access-groups"
 }
 
 resource "google_bigquery_dataset" "dataset" {
+  count = var.create_dataset ? 1 : 0
+
   dataset_id                      = var.dataset_id
   location                        = var.location
   friendly_name                   = var.friendly_name
@@ -187,5 +187,32 @@ resource "google_bigquery_dataset" "dataset" {
         target_types = ["VIEWS"]
       }
     }
+  }
+}
+
+# Non-authoritative syndication access for externally-managed datasets
+resource "google_bigquery_dataset_access" "syndication_role" {
+  for_each = var.create_dataset ? {} : {
+    for sa in module.syndication_workgroup.service_accounts : sa => sa
+  }
+
+  dataset_id    = var.dataset_id
+  role          = data.terraform_remote_state.org.outputs.bigquery_jobs_manage_syndicate_dataset_role_id
+  user_by_email = each.value
+}
+
+resource "google_bigquery_dataset_access" "syndicated_authorization" {
+  for_each = var.create_dataset ? {} : {
+    for entry in local.syndication_dataset_access : "${entry.project_id}/${entry.dataset_id}" => entry
+  }
+
+  dataset_id = var.dataset_id
+
+  dataset {
+    dataset {
+      project_id = each.value.project_id
+      dataset_id = each.value.dataset_id
+    }
+    target_types = ["VIEWS"]
   }
 }

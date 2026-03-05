@@ -70,6 +70,8 @@ module "treeherder" {
 | Name | Type |
 |------|------|
 | [google_bigquery_dataset.dataset](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset) | resource |
+| [google_bigquery_dataset_access.syndicated_authorization](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset_access) | resource |
+| [google_bigquery_dataset_access.syndication_role](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset_access) | resource |
 | [terraform_remote_state.org](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.syndication_target](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
@@ -78,6 +80,7 @@ module "treeherder" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_access"></a> [access](#input\_access) | Application-specific access blocks for this dataset. projectOwners OWNER access is included by default unless disable\_project\_owners\_access is set. | <pre>set(object({<br/>    role           = optional(string)<br/>    user_by_email  = optional(string)<br/>    group_by_email = optional(string)<br/>    special_group  = optional(string)<br/>    domain         = optional(string)<br/>    iam_member     = optional(string)<br/>    dataset = optional(object({<br/>      dataset = object({<br/>        project_id = string<br/>        dataset_id = string<br/>      })<br/>      target_types = list(string)<br/>    }))<br/>    view = optional(object({<br/>      project_id = string<br/>      dataset_id = string<br/>      table_id   = string<br/>    }))<br/>  }))</pre> | `[]` | no |
+| <a name="input_create_dataset"></a> [create\_dataset](#input\_create\_dataset) | Whether to create the BigQuery dataset. Set to false to only manage syndication access on an existing dataset. | `bool` | `true` | no |
 | <a name="input_dataset_id"></a> [dataset\_id](#input\_dataset\_id) | A unique ID for this dataset, without the project name. | `string` | n/a | yes |
 | <a name="input_default_partition_expiration_ms"></a> [default\_partition\_expiration\_ms](#input\_default\_partition\_expiration\_ms) | The default partition expiration for all partitioned tables, in milliseconds. | `number` | `null` | no |
 | <a name="input_default_table_expiration_ms"></a> [default\_table\_expiration\_ms](#input\_default\_table\_expiration\_ms) | The default lifetime of all tables in the dataset, in milliseconds. | `number` | `null` | no |

@@ -3,6 +3,12 @@ variable "dataset_id" {
   description = "A unique ID for this dataset, without the project name."
 }
 
+variable "create_dataset" {
+  type        = bool
+  description = "Whether to create the BigQuery dataset. Set to false to only manage syndication access on an existing dataset."
+  default     = true
+}
+
 variable "location" {
   type        = string
   description = "The geographic location where the dataset should reside."

@@ -1,16 +1,16 @@
 output "dataset_id" {
   description = "The dataset ID."
-  value       = google_bigquery_dataset.dataset.dataset_id
+  value       = var.dataset_id
 }
 
 output "id" {
   description = "The fully-qualified dataset ID (projects/PROJECT/datasets/DATASET)."
-  value       = google_bigquery_dataset.dataset.id
+  value       = var.create_dataset ? google_bigquery_dataset.dataset[0].id : null
 }
 
 output "self_link" {
   description = "The URI of the created resource."
-  value       = google_bigquery_dataset.dataset.self_link
+  value       = var.create_dataset ? google_bigquery_dataset.dataset[0].self_link : null
 }
 
 output "syndication_role_id" {
