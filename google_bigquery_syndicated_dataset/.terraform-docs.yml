@@ -1,0 +1,33 @@
+content: |-
+  {{ .Header }}
+
+  ## Example
+
+  ```hcl
+  module "treeherder" {
+    source = "github.com/mozilla/terraform-modules//google_bigquery_syndicated_dataset?ref=main"
+
+    dataset_id            = "for_treeherder_1"
+    syndicated_dataset_id = "treeherder_db"
+    realm                 = var.realm
+
+    access = [
+      { role = "OWNER", special_group = "projectOwners" },
+      # projectReaders/projectWriters usage is discouraged, see DSRE-1497
+      { role = "READER", special_group = "projectReaders" },
+      { role = "WRITER", special_group = "projectWriters" },
+    ]
+  }
+  ```
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Modules }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
