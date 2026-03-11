@@ -133,3 +133,9 @@ variable "ngwaf_percent_enabled" {
   type    = number
   default = 100
 }
+
+variable "ngwaf_baseline_protection" {
+  type        = bool
+  default     = false
+  description = "When true, disables immediate blocking and enables baseline attack threshold alerts."
+}
