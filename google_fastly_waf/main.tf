@@ -313,11 +313,7 @@ resource "sigsci_site" "ngwaf_edge_site" {
   immediate_block        = var.ngwaf_baseline_protection ? false : var.ngwaf_immediate_block
 
   dynamic "attack_threshold" {
-    for_each = var.ngwaf_baseline_protection ? [
-      { interval = 1, threshold = 3 },
-      { interval = 10, threshold = 10 },
-      { interval = 60, threshold = 60 },
-    ] : []
+    for_each = var.ngwaf_baseline_protection ? var.ngwaf_attack_thresholds : []
     content {
       interval  = attack_threshold.value.interval
       threshold = attack_threshold.value.threshold

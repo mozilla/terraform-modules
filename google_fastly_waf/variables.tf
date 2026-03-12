@@ -139,3 +139,22 @@ variable "ngwaf_baseline_protection" {
   default     = false
   description = "When true, disables immediate blocking and enables baseline attack threshold alerts."
 }
+
+variable "ngwaf_attack_thresholds" {
+  type = list(object({
+    interval  = number
+    threshold = number
+  }))
+  # To override the default thresholds, pass a custom list. Example:
+  # ngwaf_attack_thresholds = [
+  #   { interval = 1,  threshold = 50  },
+  #   { interval = 10, threshold = 200 },
+  #   { interval = 60, threshold = 1000 },
+  # ]
+  default = [
+    { interval = 1, threshold = 10 },
+    { interval = 10, threshold = 100 },
+    { interval = 60, threshold = 600 },
+  ]
+  description = "Attack threshold configurations applied when ngwaf_baseline_protection is enabled."
+}
