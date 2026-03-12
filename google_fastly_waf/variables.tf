@@ -157,4 +157,8 @@ variable "ngwaf_attack_thresholds" {
     { interval = 60, threshold = 600 },
   ]
   description = "Attack threshold configurations applied when ngwaf_baseline_protection is enabled."
+  validation {
+    condition     = length(var.ngwaf_attack_thresholds) == 3
+    error_message = "ngwaf_attack_thresholds must contain exactly 3 entries (one each for the 1, 10, and 60 minute intervals)."
+  }
 }
