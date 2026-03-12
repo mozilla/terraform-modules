@@ -310,7 +310,15 @@ resource "sigsci_site" "ngwaf_edge_site" {
   block_duration_seconds = 86400
   agent_anon_mode        = ""
   agent_level            = var.ngwaf_agent_level # this setting dictates blocking mode
-  immediate_block        = var.ngwaf_immediate_block
+  immediate_block        = var.ngwaf_baseline_protection ? false : var.ngwaf_immediate_block
+
+  dynamic "attack_threshold" {
+    for_each = var.ngwaf_baseline_protection ? var.ngwaf_attack_thresholds : []
+    content {
+      interval  = attack_threshold.value.interval
+      threshold = attack_threshold.value.threshold
+    }
+  }
 }
 
 resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {

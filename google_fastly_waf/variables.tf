@@ -133,3 +133,32 @@ variable "ngwaf_percent_enabled" {
   type    = number
   default = 100
 }
+
+variable "ngwaf_baseline_protection" {
+  type        = bool
+  default     = false
+  description = "When true, disables immediate blocking and enables baseline attack threshold alerts."
+}
+
+variable "ngwaf_attack_thresholds" {
+  type = list(object({
+    interval  = number
+    threshold = number
+  }))
+  # To override the default thresholds, pass a custom list. Example:
+  # ngwaf_attack_thresholds = [
+  #   { interval = 1,  threshold = 50  },
+  #   { interval = 10, threshold = 200 },
+  #   { interval = 60, threshold = 1000 },
+  # ]
+  default = [
+    { interval = 1, threshold = 10 },
+    { interval = 10, threshold = 100 },
+    { interval = 60, threshold = 600 },
+  ]
+  description = "Attack threshold configurations applied when ngwaf_baseline_protection is enabled."
+  validation {
+    condition     = length(var.ngwaf_attack_thresholds) == 3
+    error_message = "ngwaf_attack_thresholds must contain exactly 3 entries (one each for the 1, 10, and 60 minute intervals)."
+  }
+}
