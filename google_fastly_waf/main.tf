@@ -63,7 +63,7 @@ resource "fastly_service_vcl" "default" {
 
       connect_timeout    = lookup(backend.value, "connect_timeout", 10000)
       first_byte_timeout = lookup(backend.value, "first_byte_timeout", 60000)
-      keepalive_time     = lookup(backend.value, "keepalive_time", 5)
+      keepalive_time     = lookup(backend.value, "keepalive_time", 300)
       override_host      = lookup(backend.value, "override_host", "")
       port               = lookup(backend.value, "port", 443)
       request_condition  = lookup(backend.value, "request_condition", "False")
