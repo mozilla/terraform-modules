@@ -72,6 +72,7 @@ resource "fastly_service_vcl" "default" {
       shield             = lookup(backend.value, "shield", "")
       ssl_sni_hostname   = lookup(backend.value, "ssl_sni_hostname", "")
       use_ssl            = lookup(backend.value, "use_ssl", false)
+      max_conn           = lookup(backend.value, "max_conn", 200) # set to default
 
       # health check is a string, created in another block
       healthcheck = lookup(backend.value, "health_check_name", "")
