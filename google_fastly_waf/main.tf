@@ -63,13 +63,14 @@ resource "fastly_service_vcl" "default" {
 
       connect_timeout    = lookup(backend.value, "connect_timeout", 10000)
       first_byte_timeout = lookup(backend.value, "first_byte_timeout", 60000)
-      keepalive_time     = lookup(backend.value, "keepalive_time", 5)
+      keepalive_time     = lookup(backend.value, "keepalive_time", 300)
       override_host      = lookup(backend.value, "override_host", "")
       port               = lookup(backend.value, "port", 443)
       request_condition  = lookup(backend.value, "request_condition", "False")
       shield             = lookup(backend.value, "shield", "")
       ssl_sni_hostname   = lookup(backend.value, "ssl_sni_hostname", "")
       use_ssl            = lookup(backend.value, "use_ssl", false)
+      max_conn           = lookup(backend.value, "max_conn", 200) # set to default
 
       # health check is a string, created in another block
       healthcheck = lookup(backend.value, "health_check_name", "")
