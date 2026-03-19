@@ -3,6 +3,8 @@ resource "pagerduty_schedule" "schedule" {
 
   name      = each.key
   time_zone = try(each.value.time_zone, "UTC")
+  teams     = [pagerduty_team.team.id]
+
 
   layer {
     name                         = each.value.name
