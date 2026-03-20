@@ -5,6 +5,73 @@ Creates a Cloud IAM service account which lets CI workflows authenticate to GCP.
 ## Examples
 
 ```hcl
+# Allow OIDC access from GitHub Actions workflows running in the stage
+# environment of a specific repo
+data "terraform_remote_state" "wip_project" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-wip-project"
+    prefix = "wip-project/prefix"
+  }
+}
+
+module "google_deployment_accounts" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "stage"
+  github_repository  = "org/project"
+  wip_name           = "github-actions"
+  wip_project_number = data.terraform_remote_state.wip_project.number
+}
+```
+
+```hcl
+# Allow OIDC access from GitHub Actions workflows triggered on the main branch
+# of a specific repo
+module "google_deployment_accounts_branch" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "prod"
+  github_repository  = "mozilla/my-repo"
+  wip_name           = "github-actions"
+  wip_project_number = 12345
+  gha_branches       = ["main"]
+}
+```
+
+```hcl
+# A more complex example using attribute specifiers directly. Allow OIDC access
+# from GitHub Actions workflows running on the main branch of org/repo1 and
+# org/repo2, as well as any workflow running in the "production" environment.
+data "terraform_remote_state" "wip_project" {
+  backend = "gcs"
+
+  config = {
+    bucket = "my-wip-project"
+    prefix = "wip-project/prefix"
+  }
+}
+
+locals {
+  allowed_repo_refs    = formatlist("attribute.repository_ref/org/%s:refs/heads/main", ["repo1", "repo2"])
+  allowed_environments = formatlist("attribute.environment/%s", ["production"])
+}
+
+module "google_deployment_accounts" {
+  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
+  project            = "my-project"
+  environment        = "prod"
+  wip_name           = "github-actions"
+  wip_project_number = data.terraform_remote_state.wip_project.number
+  gha_attribute_specifiers = setunion(
+    local.allowed_repo_refs,
+    local.allowed_environments,
+  )
+}
+```
+
+```hcl
 # Allow OIDC access from CircleCI jobs triggered in a specific repo
 data "terraform_remote_state" "wip_project" {
   backend = "gcs"
@@ -81,26 +148,6 @@ module "google_deployment_accounts" {
 }
 ```
 
-```hcl
-data "terraform_remote_state" "wip_project" {
-  backend = "gcs"
-
-  config = {
-    bucket = "my-wip-project"
-    prefix = "wip-project/prefix"
-  }
-}
-
-module "google_deployment_accounts" {
-  source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
-  project            = "my-project"
-  environment        = "stage"
-  github_repository  = "org/project"
-  wip_name           = "github-actions"
-  wip_project_number = data.terraform_remote_state.wip_project.number
-}
-```
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -111,6 +158,8 @@ module "google_deployment_accounts" {
 | <a name="input_circleci_context_ids"></a> [circleci\_context\_ids](#input\_circleci\_context\_ids) | (CircleCI only) Contexts to allow deployments from. Not recommended when using merge queues since CircleCI Contexts are only accessible to members of your organization. | `set(string)` | `[]` | no |
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the service account. Defaults to "Deployment to the ENV environment". | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. Not used for OIDC configuration in CircleCI. | `string` | n/a | yes |
+| <a name="input_gha_attribute_specifiers"></a> [gha\_attribute\_specifiers](#input\_gha\_attribute\_specifiers) | Set of attribute specifiers to allow deploys from, in the form ATTR/ATTR\_VALUE. If specified, this overrides the github\_repository variable and any other GHA-specific variables. | `set(string)` | `[]` | no |
+| <a name="input_gha_branches"></a> [gha\_branches](#input\_gha\_branches) | Branches to allow deployments from. If unspecified, allow deployment from any branch via environment-based principals. | `set(string)` | `[]` | no |
 | <a name="input_gha_environments"></a> [gha\_environments](#input\_gha\_environments) | Github environments from which to deploy. If specified, this overrides the environment variable. | `list(string)` | `[]` | no |
 | <a name="input_github_repositories"></a> [github\_repositories](#input\_github\_repositories) | The Github repositories running the deployment workflows in the format org/repository, will be used if github\_repository is not defined. | `list(string)` | `[]` | no |
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI or when github\_repositories is specified. | `string` | `null` | no |

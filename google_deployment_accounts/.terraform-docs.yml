@@ -4,6 +4,18 @@ content: |-
   ## Examples
 
   ```hcl
+  {{ include "examples/gha.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/gha_branch.tf" }}
+  ```
+
+  ```hcl
+  {{ include "examples/gha_attribute_specifiers.tf" }}
+  ```
+
+  ```hcl
   {{ include "examples/circleci.tf" }}
   ```
 
@@ -13,10 +25,6 @@ content: |-
 
   ```hcl
   {{ include "examples/circleci3.tf" }}
-  ```
-
-  ```hcl
-  {{ include "examples/gha.tf" }}
   ```
 
   {{ .Inputs }}
