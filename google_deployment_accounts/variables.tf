@@ -67,6 +67,36 @@ variable "circleci_attribute_specifiers" {
   }
 }
 
+variable "gha_branches" {
+  description = "(GHA only) Branches to allow deployments from. If unspecified, allow deployment from any branch via environment-based principals."
+  type        = set(string)
+  default     = []
+}
+
+variable "gha_attribute_specifiers" {
+  description = "(GHA only) Set of attribute specifiers to allow deploys from, in the form ATTR/ATTR_VALUE. If specified, this overrides the github_repository variable and any other GHA-specific variables."
+  type        = set(string)
+  default     = []
+  validation {
+    condition = alltrue(
+      [for attribute_specifier in var.gha_attribute_specifiers :
+        contains(
+          [
+            "subject",
+            "attribute.actor",
+            "attribute.environment",
+            "attribute.ref",
+            "attribute.repository",
+            "attribute.repository_owner",
+            "attribute.repository_ref",
+            "attribute.workflow"
+        ], split("/", attribute_specifier)[0])
+      ]
+    )
+    error_message = "Attribute specifiers must contain a valid attribute prefix."
+  }
+}
+
 variable "project" {
   type    = string
   default = null
