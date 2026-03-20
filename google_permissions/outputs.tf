@@ -42,7 +42,7 @@ output "validate_folder_roles" {
   value = null
   precondition {
     condition = alltrue([
-      for x in var.folder_roles : contains(local.folder_additional_roles, x)
+      for x in var.folder_roles : contains(local.folder_additional_roles, x) || contains(local.allowed_folder_roles, x)
     ])
     error_message = "You have specified an invalid folder role."
   }
@@ -52,7 +52,7 @@ output "validate_prod_roles" {
   value = null
   precondition {
     condition = alltrue([
-      for x in var.prod_roles : contains(local.project_additional_roles, x)
+      for x in var.prod_roles : contains(local.project_additional_roles, x) || contains(local.allowed_prod_roles, x)
     ])
     error_message = "You have specified an invalid prod role."
   }
@@ -62,7 +62,7 @@ output "validate_nonprod_roles" {
   value = null
   precondition {
     condition = alltrue([
-      for x in var.nonprod_roles : contains(local.project_additional_roles, x)
+      for x in var.nonprod_roles : contains(local.project_additional_roles, x) || contains(local.allowed_nonprod_roles, x)
     ])
     error_message = "You have specified an invalid nonprod role."
   }

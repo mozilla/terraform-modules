@@ -6,6 +6,51 @@
 //
 */
 
+locals {
+  allowed_folder_roles = [
+    "roles/datastore.user",
+  ]
+  allowed_nonprod_roles = [
+    "roles/datastore.user",
+  ]
+  allowed_prod_roles = [
+    "roles/datastore.user",
+  ]
+}
+
+resource "google_folder_iam_binding" "developers_folder_roles" {
+  for_each = setintersection(
+    local.allowed_folder_roles,
+    [for role in var.folder_roles : role if !var.admin_only],
+  )
+
+  folder  = var.google_folder_id
+  role    = each.value
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "developers_nonprod_roles" {
+  for_each = setintersection(
+    local.allowed_nonprod_roles,
+    [for role in var.nonprod_roles : role if !var.admin_only && var.google_nonprod_project_id != ""],
+  )
+
+  project = var.google_nonprod_project_id
+  role    = each.value
+  members = module.developers_workgroup.members
+}
+
+resource "google_project_iam_binding" "developers_prod_roles" {
+  for_each = setintersection(
+    local.allowed_prod_roles,
+    [for role in var.prod_roles : role if !var.admin_only && var.google_prod_project_id != ""],
+  )
+
+  project = var.google_prod_project_id
+  role    = each.value
+  members = module.developers_workgroup.members
+}
+
 resource "google_folder_iam_binding" "bq_job_user" {
   //
   // NOTE: this uses bq_data_viewer as well as the next resource block so that those we grant data viewer
