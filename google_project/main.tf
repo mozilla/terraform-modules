@@ -25,6 +25,9 @@ resource "google_project_service" "project" {
   project            = local.project_id
   service            = each.key
   disable_on_destroy = false
+  depends_on = [
+    time_sleep.wait_60_seconds
+  ]
 }
 
 // The project feed requires that cloudasset API is not only set up but also that the service account is created
@@ -35,6 +38,9 @@ resource "google_project_service_identity" "cloud_asset_sa" {
   provider = google-beta
   project  = local.project_id
   service  = "cloudasset.googleapis.com"
+  depends_on = [
+    time_sleep.wait_60_seconds
+  ]
 }
 
 # Sleep for 60 seconds to reduce transient failures when provisioning a new
