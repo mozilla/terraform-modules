@@ -100,9 +100,6 @@ data "terraform_remote_state" "org" {
 module "syndication_workgroup" {
   source = "github.com/mozilla/terraform-modules//mozilla_workgroup?ref=main"
   ids    = var.syndication_workgroup_ids
-  # TODO this config will need to be removed when SVCSE-4008 is complete
-  terraform_remote_state_bucket = "moz-fx-data-terraform-state-global"
-  terraform_remote_state_prefix = "projects/data-shared/global/access-groups"
 }
 
 resource "google_bigquery_dataset" "dataset" {
