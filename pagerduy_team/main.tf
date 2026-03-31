@@ -1,5 +1,6 @@
 resource "pagerduty_team" "team" {
-  name = var.team_name
+  name        = var.team_name
+  description = "Team managed by Terraform."
 }
 
 resource "pagerduty_team_membership" "this" {
