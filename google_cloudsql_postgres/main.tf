@@ -147,6 +147,10 @@ resource "google_sql_database_instance" "primary" {
   }
 
   deletion_protection = var.deletion_protection
+
+  lifecycle {
+    ignore_changes = [maintenance_version]
+  }
 }
 
 resource "google_sql_database_instance" "replica" {
