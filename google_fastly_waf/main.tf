@@ -14,7 +14,9 @@ resource "fastly_service_vcl" "default" {
 
   product_enablement {
     brotli_compression = true
-    bot_management     = true
+    bot_management {
+      enabled = true
+    }
   }
 
   gzip {

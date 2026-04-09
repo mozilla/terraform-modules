@@ -3,7 +3,7 @@ terraform {
   required_providers {
     fastly = {
       source  = "fastly/fastly"
-      version = ">= 5.13.0, < 9.0.0"
+      version = ">= 9.0.0"
     }
     sigsci = {
       source  = "signalsciences/sigsci"
