@@ -5,14 +5,25 @@
 */
 
 module "oidc_role" {
-  source              = "../.././"
-  role_name           = "oidc-example-role"
-  aws_region          = "us-west-1"
-  gcp_region          = "us-west1"
-  gke_cluster_name    = "baz"
-  gcp_project_id      = "example-project"
-  gke_namespace       = "bar"
-  gke_service_account = "foo"
+  source     = "../.././"
+  role_name  = "oidc-example-role"
+  aws_region = "us-west-1"
+
+  gke_clusters = {
+    baz = {
+      gcp_region       = "us-west1"
+      gke_cluster_name = "baz"
+      gcp_project_id   = "example-project"
+    }
+  }
+
+  k8s_service_accounts = {
+    foobar = {
+      namespace       = "foo"
+      service_account = "bar"
+    }
+  }
+
   iam_policy_arns = {
     example_policy = aws_iam_policy.example_policy.arn
     ViewOnlyAccess = data.aws_iam_policy.view_only.arn

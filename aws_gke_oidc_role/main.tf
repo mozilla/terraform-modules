@@ -35,26 +35,38 @@
  * ```
 */
 
+locals {
+  k8s_service_accounts = [for k, v in var.k8s_service_accounts : "system:serviceaccount:${each.value.namespace}:${each.value.service_account}"]
+
+  oidc_provider_urls = concat([
+    for k, v in data.aws_iam_openid_connect_provider.gke_oidc : replace(v.url, "https://", "")
+  ], [data.aws_iam_openid_connect_provider.spacelift.url])
+}
+
 module "iam_assumable_role_for_oidc" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role"
   version = "~> v6.2.1"
 
-  description        = "Role for ${var.gke_cluster_name}/${var.gke_namespace}/${var.gke_service_account} and Spacelift to assume"
+  description        = "Role for GKE clusters and Spacelift to assume"
   enable_oidc        = true
   name               = var.role_name
-  oidc_provider_urls = [replace(data.aws_iam_openid_connect_provider.gke_oidc.url, "https://", ""), data.aws_iam_openid_connect_provider.spacelift.url]
+  oidc_provider_urls = local.oidc_provider_urls
   # TODO - look into using https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest/submodules/iam-role#input_trust_policy_conditions for the Spacelift subject
   # GKE subject doesn't need wildcards so it can be an `oidc_subject`, but setting both `oidc_subjects` and `wilcard_subjects` results in an AND
   oidc_wildcard_subjects = setunion(
-    ["system:serviceaccount:${var.gke_namespace}:${var.gke_service_account}"],
-    var.spacelift_prefixes
+    local.k8s_service_accounts,
+    var.spacelift_prefixes,
   )
   policies        = var.iam_policy_arns
   use_name_prefix = false
 }
 
+
+
 data "aws_iam_openid_connect_provider" "gke_oidc" {
-  url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
+  for_each = var.gke_clusters
+
+  url = "https://container.googleapis.com/v1/projects/${each.value.gcp_project_id}/locations/${each.value.gcp_region}/clusters/${each.value.gke_cluster_name}"
 }
 
 data "aws_iam_openid_connect_provider" "spacelift" {
