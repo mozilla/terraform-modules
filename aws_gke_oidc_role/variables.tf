@@ -15,29 +15,23 @@ variable "aws_region" {
   type        = string
 }
 
-variable "gcp_project_id" {
-  description = "GKE cluster's project ID"
-  type        = string
+variable "gke_clusters" {
+  default     = {}
+  description = "GKE clusters to grant role assumption privileges"
+  type = map(object({
+    gcp_project_id   = string
+    gcp_region       = string
+    gke_cluster_name = string
+  }))
 }
 
-variable "gcp_region" {
-  description = "GKE cluster's GCP region"
-  type        = string
-}
-
-variable "gke_cluster_name" {
-  description = "GKE cluster name"
-  type        = string
-}
-
-variable "gke_namespace" {
-  description = "Namespace for GKE workload"
-  type        = string
-}
-
-variable "gke_service_account" {
-  description = "GKE service account to grant role assumption privilleges"
-  type        = string
+variable "k8s_service_accounts" {
+  default     = {}
+  description = "Map of Kubernetes service accounts that are allowed to assume role. Sub claim format is `system:serviceaccount:$${namespace}:$${service_account}`"
+  type = map(object({
+    namespace       = string
+    service_account = string
+  }))
 }
 
 variable "spacelift_instance" {

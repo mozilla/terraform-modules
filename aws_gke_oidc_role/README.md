@@ -49,16 +49,27 @@ module "oidc_config" {
 }
 
 module "oidc_role" {
-  depends_on          = [module.oidc_config]
-  source              = "../.././"
-  role_name           = "opst-1509-oidc-test"
-  aws_region          = "us-west-1"
-  gcp_region          = "us-west1"
-  gke_cluster_name    = "global-platform-admin-mgmt"
-  gcp_project_id      = "moz-fx-platform-mgmt-global"
-  gke_namespace       = "atlantis-sandbox"
-  gke_service_account = "atlantis-sandbox"
-  iam_policy_arns     = {}
+  depends_on = [module.oidc_config]
+  source     = "../.././"
+  role_name  = "opst-1509-oidc-test"
+  aws_region = "us-west-1"
+
+  gke_clusters = {
+    mgmt = {
+      gcp_project_id   = "moz-fx-platform-mgmt-global"
+      gcp_region       = "us-west1"
+      gke_cluster_name = "global-platform-admin-mgmt"
+    }
+  }
+
+  k8s_service_accounts = {
+    atlantis-sandbox = {
+      namespace       = "atlantis-sandbox"
+      service_account = "atlantis-sandbox"
+    }
+  }
+
+  iam_policy_arns = {}
 }
 ```
 
@@ -70,14 +81,25 @@ module "oidc_role" {
 */
 
 module "oidc_role" {
-  source              = "../.././"
-  role_name           = "oidc-example-role"
-  aws_region          = "us-west-1"
-  gcp_region          = "us-west1"
-  gke_cluster_name    = "baz"
-  gcp_project_id      = "example-project"
-  gke_namespace       = "bar"
-  gke_service_account = "foo"
+  source     = "../.././"
+  role_name  = "oidc-example-role"
+  aws_region = "us-west-1"
+
+  gke_clusters = {
+    baz = {
+      gcp_region       = "us-west1"
+      gke_cluster_name = "baz"
+      gcp_project_id   = "example-project"
+    }
+  }
+
+  k8s_service_accounts = {
+    foobar = {
+      namespace       = "foo"
+      service_account = "bar"
+    }
+  }
+
   iam_policy_arns = {
     example_policy = aws_iam_policy.example_policy.arn
     ViewOnlyAccess = data.aws_iam_policy.view_only.arn
@@ -115,12 +137,9 @@ data "aws_iam_policy" "view_only" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region | `string` | n/a | yes |
-| <a name="input_gcp_project_id"></a> [gcp\_project\_id](#input\_gcp\_project\_id) | GKE cluster's project ID | `string` | n/a | yes |
-| <a name="input_gcp_region"></a> [gcp\_region](#input\_gcp\_region) | GKE cluster's GCP region | `string` | n/a | yes |
-| <a name="input_gke_cluster_name"></a> [gke\_cluster\_name](#input\_gke\_cluster\_name) | GKE cluster name | `string` | n/a | yes |
-| <a name="input_gke_namespace"></a> [gke\_namespace](#input\_gke\_namespace) | Namespace for GKE workload | `string` | n/a | yes |
-| <a name="input_gke_service_account"></a> [gke\_service\_account](#input\_gke\_service\_account) | GKE service account to grant role assumption privilleges | `string` | n/a | yes |
+| <a name="input_gke_clusters"></a> [gke\_clusters](#input\_gke\_clusters) | GKE clusters to grant role assumption privileges | <pre>map(object({<br/>    gcp_project_id   = string<br/>    gcp_region       = string<br/>    gke_cluster_name = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | One or more policy arns to attach to created AWS role | `map(string)` | n/a | yes |
+| <a name="input_k8s_service_accounts"></a> [k8s\_service\_accounts](#input\_k8s\_service\_accounts) | Map of Kubernetes service accounts that are allowed to assume role. Sub claim format is `system:serviceaccount:${namespace}:${service_account}` | <pre>map(object({<br/>    namespace       = string<br/>    service_account = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_role_name"></a> [role\_name](#input\_role\_name) | Name to give the AWS role | `string` | n/a | yes |
 | <a name="input_spacelift_instance"></a> [spacelift\_instance](#input\_spacelift\_instance) | Spacelift instance to grant role assumption privilleges | `string` | `"mozilla.app.spacelift.io"` | no |
 | <a name="input_spacelift_prefixes"></a> [spacelift\_prefixes](#input\_spacelift\_prefixes) | List of prefixes for Spacelift spaces/stacks that are allowed to assume role. See sub claim at https://docs.spacelift.io/integrations/cloud-providers/oidc#standard-claims for format | `list(string)` | `[]` | no |
