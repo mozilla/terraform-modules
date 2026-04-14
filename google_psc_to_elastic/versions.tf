@@ -2,12 +2,11 @@ terraform {
   required_providers {
     ec = {
       source  = "elastic/ec"
-      version = ">= 0.9.0"
+      version = "~> 0.12"
     }
     google = {
       source  = "hashicorp/google"
-      version = ">= 4.27"
+      version = "~> 7.0"
     }
   }
-  required_version = ">= 1.0"
 }
