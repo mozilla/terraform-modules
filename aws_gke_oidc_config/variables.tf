@@ -1,22 +1,20 @@
 ### Required
 
-variable "gcp_region" {
-  description = "GKE cluster's GCP region"
-  type        = string
-}
+variable "oidc_providers" {
+  default     = {}
+  description = "Map of GKE clusters and/or Spacelift instances to provision OIDC provider for"
+  type = map(object({
+    gcp_project_id     = optional(string)
+    gcp_region         = optional(string)
+    gke_cluster_name   = optional(string)
+    spacelift_instance = optional(string)
+  }))
 
-variable "gcp_project_id" {
-  description = "ID of the GKE cluster's project"
-  type        = string
-}
-
-variable "gke_cluster_name" {
-  description = "GKE cluster name"
-  type        = string
-}
-
-variable "spacelift_instance" {
-  description = "Spacelift instance to establish OIDC trust relationship"
-  default     = "mozilla.app.spacelift.io"
-  type        = string
+  validation {
+    condition = alltrue([for k, v in var.oidc_providers :
+      (v.gcp_project_id != null && v.gcp_region != null && v.gke_cluster_name != null && v.spacelift_instance == null)
+      || (v.gcp_project_id == null && v.gcp_region == null && v.gke_cluster_name == null && v.spacelift_instance != null)
+    ])
+    error_message = "You must set all variables for GKE clusters (gcp_project_id, gcp_region, and gke_cluster_name) or Spacelift instances (spacelift_instance)"
+  }
 }

@@ -8,35 +8,31 @@
  * See the `aws_gke_oidc_role` for complete usage instructions
 */
 
-resource "aws_iam_openid_connect_provider" "gke_oidc" {
-  url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
+locals {
+  gke_oidc_providers = { for k, v in var.oidc_providers : k => {
+    client_id_list = ["sts.amazonaws.com"]
+    url            = "https://container.googleapis.com/v1/projects/${v.gcp_project_id}/locations/${v.gcp_region}/clusters/${v.gke_cluster_name}"
+  } if v.gcp_project_id != null && v.gcp_region != null && v.gke_cluster_name != null }
+  spacelift_oidc_providers = { for k, v in var.oidc_providers : k => {
+    client_id_list = [v.spacelift_instance]
+    url            = "https://${v.spacelift_instance}"
+  } if v.spacelift_instance != null }
+}
 
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
+resource "aws_iam_openid_connect_provider" "oidc_providers" {
+  for_each = merge(local.gke_oidc_providers, local.spacelift_oidc_providers)
+
+  url = each.value.url
+
+  client_id_list = each.value.client_id_list
 
   thumbprint_list = [
-    data.tls_certificate.gke_oidc.certificates.0.sha1_fingerprint
+    data.tls_certificate.oidc_providers[each.key].certificates.0.sha1_fingerprint
   ]
 }
 
-data "tls_certificate" "gke_oidc" {
-  url = "https://container.googleapis.com/v1/projects/${var.gcp_project_id}/locations/${var.gcp_region}/clusters/${var.gke_cluster_name}"
-}
+data "tls_certificate" "oidc_providers" {
+  for_each = merge(local.gke_oidc_providers, local.spacelift_oidc_providers)
 
-
-resource "aws_iam_openid_connect_provider" "spacelift_oidc" {
-  url = "https://${var.spacelift_instance}"
-
-  client_id_list = [
-    var.spacelift_instance
-  ]
-
-  thumbprint_list = [
-    data.tls_certificate.spacelift_oidc.certificates.0.sha1_fingerprint
-  ]
-}
-
-data "tls_certificate" "spacelift_oidc" {
-  url = "https://${var.spacelift_instance}"
+  url = each.value.url
 }
