@@ -36,7 +36,7 @@
 */
 
 locals {
-  k8s_service_accounts = [for k, v in var.k8s_service_accounts : "system:serviceaccount:${each.value.namespace}:${each.value.service_account}"]
+  k8s_service_accounts = [for k, v in var.k8s_service_accounts : "system:serviceaccount:${v.namespace}:${v.service_account}"]
 
   oidc_provider_urls = concat([
     for k, v in data.aws_iam_openid_connect_provider.gke_oidc : replace(v.url, "https://", "")
