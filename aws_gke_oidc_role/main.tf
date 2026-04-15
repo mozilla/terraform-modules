@@ -38,9 +38,15 @@
 locals {
   k8s_service_accounts = [for k, v in var.k8s_service_accounts : "system:serviceaccount:${v.namespace}:${v.service_account}"]
 
-  oidc_provider_urls = concat([
-    for k, v in data.aws_iam_openid_connect_provider.gke_oidc : replace(v.url, "https://", "")
-  ], [data.aws_iam_openid_connect_provider.spacelift.url])
+  gke_providers = { for k, v in var.gke_clusters : k => {
+    data_url   = "https://container.googleapis.com/v1/projects/${v.gcp_project_id}/locations/${v.gcp_region}/clusters/${v.gke_cluster_name}"
+    lookup_url = "container.googleapis.com/v1/projects/${v.gcp_project_id}/locations/${v.gcp_region}/clusters/${v.gke_cluster_name}"
+  } }
+  spacelift_provider = length(var.spacelift_prefixes) > 0 ? { spacelift = {
+    data_url   = "https://${var.spacelift_instance}"
+    lookup_url = var.spacelift_instance
+  } } : {}
+  oidc_providers = merge(local.gke_providers, local.spacelift_provider)
 }
 
 module "iam_assumable_role_for_oidc" {
@@ -50,7 +56,7 @@ module "iam_assumable_role_for_oidc" {
   description        = "Role for GKE clusters and Spacelift to assume"
   enable_oidc        = true
   name               = var.role_name
-  oidc_provider_urls = local.oidc_provider_urls
+  oidc_provider_urls = values(local.oidc_providers)[*].lookup_url
   # TODO - look into using https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest/submodules/iam-role#input_trust_policy_conditions for the Spacelift subject
   # GKE subject doesn't need wildcards so it can be an `oidc_subject`, but setting both `oidc_subjects` and `wilcard_subjects` results in an AND
   oidc_wildcard_subjects = setunion(
@@ -61,14 +67,8 @@ module "iam_assumable_role_for_oidc" {
   use_name_prefix = false
 }
 
+data "aws_iam_openid_connect_provider" "oidc_providers" {
+  for_each = local.oidc_providers
 
-
-data "aws_iam_openid_connect_provider" "gke_oidc" {
-  for_each = var.gke_clusters
-
-  url = "https://container.googleapis.com/v1/projects/${each.value.gcp_project_id}/locations/${each.value.gcp_region}/clusters/${each.value.gke_cluster_name}"
-}
-
-data "aws_iam_openid_connect_provider" "spacelift" {
-  url = "https://${var.spacelift_instance}"
+  url = each.value.data_url
 }
