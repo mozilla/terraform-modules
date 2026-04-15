@@ -15,10 +15,15 @@ See the `aws_gke_oidc_role` for complete usage instructions
  */
 
 module "oidc_config" {
-  source           = "../."
-  gcp_region       = "us-west1"
-  gcp_project_id   = "moz-fx-platform-mgmt-global"
-  gke_cluster_name = "global-platform-admin-mgmt"
+  source = "../."
+
+  oidc_providers = {
+    mgmt = {
+      gcp_region       = "us-west1"
+      gcp_project_id   = "moz-fx-platform-mgmt-global"
+      gke_cluster_name = "global-platform-admin-mgmt"
+    }
+  }
 }
 ```
 
@@ -26,10 +31,7 @@ module "oidc_config" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_gcp_project_id"></a> [gcp\_project\_id](#input\_gcp\_project\_id) | ID of the GKE cluster's project | `string` | n/a | yes |
-| <a name="input_gcp_region"></a> [gcp\_region](#input\_gcp\_region) | GKE cluster's GCP region | `string` | n/a | yes |
-| <a name="input_gke_cluster_name"></a> [gke\_cluster\_name](#input\_gke\_cluster\_name) | GKE cluster name | `string` | n/a | yes |
-| <a name="input_spacelift_instance"></a> [spacelift\_instance](#input\_spacelift\_instance) | Spacelift instance to establish OIDC trust relationship | `string` | `"mozilla.app.spacelift.io"` | no |
+| <a name="input_oidc_providers"></a> [oidc\_providers](#input\_oidc\_providers) | Map of GKE clusters and/or Spacelift instances to provision OIDC provider for | <pre>map(object({<br/>    gcp_project_id     = optional(string)<br/>    gcp_region         = optional(string)<br/>    gke_cluster_name   = optional(string)<br/>    spacelift_instance = optional(string)<br/>  }))</pre> | `{}` | no |
 
 ## Outputs
 
