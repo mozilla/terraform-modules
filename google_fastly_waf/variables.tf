@@ -117,6 +117,19 @@ variable "cache_header" {
   description = "A cache header to check to toggle cache lookup"
 }
 
+variable "ddos_protection" {
+  description = "Optional DDoS Protection configuration for the Fastly service product enablement."
+  type = object({
+    enabled = bool
+    mode    = string
+  })
+  default = null
+  validation {
+    condition     = var.ddos_protection == null || contains(["off", "log", "block"], var.ddos_protection.mode)
+    error_message = "ddos_protection.mode must be one of: off, log, or block."
+  }
+}
+
 ## NGWAF
 variable "ngwaf_agent_level" {
   type        = string

@@ -18,6 +18,10 @@ resource "fastly_service_vcl" "default" {
       enabled      = true
       contentguard = "off"
     }
+    ddos_protection {
+      enabled = var.ddos_protection != null ? var.ddos_protection.enabled : false
+      mode    = var.ddos_protection != null ? var.ddos_protection.mode : "off"
+    }
   }
 
   gzip {
