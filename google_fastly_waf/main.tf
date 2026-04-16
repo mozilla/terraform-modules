@@ -15,8 +15,8 @@ resource "fastly_service_vcl" "default" {
   product_enablement {
     brotli_compression = true
     bot_management {
-      enabled      = true
-      contentguard = "off"
+      enabled      = var.bot_management != null ? var.bot_management.enabled : true
+      contentguard = var.bot_management != null ? var.bot_management.contentguard : "off"
     }
     ddos_protection {
       enabled = var.ddos_protection != null ? var.ddos_protection.enabled : false
