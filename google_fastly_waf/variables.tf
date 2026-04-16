@@ -117,6 +117,19 @@ variable "cache_header" {
   description = "A cache header to check to toggle cache lookup"
 }
 
+variable "bot_management" {
+  description = "Bot Management configuration for the Fastly service product enablement."
+  type = object({
+    enabled      = bool
+    contentguard = string
+  })
+  default = null
+  validation {
+    condition     = var.bot_management == null || contains(["off", "on"], var.bot_management.contentguard)
+    error_message = "bot_management.contentguard must be either off or on."
+  }
+}
+
 variable "ddos_protection" {
   description = "Optional DDoS Protection configuration for the Fastly service product enablement."
   type = object({
