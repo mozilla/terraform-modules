@@ -50,7 +50,7 @@ Deploys the Fastly WAF DDoS detection analyst on Cloud Run. Every 5 minutes, Clo
 
 ```hcl
 module "ddos_detection" {
-  source = "../modules/ddos_detection"
+  source = "..."
 
   project_id  = local.project_id
   application = local.application
@@ -83,43 +83,3 @@ The BigQuery dataset is derived automatically as `{application}_{realm}_{environ
 | `registry_url` | Artifact Registry base URL for pushing images |
 | `llm_secret_id` | Secret Manager secret ID for the LLM API key |
 | `results_bucket` | GCS bucket name where detection reports are written |
-
-## Post-apply steps
-
-### 1. Set the LLM API key
-
-The secret is created by Terraform but its value must be set manually:
-
-```bash
-echo -n "sk-ant-..." | gcloud secrets versions add \
-  $(terraform output -raw llm_secret_id) \
-  --data-file=- \
-  --project=<project_id>
-```
-
-### 2. Build and push the analyst image
-
-```bash
-REGISTRY=$(terraform output -raw registry_url)
-
-docker build -t ${REGISTRY}/analyst:latest /path/to/ddos_detection
-docker push ${REGISTRY}/analyst:latest
-```
-
-The Cloud Run Job pulls `analyst:latest` on each execution. Redeploy by pushing a new image — no Terraform changes needed.
-
-## Report output
-
-Reports are written to GCS at:
-
-```
-gs://<project_id>-ddos-detection/reports/YYYY-MM-DD/HH-MM_<scenario>.txt
-```
-
-Scenarios: `new`, `ongoing-{id}-w{n}`, `ended-{id}`. Objects are automatically deleted after 90 days.
-
-To browse reports:
-
-```bash
-gsutil ls gs://$(terraform output -raw results_bucket)/reports/
-```
