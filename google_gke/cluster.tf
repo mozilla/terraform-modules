@@ -107,13 +107,7 @@ resource "google_container_cluster" "primary" {
 
   # Observability
   logging_config {
-    enable_components = [
-      "APISERVER",
-      "CONTROLLER_MANAGER",
-      "SCHEDULER",
-      "SYSTEM_COMPONENTS",
-      "WORKLOADS"
-    ]
+    enable_components = var.logging_config_components
   }
 
   monitoring_config {

@@ -448,3 +448,14 @@ variable "enable_ray_cluster_monitoring" {
   type        = bool
   default     = true
 }
+
+variable "logging_config_components" {
+  type = list(string)
+  default = [
+    "APISERVER",
+    "CONTROLLER_MANAGER",
+    "SCHEDULER",
+    "SYSTEM_COMPONENTS",
+    "WORKLOADS"
+  ]
+}
