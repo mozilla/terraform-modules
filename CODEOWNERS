@@ -4,5 +4,5 @@ google_gke/ @jasonthomas @ahoneiser @mikaeld @jbuck @bkochendorfer
 google_gke_tenant/ @jasonthomas @jbuck @bkochendorfer
 google_workgroup/ @jasonthomas @jbuck @bkochendorfer
 google_workload_identity/ @jasonthomas @jbuck @bkochendorfer
-pagerduy_service/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz
-pagerduy_team/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz
+pagerduty_service/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz
+pagerduty_team/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz

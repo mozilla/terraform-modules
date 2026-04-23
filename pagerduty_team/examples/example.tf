@@ -9,7 +9,7 @@ data "pagerduty_user" "team_users" {
 }
 
 module "pagerduty_team" {
-  source = "github.com/mozilla/terraform-modules//pagerduy_team?ref=main"
+  source = "github.com/mozilla/terraform-modules//pagerduty_team?ref=main"
 
   team_name = "foo"
 
