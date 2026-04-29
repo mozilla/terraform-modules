@@ -342,6 +342,11 @@ resource "google_container_node_pool" "pools" {
       initial_node_count,
       node_config[0].oauth_scopes,
       node_config[0].metadata,
+      # GKE auto-attaches local NVMe SSDs to certain GPU machine types
+      # (e.g., a3-highgpu-2g). The module does not model this attribute,
+      # so let the provider keep whatever GKE configures rather than
+      # repeatedly trying to remove it (which forces pool replacement).
+      node_config[0].ephemeral_storage_local_ssd_config,
     ]
   }
 }
