@@ -99,7 +99,7 @@ resource "fastly_service_vcl" "default" {
 
   # Allow passing in arbitrary snippets for VCL configuration
   dynamic "snippet" {
-    for_each = local.snippets
+    for_each = var.snippets
     content {
       content  = snippet.value.content
       name     = snippet.value.name
@@ -148,7 +148,7 @@ resource "fastly_service_vcl" "default" {
   }
 
   # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
-  #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
+  #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - Start
   dynamicsnippet {
     name     = "ngwaf_config_init"
     type     = "init"
@@ -173,13 +173,7 @@ resource "fastly_service_vcl" "default" {
     priority = 9000
   }
 
-  # percentage of traffic going through WAF
-  # usually 100%, this is called later in the file to set
-  # how much traffic to send to the WAF
-  dictionary {
-    name = "Edge_Security"
-  }
-  #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - End
+  #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
 
   dynamic "healthcheck" {
     # only enable the health on endpoints that need healthcheck enabled
