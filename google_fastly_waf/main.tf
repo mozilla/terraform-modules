@@ -22,6 +22,11 @@ resource "fastly_service_vcl" "default" {
       enabled = var.ddos_protection != null ? var.ddos_protection.enabled : false
       mode    = var.ddos_protection != null ? var.ddos_protection.mode : "off"
     }
+    ngwaf {
+      enabled      = true
+      workspace_id = sigsci_site.ngwaf_edge_site.short_name
+      traffic_ramp = var.ngwaf_percent_enabled
+    }
   }
 
   gzip {
@@ -94,7 +99,7 @@ resource "fastly_service_vcl" "default" {
 
   # Allow passing in arbitrary snippets for VCL configuration
   dynamic "snippet" {
-    for_each = local.snippets
+    for_each = var.snippets
     content {
       content  = snippet.value.content
       name     = snippet.value.name
@@ -143,7 +148,7 @@ resource "fastly_service_vcl" "default" {
   }
 
   # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
-  #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
+  #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - Start
   dynamicsnippet {
     name     = "ngwaf_config_init"
     type     = "init"
@@ -168,13 +173,7 @@ resource "fastly_service_vcl" "default" {
     priority = 9000
   }
 
-  # percentage of traffic going through WAF
-  # usually 100%, this is called later in the file to set
-  # how much traffic to send to the WAF
-  dictionary {
-    name = "Edge_Security"
-  }
-  #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - End
+  #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
 
   dynamic "healthcheck" {
     # only enable the health on endpoints that need healthcheck enabled
@@ -287,30 +286,6 @@ resource "fastly_service_dynamic_snippet_content" "ngwaf_config_deliver" {
 
 #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
 
-resource "sigsci_edge_deployment" "ngwaf_edge_site_service" {
-  # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-}
-
-resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
-  # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment_service
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-  fastly_sid      = fastly_service_vcl.default.id
-
-  activate_version = true
-  percent_enabled  = var.ngwaf_percent_enabled
-
-  depends_on = [
-    sigsci_edge_deployment.ngwaf_edge_site_service,
-    fastly_service_vcl.default,
-    fastly_service_dynamic_snippet_content.ngwaf_config_init,
-    fastly_service_dynamic_snippet_content.ngwaf_config_miss,
-    fastly_service_dynamic_snippet_content.ngwaf_config_pass,
-    fastly_service_dynamic_snippet_content.ngwaf_config_deliver,
-    sigsci_site.ngwaf_edge_site,
-  ]
-}
-
 # This creates the actual WAF object
 resource "sigsci_site" "ngwaf_edge_site" {
   short_name             = "${var.application}-${var.realm}-${var.environment}"
@@ -329,13 +304,3 @@ resource "sigsci_site" "ngwaf_edge_site" {
   }
 }
 
-resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-  fastly_sid      = fastly_service_vcl.default.id
-
-  fastly_service_vcl_active_version = fastly_service_vcl.default.active_version
-
-  depends_on = [
-    sigsci_edge_deployment_service.ngwaf_edge_service_link,
-  ]
-}

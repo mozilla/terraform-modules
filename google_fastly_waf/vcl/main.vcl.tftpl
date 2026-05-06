@@ -23,7 +23,6 @@ if (fastly.ff.visits_this_service == 0 && req.restarts == 0) {
   set req.http.asn = client.as.number;
   set req.http.proxy-type = client.geo.proxy_type;
   set req.http.proxy-desc = client.geo.proxy_description;
-  set req.http.X-Sigsci-Response-Headers = "true";
   set req.http.h2fp = fastly_info.h2.fingerprint;
   set req.http.ohfp = fastly_info.oh_fingerprint;
 }
