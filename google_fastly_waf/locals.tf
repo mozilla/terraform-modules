@@ -1,6 +1,6 @@
 locals {
   waf_bypass_snippet = {
-    content  = "set req.http.x-sigsci-no-inspection = \"debug_bypass\";"
+    content  = "set waf.inspection.disabled = true;"
     name     = "bypass_ngwaf"
     type     = "recv"
     priority = 1

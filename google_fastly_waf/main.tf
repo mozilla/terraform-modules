@@ -22,6 +22,11 @@ resource "fastly_service_vcl" "default" {
       enabled = var.ddos_protection != null ? var.ddos_protection.enabled : false
       mode    = var.ddos_protection != null ? var.ddos_protection.mode : "off"
     }
+    ngwaf {
+      enabled      = true
+      workspace_id = sigsci_site.ngwaf_edge_site.short_name
+      traffic_ramp = var.ngwaf_percent_enabled
+    }
   }
 
   gzip {
@@ -287,30 +292,6 @@ resource "fastly_service_dynamic_snippet_content" "ngwaf_config_deliver" {
 
 #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
 
-resource "sigsci_edge_deployment" "ngwaf_edge_site_service" {
-  # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-}
-
-resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
-  # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment_service
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-  fastly_sid      = fastly_service_vcl.default.id
-
-  activate_version = true
-  percent_enabled  = var.ngwaf_percent_enabled
-
-  depends_on = [
-    sigsci_edge_deployment.ngwaf_edge_site_service,
-    fastly_service_vcl.default,
-    fastly_service_dynamic_snippet_content.ngwaf_config_init,
-    fastly_service_dynamic_snippet_content.ngwaf_config_miss,
-    fastly_service_dynamic_snippet_content.ngwaf_config_pass,
-    fastly_service_dynamic_snippet_content.ngwaf_config_deliver,
-    sigsci_site.ngwaf_edge_site,
-  ]
-}
-
 # This creates the actual WAF object
 resource "sigsci_site" "ngwaf_edge_site" {
   short_name             = "${var.application}-${var.realm}-${var.environment}"
@@ -329,13 +310,3 @@ resource "sigsci_site" "ngwaf_edge_site" {
   }
 }
 
-resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-  fastly_sid      = fastly_service_vcl.default.id
-
-  fastly_service_vcl_active_version = fastly_service_vcl.default.active_version
-
-  depends_on = [
-    sigsci_edge_deployment_service.ngwaf_edge_service_link,
-  ]
-}
