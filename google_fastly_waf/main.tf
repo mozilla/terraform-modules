@@ -147,34 +147,6 @@ resource "fastly_service_vcl" "default" {
     }
   }
 
-  # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
-  #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - Start
-  dynamicsnippet {
-    name     = "ngwaf_config_init"
-    type     = "init"
-    priority = 0
-  }
-
-  dynamicsnippet {
-    name     = "ngwaf_config_miss"
-    type     = "miss"
-    priority = 9000
-  }
-
-  dynamicsnippet {
-    name     = "ngwaf_config_pass"
-    type     = "pass"
-    priority = 9000
-  }
-
-  dynamicsnippet {
-    name     = "ngwaf_config_deliver"
-    type     = "deliver"
-    priority = 9000
-  }
-
-  #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
-
   dynamic "healthcheck" {
     # only enable the health on endpoints that need healthcheck enabled
     for_each = { for healthcheck, values in var.backends : healthcheck => values
@@ -239,53 +211,6 @@ resource "fastly_service_vcl" "default" {
   }
 }
 
-#### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
-resource "fastly_service_dynamic_snippet_content" "ngwaf_config_init" {
-  for_each = {
-    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_init"
-  }
-
-  service_id      = fastly_service_vcl.default.id
-  snippet_id      = each.value.snippet_id
-  content         = "### Fastly managed ngwaf_config_init"
-  manage_snippets = false
-}
-
-resource "fastly_service_dynamic_snippet_content" "ngwaf_config_miss" {
-  for_each = {
-    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_miss"
-  }
-
-  service_id      = fastly_service_vcl.default.id
-  snippet_id      = each.value.snippet_id
-  content         = "### Fastly managed ngwaf_config_miss"
-  manage_snippets = false
-}
-
-resource "fastly_service_dynamic_snippet_content" "ngwaf_config_pass" {
-  for_each = {
-    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_pass"
-  }
-
-  service_id      = fastly_service_vcl.default.id
-  snippet_id      = each.value.snippet_id
-  content         = "### Fastly managed ngwaf_config_pass"
-  manage_snippets = false
-}
-
-resource "fastly_service_dynamic_snippet_content" "ngwaf_config_deliver" {
-  for_each = {
-    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_deliver"
-  }
-
-  service_id      = fastly_service_vcl.default.id
-  snippet_id      = each.value.snippet_id
-  content         = "### Fastly managed ngwaf_config_deliver"
-  manage_snippets = false
-}
-
-#### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
-
 # This creates the actual WAF object
 resource "sigsci_site" "ngwaf_edge_site" {
   short_name             = "${var.application}-${var.realm}-${var.environment}"
@@ -303,4 +228,3 @@ resource "sigsci_site" "ngwaf_edge_site" {
     }
   }
 }
-
