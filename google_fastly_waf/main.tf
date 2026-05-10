@@ -13,7 +13,7 @@ resource "fastly_service_vcl" "default" {
   stage    = var.stage
 
   product_enablement {
-    brotli_compression = true
+    brotli_compression = var.brotli_compression
     bot_management {
       enabled      = var.bot_management != null ? var.bot_management.enabled : true
       contentguard = var.bot_management != null ? var.bot_management.contentguard : "off"

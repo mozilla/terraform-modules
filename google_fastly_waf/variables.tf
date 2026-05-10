@@ -188,3 +188,9 @@ variable "ngwaf_attack_thresholds" {
     error_message = "ngwaf_attack_thresholds must contain exactly 3 entries (one each for the 1, 10, and 60 minute intervals)."
   }
 }
+
+variable "brotli_compression" {
+  type        = bool
+  default     = true
+  description = "Enable brotli compression or not"
+}
