@@ -5,7 +5,6 @@ module "fastly_maintenance_page" {
   project_id  = bar
   realm       = bar
 
-  waf_enabled       = true
   ngwaf_agent_level = "block"
 
   subscription_domains = [
