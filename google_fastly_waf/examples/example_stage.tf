@@ -12,7 +12,6 @@ module "fastly_stage" {
   project_id  = bar
   realm       = bar
 
-  waf_enabled       = true
   ngwaf_agent_level = "block"
   stage             = true
 
