@@ -68,17 +68,17 @@ resource "fastly_service_vcl" "default" {
       name    = backend.value.name
       address = backend.value.address
 
-      connect_timeout          = lookup(backend.value, "connect_timeout", 10000)
-      first_byte_timeout       = lookup(backend.value, "first_byte_timeout", 60000)
-      keepalive_time           = lookup(backend.value, "keepalive_time", 300)
-      override_host            = lookup(backend.value, "override_host", "")
-      port                     = lookup(backend.value, "port", 443)
-      request_condition        = lookup(backend.value, "request_condition", "False")
-      shield                   = lookup(backend.value, "shield", "")
-      ssl_sni_hostname         = lookup(backend.value, "ssl_sni_hostname", "")
-      use_ssl                  = lookup(backend.value, "use_ssl", false)
-      max_conn                 = lookup(backend.value, "max_conn", 200) # set to default
-      between_bytes_timeout_ms = lookup(backend.value, "between_bytes_timeout_ms", 10000)
+      connect_timeout       = lookup(backend.value, "connect_timeout", 10000)
+      first_byte_timeout    = lookup(backend.value, "first_byte_timeout", 60000)
+      keepalive_time        = lookup(backend.value, "keepalive_time", 300)
+      override_host         = lookup(backend.value, "override_host", "")
+      port                  = lookup(backend.value, "port", 443)
+      request_condition     = lookup(backend.value, "request_condition", "False")
+      shield                = lookup(backend.value, "shield", "")
+      ssl_sni_hostname      = lookup(backend.value, "ssl_sni_hostname", "")
+      use_ssl               = lookup(backend.value, "use_ssl", false)
+      max_conn              = lookup(backend.value, "max_conn", 200) # set to default
+      between_bytes_timeout = lookup(backend.value, "between_bytes_timeout", 10000)
 
       # health check is a string, created in another block
       healthcheck = lookup(backend.value, "health_check_name", "")
