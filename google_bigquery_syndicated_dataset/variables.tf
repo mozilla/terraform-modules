@@ -80,6 +80,17 @@ variable "access" {
   }))
   description = "Application-specific access blocks for this dataset. projectOwners OWNER access is included by default unless disable_project_owners_access is set."
   default     = []
+
+  validation {
+    condition = alltrue([
+      for a in var.access : !contains([
+        "roles/bigquery.dataOwner",
+        "roles/bigquery.dataEditor",
+        "roles/bigquery.dataViewer",
+      ], coalesce(a.role, ""))
+    ])
+    error_message = "Use the BigQuery-specific dataset roles OWNER/WRITER/READER instead of roles/bigquery.dataOwner|dataEditor|dataViewer to avoid permadiffs. See https://docs.cloud.google.com/bigquery/docs/access-control-basic-roles#dataset-basic-roles. Custom roles are still allowed."
+  }
 }
 
 variable "disable_project_owners_access" {
