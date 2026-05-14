@@ -17,7 +17,7 @@ This repository also uses [GitHub Actions](.github/workflows/ci.yaml) to run sta
   * the module subdirectory name follows the format `provider_name`;
   * a `README.md` exists (use terraform-docs, detailed below, to generate);
   * a `main.tf` file exists;
-  * a `versions.tf` file exists & contains value `terraform.required_version`;
+  * a `versions.tf` file exists
 * security checks are run, including validating providers used are allowed & secrets scanning (via same pre-commit tooling).
 
 ### Versioning and Releases
@@ -27,6 +27,10 @@ If your PR contains [Conventional commits](https://www.conventionalcommits.org/e
 
 Release changelogs are generated based off of the contents of your PR description.
 Readmes will be automatically generated, using `.terraform-docs.yml` from the module directory (if it exists).
+
+#### Provider Versions
+
+See https://mozilla-hub.atlassian.net/wiki/spaces/SRE/pages/2606923830/Tofu+Terraform+Versioning+Strategy for guidance on provider versioning.
 
 ## Creating modules
 
@@ -67,16 +71,17 @@ Some examples on using modules in this repository follow.
 }
 ```
 
-Using the (imaginary) `google_gke-cluster` module with always the latest version (e.g. following main branch):
-```terraform
- module "gke" {
-  source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=main"
-}
-```
-
 Using the (imaginary) `google_gke-cluster` module based on a specific (imaginary) git commit:
 ```terraform
  module "gke" {
   source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=69ad17030bfa4ea46f68f8cc449102d446658851"
+}
+```
+
+**Do not pin to main**: pinning to main makes your infrastructure non-deterministic, this will soon be disallowed by CI
+Using the (imaginary) `google_gke-cluster` module with always the latest version (** Not recommended**):
+```terraform
+ module "gke" {
+  source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=main"
 }
 ```
