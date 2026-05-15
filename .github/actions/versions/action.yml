@@ -28,7 +28,7 @@ runs:
       shell: bash
       run: |
         git fetch --tags
-        TAG=$(git tag -l "$PACKAGE_NAME-*" --sort=-v:refname | head -n 1)
+        TAG=$(git tag -l "$PACKAGE_NAME-[0-9]*" --sort=-v:refname | head -n 1)
 
         if [ -z "$TAG" ] ; then
           echo "No git tag found for $PACKAGE_NAME, using 0.0.0 as previous version"
