@@ -79,7 +79,7 @@ Using the (imaginary) `google_gke-cluster` module based on a specific (imaginary
 ```
 
 **Do not pin to main**: pinning to main makes your infrastructure non-deterministic, this will soon be disallowed by CI
-Using the (imaginary) `google_gke-cluster` module with always the latest version (** Not recommended**):
+Using the (imaginary) `google_gke-cluster` module with always the latest version (**Not recommended**):
 ```terraform
  module "gke" {
   source      = "git@github.com:mozilla/terraform-modules.git//google_gke-cluster?ref=main"
