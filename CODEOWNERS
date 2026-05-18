@@ -1,8 +1,8 @@
-google_deployment_accounts/ @jasonthomas @jbuck @bkochendorfer @smarnach @whd
-google_fastly_waf/ @jasonthomas @jbuck @bkochendorfer @whd @tibap
-google_gke/ @jasonthomas @ahoneiser @mikaeld @jbuck @bkochendorfer
-google_gke_tenant/ @jasonthomas @jbuck @bkochendorfer
-google_workgroup/ @jasonthomas @jbuck @bkochendorfer
-google_workload_identity/ @jasonthomas @jbuck @bkochendorfer
-pagerduty_service/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz
-pagerduty_team/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz
+google_deployment_accounts/ @jasonthomas @jbuck @bkochendorfer @smarnach @whd @mozilla/gcp-wg
+google_fastly_waf/ @jasonthomas @jbuck @bkochendorfer @whd @tibap @mozilla/gcp-wg
+google_gke/ @jasonthomas @ahoneiser @mikaeld @jbuck @bkochendorfer @mozilla/gcp-wg
+google_gke_tenant/ @jasonthomas @jbuck @bkochendorfer @mozilla/gcp-wg
+google_workgroup/ @jasonthomas @jbuck @bkochendorfer @mozilla/gcp-wg
+google_workload_identity/ @jasonthomas @jbuck @bkochendorfer @mozilla/gcp-wg
+pagerduty_service/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz @mozilla/gcp-wg
+pagerduty_team/ @jasonthomas @jbuck @bkochendorfer @whd @bwells-moz @cass-moz @mozilla/gcp-wg
