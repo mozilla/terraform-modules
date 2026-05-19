@@ -1,6 +1,6 @@
 output "dataset_id" {
   description = "The dataset ID."
-  value       = var.dataset_id
+  value       = var.create_dataset ? google_bigquery_dataset.dataset[0].dataset_id : var.dataset_id
 }
 
 output "id" {
