@@ -5,5 +5,7 @@ locals {
     type     = "recv"
     priority = 1
   }
-  snippets = concat(var.snippets, var.stage ? [local.waf_bypass_snippet] : [])
+  # The waf_bypass_snippet relies on the legacy x-sigsci-no-inspection header,
+  # which is only honored by the legacy EdgeDeployment integration.
+  snippets = var.legacy_edge_deployment ? concat(var.snippets, var.stage ? [local.waf_bypass_snippet] : []) : var.snippets
 }

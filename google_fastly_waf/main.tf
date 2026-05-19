@@ -22,6 +22,14 @@ resource "fastly_service_vcl" "default" {
       enabled = var.ddos_protection != null ? var.ddos_protection.enabled : false
       mode    = var.ddos_protection != null ? var.ddos_protection.mode : "off"
     }
+    dynamic "ngwaf" {
+      for_each = var.legacy_edge_deployment ? [] : [1]
+      content {
+        enabled      = true
+        workspace_id = sigsci_site.ngwaf_edge_site.short_name
+        traffic_ramp = var.ngwaf_percent_enabled
+      }
+    }
   }
 
   gzip {
@@ -145,35 +153,50 @@ resource "fastly_service_vcl" "default" {
 
   # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
   #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
-  dynamicsnippet {
-    name     = "ngwaf_config_init"
-    type     = "init"
-    priority = 0
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["init"]) : toset([])
+    content {
+      name     = "ngwaf_config_init"
+      type     = "init"
+      priority = 0
+    }
   }
 
-  dynamicsnippet {
-    name     = "ngwaf_config_miss"
-    type     = "miss"
-    priority = 9000
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["miss"]) : toset([])
+    content {
+      name     = "ngwaf_config_miss"
+      type     = "miss"
+      priority = 9000
+    }
   }
 
-  dynamicsnippet {
-    name     = "ngwaf_config_pass"
-    type     = "pass"
-    priority = 9000
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["pass"]) : toset([])
+    content {
+      name     = "ngwaf_config_pass"
+      type     = "pass"
+      priority = 9000
+    }
   }
 
-  dynamicsnippet {
-    name     = "ngwaf_config_deliver"
-    type     = "deliver"
-    priority = 9000
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["deliver"]) : toset([])
+    content {
+      name     = "ngwaf_config_deliver"
+      type     = "deliver"
+      priority = 9000
+    }
   }
 
   # percentage of traffic going through WAF
   # usually 100%, this is called later in the file to set
   # how much traffic to send to the WAF
-  dictionary {
-    name = "Edge_Security"
+  dynamic "dictionary" {
+    for_each = var.legacy_edge_deployment ? toset(["edge_security"]) : toset([])
+    content {
+      name = "Edge_Security"
+    }
   }
   #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - End
 
@@ -212,7 +235,8 @@ resource "fastly_service_vcl" "default" {
         realm                  = var.realm,
         environment            = var.environment,
         https_redirect_enabled = var.https_redirect_enabled,
-        cache_header           = var.cache_header
+        cache_header           = var.cache_header,
+        legacy_edge_deployment = var.legacy_edge_deployment
       }
     )
     main = true
@@ -226,7 +250,7 @@ resource "fastly_service_vcl" "default" {
     project_id         = var.project_id
     table              = google_bigquery_table.fastly.table_id
     account_name       = google_service_account.log_uploader.account_id
-    format             = file("${path.module}/logging/bq_format.txt")
+    format             = file("${path.module}/logging/${var.legacy_edge_deployment ? "bq_format.txt" : "bq_format_v2.txt"}")
     response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 
@@ -285,16 +309,38 @@ resource "fastly_service_dynamic_snippet_content" "ngwaf_config_deliver" {
   content         = "### Fastly managed ngwaf_config_deliver"
   manage_snippets = false
 }
-
 #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
+
+# This is to make sure no plan diff is shown for services using the legacy method.
+# State-address renames triggered by adding `count` to these resources (single
+# instance -> `[0]` instance). 
+# This is safe to delete once all services have been migrated away from the legacy backend.
+moved {
+  from = sigsci_edge_deployment.ngwaf_edge_site_service
+  to   = sigsci_edge_deployment.ngwaf_edge_site_service[0]
+}
+
+moved {
+  from = sigsci_edge_deployment_service.ngwaf_edge_service_link
+  to   = sigsci_edge_deployment_service.ngwaf_edge_service_link[0]
+}
+
+moved {
+  from = sigsci_edge_deployment_service_backend.ngwaf_edge_service_backend_sync
+  to   = sigsci_edge_deployment_service_backend.ngwaf_edge_service_backend_sync[0]
+}
 
 resource "sigsci_edge_deployment" "ngwaf_edge_site_service" {
   # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment
+  count = var.legacy_edge_deployment ? 1 : 0
+
   site_short_name = sigsci_site.ngwaf_edge_site.short_name
 }
 
 resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
   # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment_service
+  count = var.legacy_edge_deployment ? 1 : 0
+
   site_short_name = sigsci_site.ngwaf_edge_site.short_name
   fastly_sid      = fastly_service_vcl.default.id
 
@@ -309,6 +355,19 @@ resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
     fastly_service_dynamic_snippet_content.ngwaf_config_pass,
     fastly_service_dynamic_snippet_content.ngwaf_config_deliver,
     sigsci_site.ngwaf_edge_site,
+  ]
+}
+
+resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {
+  count = var.legacy_edge_deployment ? 1 : 0
+
+  site_short_name = sigsci_site.ngwaf_edge_site.short_name
+  fastly_sid      = fastly_service_vcl.default.id
+
+  fastly_service_vcl_active_version = fastly_service_vcl.default.active_version
+
+  depends_on = [
+    sigsci_edge_deployment_service.ngwaf_edge_service_link,
   ]
 }
 
@@ -328,15 +387,4 @@ resource "sigsci_site" "ngwaf_edge_site" {
       threshold = attack_threshold.value.threshold
     }
   }
-}
-
-resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {
-  site_short_name = sigsci_site.ngwaf_edge_site.short_name
-  fastly_sid      = fastly_service_vcl.default.id
-
-  fastly_service_vcl_active_version = fastly_service_vcl.default.active_version
-
-  depends_on = [
-    sigsci_edge_deployment_service.ngwaf_edge_service_link,
-  ]
 }

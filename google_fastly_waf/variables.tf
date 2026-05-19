@@ -144,6 +144,12 @@ variable "ddos_protection" {
 }
 
 ## NGWAF
+variable "legacy_edge_deployment" {
+  type        = bool
+  default     = true
+  description = "If true (default), deploy NGWAF via the legacy sigsci EdgeDeployment APIs and Fastly dynamic snippets. If false, deploy via Fastly's product_enablement ngwaf block. Default preserves behavior for services still on the legacy method."
+}
+
 variable "ngwaf_agent_level" {
   type        = string
   default     = "log"
