@@ -22,10 +22,13 @@ resource "fastly_service_vcl" "default" {
       enabled = var.ddos_protection != null ? var.ddos_protection.enabled : false
       mode    = var.ddos_protection != null ? var.ddos_protection.mode : "off"
     }
-    ngwaf {
-      enabled      = true
-      workspace_id = sigsci_site.ngwaf_edge_site.short_name
-      traffic_ramp = var.ngwaf_percent_enabled
+    dynamic "ngwaf" {
+      for_each = var.legacy_edge_deployment ? [] : [1]
+      content {
+        enabled      = true
+        workspace_id = sigsci_site.ngwaf_edge_site.short_name
+        traffic_ramp = var.ngwaf_percent_enabled
+      }
     }
   }
 
@@ -100,7 +103,7 @@ resource "fastly_service_vcl" "default" {
 
   # Allow passing in arbitrary snippets for VCL configuration
   dynamic "snippet" {
-    for_each = var.snippets
+    for_each = local.snippets
     content {
       content  = snippet.value.content
       name     = snippet.value.name
@@ -148,6 +151,55 @@ resource "fastly_service_vcl" "default" {
     }
   }
 
+  # https://www.fastly.com/documentation/solutions/tutorials/next-gen-waf-edge-integration/
+  #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["init"]) : toset([])
+    content {
+      name     = "ngwaf_config_init"
+      type     = "init"
+      priority = 0
+    }
+  }
+
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["miss"]) : toset([])
+    content {
+      name     = "ngwaf_config_miss"
+      type     = "miss"
+      priority = 9000
+    }
+  }
+
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["pass"]) : toset([])
+    content {
+      name     = "ngwaf_config_pass"
+      type     = "pass"
+      priority = 9000
+    }
+  }
+
+  dynamic "dynamicsnippet" {
+    for_each = var.legacy_edge_deployment ? toset(["deliver"]) : toset([])
+    content {
+      name     = "ngwaf_config_deliver"
+      type     = "deliver"
+      priority = 9000
+    }
+  }
+
+  # percentage of traffic going through WAF
+  # usually 100%, this is called later in the file to set
+  # how much traffic to send to the WAF
+  dynamic "dictionary" {
+    for_each = var.legacy_edge_deployment ? toset(["edge_security"]) : toset([])
+    content {
+      name = "Edge_Security"
+    }
+  }
+  #### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - End
+
   dynamic "healthcheck" {
     # only enable the health on endpoints that need healthcheck enabled
     for_each = { for healthcheck, values in var.backends : healthcheck => values
@@ -183,7 +235,8 @@ resource "fastly_service_vcl" "default" {
         realm                  = var.realm,
         environment            = var.environment,
         https_redirect_enabled = var.https_redirect_enabled,
-        cache_header           = var.cache_header
+        cache_header           = var.cache_header,
+        legacy_edge_deployment = var.legacy_edge_deployment
       }
     )
     main = true
@@ -197,7 +250,7 @@ resource "fastly_service_vcl" "default" {
     project_id         = var.project_id
     table              = google_bigquery_table.fastly.table_id
     account_name       = google_service_account.log_uploader.account_id
-    format             = file("${path.module}/logging/bq_format.txt")
+    format             = file("${path.module}/logging/${var.legacy_edge_deployment ? "bq_format.txt" : "bq_format_v2.txt"}")
     response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 
@@ -210,6 +263,93 @@ resource "fastly_service_vcl" "default" {
     period             = 300 # 5 minutes
     response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
+}
+
+#### NGWAF Dynamic Snippets and dictionary - MANAGED BY FASTLY - Start
+resource "fastly_service_dynamic_snippet_content" "ngwaf_config_init" {
+  for_each = {
+    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_init"
+  }
+
+  service_id      = fastly_service_vcl.default.id
+  snippet_id      = each.value.snippet_id
+  content         = "### Fastly managed ngwaf_config_init"
+  manage_snippets = false
+}
+
+resource "fastly_service_dynamic_snippet_content" "ngwaf_config_miss" {
+  for_each = {
+    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_miss"
+  }
+
+  service_id      = fastly_service_vcl.default.id
+  snippet_id      = each.value.snippet_id
+  content         = "### Fastly managed ngwaf_config_miss"
+  manage_snippets = false
+}
+
+resource "fastly_service_dynamic_snippet_content" "ngwaf_config_pass" {
+  for_each = {
+    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_pass"
+  }
+
+  service_id      = fastly_service_vcl.default.id
+  snippet_id      = each.value.snippet_id
+  content         = "### Fastly managed ngwaf_config_pass"
+  manage_snippets = false
+}
+
+resource "fastly_service_dynamic_snippet_content" "ngwaf_config_deliver" {
+  for_each = {
+    for d in fastly_service_vcl.default.dynamicsnippet : d.name => d if d.name == "ngwaf_config_deliver"
+  }
+
+  service_id      = fastly_service_vcl.default.id
+  snippet_id      = each.value.snippet_id
+  content         = "### Fastly managed ngwaf_config_deliver"
+  manage_snippets = false
+}
+#### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
+
+resource "sigsci_edge_deployment" "ngwaf_edge_site_service" {
+  # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment
+  count = var.legacy_edge_deployment ? 1 : 0
+
+  site_short_name = sigsci_site.ngwaf_edge_site.short_name
+}
+
+resource "sigsci_edge_deployment_service" "ngwaf_edge_service_link" {
+  # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment_service
+  count = var.legacy_edge_deployment ? 1 : 0
+
+  site_short_name = sigsci_site.ngwaf_edge_site.short_name
+  fastly_sid      = fastly_service_vcl.default.id
+
+  activate_version = true
+  percent_enabled  = var.ngwaf_percent_enabled
+
+  depends_on = [
+    sigsci_edge_deployment.ngwaf_edge_site_service,
+    fastly_service_vcl.default,
+    fastly_service_dynamic_snippet_content.ngwaf_config_init,
+    fastly_service_dynamic_snippet_content.ngwaf_config_miss,
+    fastly_service_dynamic_snippet_content.ngwaf_config_pass,
+    fastly_service_dynamic_snippet_content.ngwaf_config_deliver,
+    sigsci_site.ngwaf_edge_site,
+  ]
+}
+
+resource "sigsci_edge_deployment_service_backend" "ngwaf_edge_service_backend_sync" {
+  count = var.legacy_edge_deployment ? 1 : 0
+
+  site_short_name = sigsci_site.ngwaf_edge_site.short_name
+  fastly_sid      = fastly_service_vcl.default.id
+
+  fastly_service_vcl_active_version = fastly_service_vcl.default.active_version
+
+  depends_on = [
+    sigsci_edge_deployment_service.ngwaf_edge_service_link,
+  ]
 }
 
 # This creates the actual WAF object
