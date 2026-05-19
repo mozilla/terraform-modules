@@ -311,6 +311,25 @@ resource "fastly_service_dynamic_snippet_content" "ngwaf_config_deliver" {
 }
 #### NGWAF Dynamic Snippets - MANAGED BY FASTLY - End
 
+# This is to make sure no plan diff is shown for services using the legacy method.
+# State-address renames triggered by adding `count` to these resources (single
+# instance -> `[0]` instance). 
+# This is safe to delete once all services have been migrated away from the legacy backend.
+moved {
+  from = sigsci_edge_deployment.ngwaf_edge_site_service
+  to   = sigsci_edge_deployment.ngwaf_edge_site_service[0]
+}
+
+moved {
+  from = sigsci_edge_deployment_service.ngwaf_edge_service_link
+  to   = sigsci_edge_deployment_service.ngwaf_edge_service_link[0]
+}
+
+moved {
+  from = sigsci_edge_deployment_service_backend.ngwaf_edge_service_backend_sync
+  to   = sigsci_edge_deployment_service_backend.ngwaf_edge_service_backend_sync[0]
+}
+
 resource "sigsci_edge_deployment" "ngwaf_edge_site_service" {
   # https://registry.terraform.io/providers/signalsciences/sigsci/latest/docs/resources/edge_deployment
   count = var.legacy_edge_deployment ? 1 : 0
