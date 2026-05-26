@@ -249,6 +249,15 @@ variable "node_pools_sysctls" {
   }
 }
 
+variable "node_pools_shielded_instance_config" {
+  description = "Per-node-pool shielded instance config. Keyed by node pool name. Pools not present in this map fall back to GKE provider defaults (integrity monitoring on, secure boot off). Changing shielded_instance_config on an existing pool forces recreation, so opt in per pool."
+  type = map(object({
+    enable_secure_boot          = optional(bool, true)
+    enable_integrity_monitoring = optional(bool, true)
+  }))
+  default = {}
+}
+
 variable "node_pools_tags" {
   description = "Map containing node pools non-default tags (as an list). Each node pool's name is the key. See locals.tf for defaults."
   type        = map(list(string))

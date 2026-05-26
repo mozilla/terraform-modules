@@ -4,7 +4,6 @@
 # * cluster telemetry (some kinda new monitoring / logging / metrics aggregation & dashboard for gke clusters; in beta)
 # * enable_binary_authorization (all container images validated by Google Binary Authorization; needs further impact investigation)
 # * enable_l4_ilb_subsetting (needs further impact investigation)
-# * shielded_instance_config.enable_secure_boot & shielded_instance_config.enable_integrity_monitoring (needs further impact investigation)
 # * database_encryption to be added with CloudKMS key (postponed for adding CloudKMS keys structure to Terraform or secrets management)
 
 #
@@ -310,6 +309,15 @@ resource "google_container_node_pool" "pools" {
     }
 
     spot = local.node_pools_spot_enabled[each.key]
+
+    dynamic "shielded_instance_config" {
+      for_each = local.node_pools_shielded_instance_config[each.key] != null ? [local.node_pools_shielded_instance_config[each.key]] : []
+
+      content {
+        enable_secure_boot          = shielded_instance_config.value.enable_secure_boot
+        enable_integrity_monitoring = shielded_instance_config.value.enable_integrity_monitoring
+      }
+    }
 
     machine_type    = each.value.machine_type
     oauth_scopes    = local.node_pools_oauth_scopes[each.key]
