@@ -7,7 +7,7 @@ The log routing configuration happens as part of the GKE tenant bootstrapping.
 ## Example
 ```hcl
 module "gke_logging" {
-  source = "github.com/mozilla/terraform-modules//google_gke_namespace_logging?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_gke_namespace_logging?ref=google_gke_namespace_logging-1.3.0"
 
   application                           = "glonk"
   realm                                 = "dev"
