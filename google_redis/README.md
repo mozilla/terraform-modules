@@ -12,7 +12,7 @@ locals {
 }
 
 module "redis" {
-  source = "github.com/mozilla/terraform-modules//google_redis?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_redis?ref=google_redis-0.4.0"
 
   application    = local.name
   environment    = "dev"

@@ -5,7 +5,7 @@ locals {
 }
 
 module "memcache" {
-  source = "github.com/mozilla/terraform-modules//google_memcache?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_memcache?ref=google_memcache-0.3.0"
 
   application        = local.name
   environment        = "dev"

@@ -9,7 +9,7 @@ For information on how to add new roles to the modules, please see [this documen
 
 ```hcl
 module "permissions" {
-  source = "github.com/mozilla/terraform-modules//google_permissions?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_permissions?ref=google_permissions-0.9.0"
   // it is assumed that you loaded and have available a local.project
   google_folder_id          = local.project.folder.id
   google_prod_project_id    = local.project["prod"].id

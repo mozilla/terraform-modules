@@ -30,7 +30,7 @@ detection automation will make these manual steps unnecessary.
 
 ```hcl
 module "treeherder" {
-  source = "github.com/mozilla/terraform-modules//google_bigquery_syndicated_dataset?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_bigquery_syndicated_dataset?ref=google_bigquery_syndicated_dataset-1.3.1"
 
   dataset_id            = "for_treeherder_1"
   syndicated_dataset_id = "treeherder_db"
@@ -62,7 +62,7 @@ module "treeherder" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_syndication_workgroup"></a> [syndication\_workgroup](#module\_syndication\_workgroup) | github.com/mozilla/terraform-modules//mozilla_workgroup | main |
+| <a name="module_syndication_workgroup"></a> [syndication\_workgroup](#module\_syndication\_workgroup) | github.com/mozilla/terraform-modules//mozilla_workgroup | mozilla_workgroup-1.3.0 |
 
 ## Resources
 
