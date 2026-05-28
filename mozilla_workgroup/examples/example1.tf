@@ -1,5 +1,5 @@
 module "workgroup" {
-  source = "github.com/mozilla/terraform-modules//mozilla_workgroup?ref=main"
+  source = "github.com/mozilla/terraform-modules//mozilla_workgroup?ref=mozilla_workgroup-1.3.0"
 
   ids                           = ["workgroup:app/admins"]
   roles                         = {}

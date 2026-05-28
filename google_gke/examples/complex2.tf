@@ -8,7 +8,7 @@ data "terraform_remote_state" "vpc" {
 }
 
 module "gke" {
-  source = "github.com/mozilla/terraform-modules//google_gke?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_gke?ref=google_gke-0.11.0"
 
   name               = "my-cluster"
   project_id         = "shared-clusters"

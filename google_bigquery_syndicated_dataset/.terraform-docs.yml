@@ -5,7 +5,7 @@ content: |-
 
   ```hcl
   module "treeherder" {
-    source = "github.com/mozilla/terraform-modules//google_bigquery_syndicated_dataset?ref=main"
+    source = "github.com/mozilla/terraform-modules//google_bigquery_syndicated_dataset?ref=google_bigquery_syndicated_dataset-1.3.1"
 
     dataset_id            = "for_treeherder_1"
     syndicated_dataset_id = "treeherder_db"

@@ -1,5 +1,5 @@
 module "datastream" {
-  source = "github.com/mozilla/terraform-modules//google_datastream?ref=main"
+  source = "github.com/mozilla/terraform-modules//google_datastream?ref=google_datastream-0.3.0"
 
   application = var.application
   environment = var.environment
