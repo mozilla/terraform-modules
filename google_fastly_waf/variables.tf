@@ -143,6 +143,29 @@ variable "ddos_protection" {
   }
 }
 
+variable "ddos_protection_alert" {
+  description = <<-EOT
+    Optional Slack alerting for Fastly DDoS Protection. When set, the module
+    creates a Slack `fastly_integration` and a `fastly_alert` on the
+    `ddos_detected_requests` stats metric that notifies the channel behind the
+    webhook. Intended to be paired with `ddos_protection` being enabled.
+    Set to `null` (the default) to create no alerting resources.
+  EOT
+  type = object({
+    enabled       = optional(bool, true)   # set false to keep config but tear the alert down
+    slack_webhook = string                 # Slack incoming-webhook URL (sensitive)
+    threshold     = optional(number, 1)    # ddos_detected_requests count that fires the alert
+    period        = optional(string, "5m") # evaluation window: 2m, 3m, 5m, 15m, or 30m
+  })
+  default = null
+  validation {
+    condition = var.ddos_protection_alert == null || contains(
+      ["2m", "3m", "5m", "15m", "30m"], var.ddos_protection_alert.period
+    )
+    error_message = "ddos_protection_alert.period must be one of: 2m, 3m, 5m, 15m, or 30m."
+  }
+}
+
 ## NGWAF
 variable "legacy_edge_deployment" {
   type        = bool
