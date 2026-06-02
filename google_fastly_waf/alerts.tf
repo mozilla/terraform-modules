@@ -1,8 +1,9 @@
 # DDoS Protection alerting
 #
 # When var.ddos_protection_alert is set, create a Slack integration and a
-# Fastly stats alert that fires on the `ddos_detected_requests` metric. This is
-# only meaningful when ddos_protection is enabled (mode "log" or "block").
+# Fastly stats alert that fires on the `ddos_protection_requests_detect_count`
+# metric (requests classified as DDoS attacks). This is only meaningful when
+# ddos_protection is enabled (mode "log" or "block").
 #
 # count keys off the non-sensitive `enabled` field so it can be computed without
 # tainting the value as sensitive; the webhook itself is wrapped in sensitive()
@@ -32,7 +33,7 @@ resource "fastly_alert" "ddos_protection" {
   name       = "${var.application}-${var.realm}-${var.environment} DDoS Protection events"
   service_id = fastly_service_vcl.default.id
   source     = "stats"
-  metric     = "ddos_detected_requests"
+  metric     = "ddos_protection_requests_detect_count"
 
   evaluation_strategy {
     type      = "above_threshold"

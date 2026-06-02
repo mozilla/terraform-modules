@@ -1,4 +1,8 @@
 terraform {
+  # >= 1.9 is required for cross-variable references in validation blocks
+  # (see ddos_protection_alert in variables.tf).
+  required_version = ">= 1.9"
+
   required_providers {
     fastly = {
       source  = "fastly/fastly"
