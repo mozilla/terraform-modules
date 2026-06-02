@@ -152,10 +152,10 @@ variable "ddos_protection_alert" {
     Set to `null` (the default) to create no alerting resources.
   EOT
   type = object({
-    enabled       = optional(bool, true)   # set false to keep config but tear the alert down
-    slack_webhook = string                 # Slack incoming-webhook URL (sensitive)
-    threshold     = optional(number, 1)    # ddos_detected_requests count that fires the alert
-    period        = optional(string, "5m") # evaluation window: 2m, 3m, 5m, 15m, or 30m
+    enabled              = optional(bool, true)   # set false to keep config but tear the alert down
+    slack_webhook_secret = string                 # Slack incoming-webhook URL (sensitive)
+    threshold            = optional(number, 1)    # ddos_detected_requests count that fires the alert
+    period               = optional(string, "5m") # evaluation window: 2m, 3m, 5m, 15m, or 30m
   })
   default = null
   validation {

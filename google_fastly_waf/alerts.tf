@@ -22,7 +22,7 @@ resource "fastly_integration" "ddos_protection_slack" {
   type        = "slack"
 
   config = {
-    webhook = sensitive(var.ddos_protection_alert.slack_webhook)
+    webhook = sensitive(var.ddos_protection_alert.slack_webhook_secret)
   }
 }
 
