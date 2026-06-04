@@ -57,6 +57,8 @@ locals {
 
   node_pools_shielded_instance_config = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_shielded_instance_config, node_pool.name, null) }
 
+  node_pools_metadata = { for node_pool in var.node_pools : node_pool.name => lookup(var.node_pools_metadata, node_pool.name, {}) }
+
   # Google Group for RBAC
   cluster_authenticator_security_group = var.google_group_name == null ? [] : [{
     security_group = var.google_group_name

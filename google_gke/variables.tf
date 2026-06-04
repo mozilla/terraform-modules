@@ -258,6 +258,12 @@ variable "node_pools_shielded_instance_config" {
   default = {}
 }
 
+variable "node_pools_metadata" {
+  description = "Per-node-pool node metadata (key/value strings applied at pool creation, e.g. `serial-port-logging-enable: \"false\"`). Keyed by node pool name. NOTE: the module includes `node_config[0].metadata` in `lifecycle.ignore_changes`, so values here are applied ONLY at pool creation — drift / variable updates do not reconcile to existing pools. Use this for set-once hardening settings (rotate the pool to change them)."
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "node_pools_tags" {
   description = "Map containing node pools non-default tags (as an list). Each node pool's name is the key. See locals.tf for defaults."
   type        = map(list(string))

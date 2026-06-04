@@ -290,6 +290,9 @@ resource "google_container_node_pool" "pools" {
     image_type      = "COS_CONTAINERD"
     labels          = local.node_pools_labels[each.key]
     logging_variant = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
+    # Set-once metadata applied at pool creation. node_config[0].metadata is in
+    # ignore_changes below, so values here are not reconciled afterward.
+    metadata = length(local.node_pools_metadata[each.key]) > 0 ? local.node_pools_metadata[each.key] : null
 
     dynamic "guest_accelerator" {
       for_each = length(local.node_pools_guest_accelerator[each.key]) != 0 ? [1] : []
