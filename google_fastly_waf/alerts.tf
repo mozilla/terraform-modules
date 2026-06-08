@@ -25,7 +25,12 @@ resource "fastly_integration" "ddos_protection_slack" {
 resource "fastly_alert" "ddos_protection" {
   count = local.ddos_protection_alert_enabled ? 1 : 0
 
-  name       = "${var.application}-${var.realm}-${var.environment} DDoS Protection events"
+  name = "${var.application}-${var.realm}-${var.environment} DDoS Protection events"
+  description = (
+    var.ddos_protection_alert.description != null
+    ? var.ddos_protection_alert.description
+    : "A DDoS event has happened for ${var.application} ${var.environment}"
+  )
   service_id = fastly_service_vcl.default.id
   source     = "stats"
   metric     = "ddos_protection_requests_detect_count"

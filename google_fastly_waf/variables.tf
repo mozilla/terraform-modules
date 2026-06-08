@@ -157,6 +157,7 @@ variable "ddos_protection_alert" {
     slack_webhook_secret = string                 # Slack incoming-webhook URL (sensitive)
     threshold            = optional(number, 1)    # ddos_protection_requests_detect_count that fires the alert
     period               = optional(string, "5m") # evaluation window: 2m, 3m, 5m, 15m, or 30m
+    description          = optional(string)        # alert description; defaults to a generic per-service message
   })
   default = null
   validation {
