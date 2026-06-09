@@ -7,8 +7,10 @@ locals {
   # 1. gha_attribute_specifiers: full override
   # 2. gha_branches: repository_ref-based principals per repo and branch
   # 3. Default: environment-based principals
+  # A subject specifier maps to a single identity (principal://); all other
+  # attributes map to identity sets (principalSet://).
   gha_attribute_assertions = [for attribute_specifier in var.gha_attribute_specifiers :
-    "principalSet://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/${attribute_specifier}"
+    "${split("/", attribute_specifier)[0] == "subject" ? "principal" : "principalSet"}://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/${attribute_specifier}"
   ]
 
   gha_branch_assertions = flatten([for repo in local.github_deploy_repositories : [for branch in var.gha_branches :

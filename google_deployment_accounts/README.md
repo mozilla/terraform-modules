@@ -28,7 +28,8 @@ module "google_deployment_accounts" {
 
 ```hcl
 # Allow OIDC access from GitHub Actions workflows triggered on the main branch
-# of a specific repo
+# of a specific repo. Branch-based access is typically secured by strong
+# primary branch protection settings, not Github environment approval rules.
 module "google_deployment_accounts_branch" {
   source             = "github.com/mozilla/terraform-modules//google_deployment_accounts?ref=main"
   project            = "my-project"
@@ -159,8 +160,8 @@ module "google_deployment_accounts" {
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the service account. Defaults to "Deployment to the ENV environment". | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment e.g., stage. Not used for OIDC configuration in CircleCI. | `string` | n/a | yes |
 | <a name="input_gha_attribute_specifiers"></a> [gha\_attribute\_specifiers](#input\_gha\_attribute\_specifiers) | Set of attribute specifiers to allow deploys from, in the form ATTR/ATTR\_VALUE. If specified, this overrides the github\_repository variable and any other GHA-specific variables. | `set(string)` | `[]` | no |
-| <a name="input_gha_branches"></a> [gha\_branches](#input\_gha\_branches) | Branches to allow deployments from. If unspecified, allow deployment from any branch via environment-based principals. | `set(string)` | `[]` | no |
-| <a name="input_gha_environments"></a> [gha\_environments](#input\_gha\_environments) | Github environments from which to deploy. If specified, this overrides the environment variable. | `list(string)` | `[]` | no |
+| <a name="input_gha_branches"></a> [gha\_branches](#input\_gha\_branches) | Branches to allow deployments from. If specified, takes precedence over gha\_environments and the environment variable, and is overridden by gha\_attribute\_specifiers. If unspecified, allow deployment from any branch via environment-based principals. | `set(string)` | `[]` | no |
+| <a name="input_gha_environments"></a> [gha\_environments](#input\_gha\_environments) | Github environments from which to deploy. If specified, this overrides the environment variable. Overridden by gha\_branches and gha\_attribute\_specifiers when either is set. | `list(string)` | `[]` | no |
 | <a name="input_github_repositories"></a> [github\_repositories](#input\_github\_repositories) | The Github repositories running the deployment workflows in the format org/repository, will be used if github\_repository is not defined. | `list(string)` | `[]` | no |
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | The Github repository running the deployment workflows in the format org/repository. Optional for CircleCI or when github\_repositories is specified. | `string` | `null` | no |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | `null` | no |
