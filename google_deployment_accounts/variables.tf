@@ -21,9 +21,43 @@ variable "environment" {
 # requires manual approval for deploying to production, and that particular
 # Github environment should be included in the gha_environments list.
 variable "gha_environments" {
-  description = "Github environments from which to deploy. If specified, this overrides the environment variable."
+  description = "Github environments from which to deploy. If specified, this overrides the environment variable. Overridden by gha_branches and gha_attribute_specifiers when either is set."
   type        = list(string)
   default     = []
+}
+
+# Note that branch-based principals authorize any workflow running on the given
+# branch and rely entirely on branch protection rules for security. This is
+# acceptable because branch protection rules on the primary branch for which
+# this setting is likely to be used are typically strong.
+variable "gha_branches" {
+  description = "Branches to allow deployments from. If specified, takes precedence over gha_environments and the environment variable, and is overridden by gha_attribute_specifiers. If unspecified, allow deployment from any branch via environment-based principals."
+  type        = set(string)
+  default     = []
+}
+
+variable "gha_attribute_specifiers" {
+  description = "Set of attribute specifiers to allow deploys from, in the form ATTR/ATTR_VALUE. If specified, this overrides the github_repository variable and any other GHA-specific variables."
+  type        = set(string)
+  default     = []
+  validation {
+    condition = alltrue(
+      [for attribute_specifier in var.gha_attribute_specifiers :
+        contains(
+          [
+            "subject",
+            "attribute.actor",
+            "attribute.environment",
+            "attribute.ref",
+            "attribute.repository",
+            "attribute.repository_owner",
+            "attribute.repository_ref",
+            "attribute.workflow"
+        ], split("/", attribute_specifier)[0])
+      ]
+    )
+    error_message = "Attribute specifiers must contain a valid attribute prefix."
+  }
 }
 
 # For CircleCI, the default options are to deploy from certain repositories

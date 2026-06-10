@@ -1,3 +1,5 @@
+# Allow OIDC access from GitHub Actions workflows running in the stage
+# environment of a specific repo
 data "terraform_remote_state" "wip_project" {
   backend = "gcs"
 

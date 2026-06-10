@@ -23,9 +23,11 @@ resource "google_service_account_iam_binding" "github-actions-access" {
 
 locals {
   circleci = var.wip_name == "circleci"
-  # explicit attributes replace all other kinds of assertions
+  # explicit attributes replace all other kinds of assertions. A subject
+  # specifier maps to a single identity (principal://); all other attributes
+  # map to identity sets (principalSet://).
   circleci_attribute_assertions = local.circleci ? [for attribute_specifier in var.circleci_attribute_specifiers :
-    "principalSet://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/${attribute_specifier}"
+    "${split("/", attribute_specifier)[0] == "subject" ? "principal" : "principalSet"}://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/${attribute_specifier}"
   ] : []
   # single repo, all branches
   circleci_vcs_origin_assertions = local.circleci && var.github_repository != null && length(var.circleci_branches) == 0 ? ["principalSet://iam.googleapis.com/projects/${var.wip_project_number}/locations/global/workloadIdentityPools/${var.wip_name}/attribute.vcs_origin/github.com/${var.github_repository}",
