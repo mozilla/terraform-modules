@@ -236,3 +236,20 @@ variable "brotli_compression" {
   default     = true
   description = "Enable brotli compression or not"
 }
+
+variable "column_policy_tags" {
+  type        = map(list(string))
+  default     = {}
+  description = <<-EOT
+    Optional map of column name -> list of Data Catalog policy tag resource names
+    to attach to the corresponding field in the fastly_cdn_logs.fastly table.
+    Enables BigQuery column data masking when paired with Data Catalog policy
+    tags and BigQuery data policies. Defaults to empty (no policy tags attached,
+    behavior unchanged from prior versions).
+
+    Example:
+      column_policy_tags = {
+        request_client_ip = ["projects/p/locations/us/taxonomies/123/policyTags/456"]
+      }
+  EOT
+}

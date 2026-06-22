@@ -31,6 +31,52 @@ resource "google_bigquery_dataset" "fastly" {
   }
 }
 
+locals {
+  # Base column definitions for the fastly logs table. Kept as a structured list
+  # so policy tags can be injected per-column via var.column_policy_tags.
+  fastly_table_columns = [
+    { name = "timestamp", type = "TIMESTAMP", description = "The timestamp" },
+    { name = "response_state", type = "STRING", description = "State of Response" },
+    { name = "response_status", type = "STRING", description = "Status of Response" },
+    { name = "response_reason", type = "STRING", description = "Response reason" },
+    { name = "request_referer", type = "STRING", description = "Referrer Information" },
+    { name = "request_method", type = "STRING", description = null },
+    { name = "request_protocol", type = "STRING", description = null },
+    { name = "request_user_agent", type = "STRING", description = null },
+    { name = "url", type = "STRING", description = "URL" },
+    { name = "waf_executed", type = "BOOLEAN", description = "Waf Executed" },
+    { name = "ngwaf_agentresponse", type = "STRING", description = "Response of Agent" },
+    { name = "ngwaf_decision_ms", type = "STRING", description = "Decision in MS" },
+    { name = "ngwaf_signals", type = "STRING", description = "Signals" },
+    { name = "response_bytes_written", type = "STRING", description = "Size of body written to request" },
+    { name = "ja3", type = "STRING", description = "ja3 of client" },
+    { name = "ja4", type = "STRING", description = "ja4 of client" },
+    { name = "request_client_ip", type = "STRING", description = "client IP" },
+    { name = "h2fp", type = "STRING", description = "HTTP/2 implementation details" },
+    { name = "asn", type = "STRING", description = "Autonomous System Number" },
+    { name = "ohfp", type = "STRING", description = "order and structure of HTTP headers" },
+    { name = "proxy_type", type = "STRING", description = "proxy type" },
+    { name = "proxy_desc", type = "STRING", description = "proxy description" },
+    { name = "fastly_request_id", type = "STRING", description = "Fastly Request ID" },
+  ]
+
+  # Compose the final schema, attaching policy tags from var.column_policy_tags
+  # to matching columns. Columns without a tag entry render as before.
+  fastly_table_schema = [
+    for col in local.fastly_table_columns : merge(
+      {
+        name = col.name
+        type = col.type
+        mode = "NULLABLE"
+      },
+      col.description == null ? {} : { description = col.description },
+      contains(keys(var.column_policy_tags), col.name) ? {
+        policyTags = { names = var.column_policy_tags[col.name] }
+      } : {}
+    )
+  ]
+}
+
 resource "google_bigquery_table" "fastly" {
   project    = var.project_id
   dataset_id = google_bigquery_dataset.fastly.dataset_id
@@ -49,143 +95,5 @@ resource "google_bigquery_table" "fastly" {
     component_code = "fastly-logs"
   }
 
-  schema = <<EOF
-[
-  {
-    "name": "timestamp",
-    "type": "TIMESTAMP",
-    "mode": "NULLABLE",
-    "description": "The timestamp"
-  },
-  {
-    "name": "response_state",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "State of Response"
-  },
-  {
-    "name": "response_status",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Status of Response"
-  },
-  {
-    "name": "response_reason",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Response reason"
-  },
-  {
-    "name": "request_referer",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Referrer Information"
-  },
-  {
-    "name": "request_method",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "request_protocol",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "request_user_agent",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "url",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "URL"
-  },
-  {
-    "name": "waf_executed",
-    "type": "BOOLEAN",
-    "mode": "NULLABLE",
-    "description": "Waf Executed"
-  },
-  {
-    "name": "ngwaf_agentresponse",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Response of Agent"
-  },
-  {
-    "name": "ngwaf_decision_ms",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Decision in MS"
-  },
-  {
-    "name": "ngwaf_signals",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Signals"
-  },
-  {
-    "name": "response_bytes_written",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Size of body written to request"
-  },
-  {
-    "name": "ja3",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "ja3 of client"
-  },
-  {
-    "name": "ja4",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "ja4 of client"
-  },
-  {
-    "name": "request_client_ip",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "client IP"
-  },
-  {
-    "name": "h2fp",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "HTTP/2 implementation details"
-  },
-  {
-    "name": "asn",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Autonomous System Number"
-  },
-  {
-    "name": "ohfp",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "order and structure of HTTP headers"
-  },
-  {
-    "name": "proxy_type",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "proxy type"
-  },
-  {
-    "name": "proxy_desc",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "proxy description"
-  },
-  {
-    "name": "fastly_request_id",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Fastly Request ID"
-  }
-]
-EOF
+  schema = jsonencode(local.fastly_table_schema)
 }
