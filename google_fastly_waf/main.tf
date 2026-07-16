@@ -98,6 +98,13 @@ resource "fastly_service_vcl" "default" {
       # don't fail early, "terraform apply" will fail when it calls Fastly API.
       ssl_check_cert    = lookup(backend.value, "use_ssl", false) ? true : false
       ssl_cert_hostname = lookup(backend.value, "use_ssl", false) ? backend.value.ssl_cert_hostname : ""
+
+      # Optional client certificate for mutual TLS to the origin. When set,
+      # Fastly presents this cert/key during the origin TLS handshake (used for
+      # origins that enforce client mTLS, e.g. the shared GKE Gateway). Both must
+      # be PEM. Omit for non-mTLS origins.
+      ssl_client_cert = lookup(backend.value, "ssl_client_cert", null)
+      ssl_client_key  = lookup(backend.value, "ssl_client_key", null)
     }
   }
 

@@ -1,5 +1,11 @@
 variable "backends" {
-  description = "A list of backends"
+  description = <<-EOT
+    A list of backends. Common keys: name, address, port, use_ssl,
+    ssl_cert_hostname, ssl_sni_hostname, override_host. Optional mutual-TLS keys
+    ssl_client_cert / ssl_client_key (both PEM) make Fastly present a client
+    certificate during the origin TLS handshake, for origins that enforce client
+    mTLS (e.g. the shared GKE Gateway); omit them for non-mTLS origins.
+  EOT
   type        = list(any)
   default     = []
 }
