@@ -123,6 +123,17 @@ variable "cache_header" {
   description = "A cache header to check to toggle cache lookup"
 }
 
+variable "default_object_ttl" {
+  type        = number
+  default     = 3600
+  description = <<-EOT
+    Default TTL (in seconds) applied in vcl_fetch to cacheable responses that
+    arrive from origin without any cache headers (no Expires, Surrogate-Control
+    max-age, or Cache-Control s-maxage/max-age). Lower it to cap how long
+    header-less responses are cached.
+  EOT
+}
+
 variable "bot_management" {
   description = "Bot Management configuration for the Fastly service product enablement."
   type = object({

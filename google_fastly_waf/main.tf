@@ -243,6 +243,7 @@ resource "fastly_service_vcl" "default" {
         environment            = var.environment,
         https_redirect_enabled = var.https_redirect_enabled,
         cache_header           = var.cache_header,
+        default_object_ttl     = var.default_object_ttl,
         legacy_edge_deployment = var.legacy_edge_deployment
       }
     )
