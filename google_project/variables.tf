@@ -127,3 +127,15 @@ variable "deletion_policy" {
   description = "The deletion policy for the Project."
   type        = string
 }
+
+variable "cloud_assist" {
+  default     = false
+  description = "Enables the Cloud Assist API set and grants the project's auto-provisioned proactive agent identity the IAM roles it needs. Proactive Mode itself must still be toggled on in the console."
+  type        = bool
+}
+
+variable "organization_number" {
+  default     = "442341870013"
+  description = "GCP organization number (the bare numeric id, not the organizations/NUMBER resource name). Used to construct the Cloud Assist proactive agent principal."
+  type        = string
+}

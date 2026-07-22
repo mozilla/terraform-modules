@@ -33,7 +33,35 @@ locals {
     "stackdriver.googleapis.com",
     "privilegedaccessmanager.googleapis.com"
   ]
-  all_project_services = setunion(local.default_project_services, var.project_services)
+  # Gemini Cloud Assist APIs
+  cloud_assist_services = var.cloud_assist ? [
+    "geminicloudassist.googleapis.com", # chat + Investigations
+    "cloudaicompanion.googleapis.com",
+    "designcenter.googleapis.com", # "Required & recommended" APIs
+    "appoptimize.googleapis.com",
+    "apphub.googleapis.com",
+    "apptopology.googleapis.com", # recommended for deeper responses
+    "recommender.googleapis.com",
+    "cloudresourcemanager.googleapis.com", # lets investigations read the project IAM policy
+    "policytroubleshooter.googleapis.com", # lets investigations run IAM Policy Troubleshooter
+  ] : []
+
+  all_project_services = setunion(local.default_project_services, var.project_services, local.cloud_assist_services)
+
+  # Roles the console "Grant access" step assigns to the proactive agent identity
+  cloud_assist_agent_binding_roles = [
+    "roles/iam.supportUser",   # proactive troubleshooting
+    "roles/cloudhub.operator", # cost optimization
+    "roles/appoptimize.admin", # cost optimization
+  ]
+  # serviceUsageConsumer is not managed authoritatively as it is occasionally
+  # configured explicitly and non-canonically by tenants
+  cloud_assist_agent_member_roles = [
+    "roles/serviceusage.serviceUsageConsumer", # proactive troubleshooting
+  ]
+
+  # https://docs.cloud.google.com/cloud-assist/proactive-agents-setup#agent_identity_roles
+  cloud_assist_agent_principal = "principal://agents.global.org-${var.organization_number}.system.id.goog/resources/geminicloudassist/projects/${google_project.project.number}/locations/global/agents/cloud"
 
   default_data_access_logs = ["iam.googleapis.com", "secretmanager.googleapis.com", "sts.googleapis.com", "privilegedaccessmanager.googleapis.com"]
   data_access_logs_filter  = join("\n", toset([for v in concat(local.default_data_access_logs, var.additional_data_access_logs) : "AND NOT protoPayload.serviceName=\"${v}\""]))
