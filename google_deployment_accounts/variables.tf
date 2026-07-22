@@ -52,6 +52,7 @@ variable "gha_attribute_specifiers" {
             "attribute.repository",
             "attribute.repository_owner",
             "attribute.repository_ref",
+            "attribute.repository_visibility",
             "attribute.workflow"
         ], split("/", attribute_specifier)[0])
       ]
