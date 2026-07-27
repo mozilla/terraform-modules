@@ -53,6 +53,10 @@ resource "google_artifact_registry_repository" "repository" {
     app_code = var.application
     realm    = var.realm
   }
+  lifecycle {
+    ignore_changes = [update_time]
+  }
+
 }
 
 resource "google_artifact_registry_repository_iam_member" "reader" {
