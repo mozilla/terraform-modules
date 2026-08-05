@@ -227,14 +227,17 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  dynamic "node_pool_defaults" {
-    for_each = var.enable_gcfs || var.enable_high_throughput_logging ? [1] : []
-    content {
-      node_config_defaults {
-        gcfs_config {
+  # Defaults for new node pools only; existing pools are set per pool below.
+  node_pool_defaults {
+    node_config_defaults {
+      insecure_kubelet_readonly_port_enabled = var.insecure_kubelet_readonly_port_enabled ? "TRUE" : "FALSE"
+      logging_variant                        = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
+
+      dynamic "gcfs_config" {
+        for_each = var.enable_gcfs ? [1] : []
+        content {
           enabled = var.enable_gcfs
         }
-        logging_variant = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
       }
     }
   }
@@ -293,6 +296,10 @@ resource "google_container_node_pool" "pools" {
     # Set-once metadata applied at pool creation. node_config[0].metadata is in
     # ignore_changes below, so values here are not reconciled afterward.
     metadata = length(local.node_pools_metadata[each.key]) > 0 ? local.node_pools_metadata[each.key] : null
+
+    kubelet_config {
+      insecure_kubelet_readonly_port_enabled = var.insecure_kubelet_readonly_port_enabled ? "TRUE" : "FALSE"
+    }
 
     dynamic "guest_accelerator" {
       for_each = length(local.node_pools_guest_accelerator[each.key]) != 0 ? [1] : []
