@@ -227,10 +227,10 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  # Defaults for new node pools only; existing pools are set per pool below.
+  # Defaults for new node pools only; GKE does not retrofit existing pools.
   node_pool_defaults {
     node_config_defaults {
-      insecure_kubelet_readonly_port_enabled = var.insecure_kubelet_readonly_port_enabled ? "TRUE" : "FALSE"
+      insecure_kubelet_readonly_port_enabled = "FALSE"
       logging_variant                        = var.enable_high_throughput_logging ? "MAX_THROUGHPUT" : "DEFAULT"
 
       dynamic "gcfs_config" {
@@ -297,8 +297,12 @@ resource "google_container_node_pool" "pools" {
     # ignore_changes below, so values here are not reconciled afterward.
     metadata = length(local.node_pools_metadata[each.key]) > 0 ? local.node_pools_metadata[each.key] : null
 
-    kubelet_config {
-      insecure_kubelet_readonly_port_enabled = var.insecure_kubelet_readonly_port_enabled ? "TRUE" : "FALSE"
+    dynamic "kubelet_config" {
+      for_each = var.insecure_kubelet_readonly_port_enabled != null ? [1] : []
+
+      content {
+        insecure_kubelet_readonly_port_enabled = var.insecure_kubelet_readonly_port_enabled ? "TRUE" : "FALSE"
+      }
     }
 
     dynamic "guest_accelerator" {

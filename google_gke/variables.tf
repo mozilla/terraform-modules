@@ -115,8 +115,8 @@ variable "enable_gcfs" {
 }
 
 variable "insecure_kubelet_readonly_port_enabled" {
-  default     = false
-  description = "Enable the unauthenticated kubelet read-only port (10255) on nodes. Applies to the cluster node defaults and every node pool."
+  default     = null
+  description = "Set the unauthenticated kubelet read-only port (10255) on every node pool. Leave null to let pools inherit the cluster default, which is always disabled."
   type        = bool
 }
 
