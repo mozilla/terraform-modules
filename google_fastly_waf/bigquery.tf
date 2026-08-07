@@ -181,6 +181,12 @@ resource "google_bigquery_table" "fastly" {
     "description": "proxy description"
   },
   {
+    "name": "response_content_encoding",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Response Content-Encoding"
+  },
+  {
     "name": "fastly_request_id",
     "type": "STRING",
     "mode": "NULLABLE",
