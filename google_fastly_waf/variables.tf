@@ -112,6 +112,17 @@ variable "log_sampling_enabled" {
   default = false
 }
 
+variable "log_response_content_encoding" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+    When true, adds a `response_content_encoding` column to the BigQuery logs table, populated
+    from the response `Content-Encoding` header. Useful for measuring compression negotiation
+    (`gzip`, `br`, and Compression Dictionary Transport's `dcb`/`dcz`). Off by default so the
+    shared log schema only grows for services that need it.
+  EOT
+}
+
 variable "https_redirect_enabled" {
   type    = bool
   default = true

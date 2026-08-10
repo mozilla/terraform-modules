@@ -152,6 +152,7 @@ module "fastly_stage" {
 | <a name="input_domains"></a> [domains](#input\_domains) | A list of domains | `list(any)` | `[]` | no |
 | <a name="input_https_redirect_enabled"></a> [https\_redirect\_enabled](#input\_https\_redirect\_enabled) | n/a | `bool` | `true` | no |
 | <a name="input_legacy_edge_deployment"></a> [legacy\_edge\_deployment](#input\_legacy\_edge\_deployment) | If true (default), deploy NGWAF via the legacy sigsci EdgeDeployment APIs and Fastly dynamic snippets. If false, deploy via Fastly's product\_enablement ngwaf block. Default preserves behavior for services still on the legacy method. | `bool` | `true` | no |
+| <a name="input_log_response_content_encoding"></a> [log\_response\_content\_encoding](#input\_log\_response\_content\_encoding) | When true, adds a `response_content_encoding` column to the BigQuery logs table, populated from the response `Content-Encoding` header. Useful for measuring compression negotiation (`gzip`, `br`, and Compression Dictionary Transport's `dcb`/`dcz`). Off by default so the shared log schema only grows for services that need it. | `bool` | `false` | no |
 | <a name="input_log_sampling_enabled"></a> [log\_sampling\_enabled](#input\_log\_sampling\_enabled) | n/a | `bool` | `false` | no |
 | <a name="input_log_sampling_percent"></a> [log\_sampling\_percent](#input\_log\_sampling\_percent) | n/a | `string` | `"10"` | no |
 | <a name="input_ngwaf_agent_level"></a> [ngwaf\_agent\_level](#input\_ngwaf\_agent\_level) | This is the site wide blocking level | `string` | `"log"` | no |
