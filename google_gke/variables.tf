@@ -114,6 +114,12 @@ variable "enable_gcfs" {
   type        = bool
 }
 
+variable "insecure_kubelet_readonly_port_enabled" {
+  default     = null
+  description = "Set the unauthenticated kubelet read-only port (10255) on every node pool. Leave null to let pools inherit the cluster default, which is always disabled."
+  type        = bool
+}
+
 variable "enable_public_cidrs_access" {
   default     = false
   description = "Whether the control plane is open to Google public IPs. Defaults to false."
