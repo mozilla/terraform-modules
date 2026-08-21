@@ -50,16 +50,26 @@ resource "google_bigquery_table" "fastly" {
   }
 
   # The base schema lives in logging/bq_schema.json alongside the log formats it mirrors.
-  # Optional columns are appended here, gated on the same variable that adds the matching
-  # field to the log format in locals.tf. The two must stay in sync: a field present in the
-  # format but missing from the schema will make BigQuery reject the insert and drop the log line.
+  # Extra columns come from var.extra_log_fields, which also drives the matching log-format
+  # fields in locals.tf, so the two cannot drift: a field present in the format but missing from
+  # the schema would make BigQuery reject the insert and drop the whole log line.
   schema = jsonencode(concat(
-    jsondecode(file("${path.module}/logging/bq_schema.json")),
-    var.log_response_content_encoding ? [{
-      name        = "response_content_encoding"
+    local.base_bq_schema,
+    [for f in var.extra_log_fields : {
+      name        = f.name
       type        = "STRING"
       mode        = "NULLABLE"
-      description = "Content-Encoding negotiated for the response (e.g. gzip, br, dcb, dcz)"
-    }] : [],
+      description = f.description
+    }],
   ))
+
+  lifecycle {
+    precondition {
+      condition = length(setintersection(
+        toset([for c in local.base_bq_schema : c.name]),
+        toset([for f in var.extra_log_fields : f.name]),
+      )) == 0
+      error_message = "extra_log_fields names must not duplicate a base column in logging/bq_schema.json."
+    }
+  }
 }

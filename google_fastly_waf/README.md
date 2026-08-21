@@ -5,19 +5,19 @@
 ```hcl
 module "fastly" {
   source      = "github.com/mozilla/terraform-modules//google_fastly_waf?ref=main"
-  application = glab
-  environment = foo
+  application = my-app
+  environment = stage
   project_id  = bar
-  realm       = bar
+  realm       = dev
 
-  ngwaf_agent_level = "block"
+  ngwaf_agent_level = "logs"
 
   subscription_domains = [
     { name = "my-app.mozilla.org" }
   ]
 
   domains = [
-    { name = "my-cool-app.global.ssl.fastly.net" },
+    { name = "my-app.global.ssl.fastly.net" },
   ]
 
   backends = [
@@ -150,9 +150,9 @@ module "fastly_stage" {
 | <a name="input_ddos_protection"></a> [ddos\_protection](#input\_ddos\_protection) | Optional DDoS Protection configuration for the Fastly service product enablement. | <pre>object({<br/>    enabled = bool<br/>    mode    = string<br/>  })</pre> | `null` | no |
 | <a name="input_ddos_protection_alert"></a> [ddos\_protection\_alert](#input\_ddos\_protection\_alert) | Optional Slack alerting for Fastly DDoS Protection. When set, the module creates a Slack `fastly_integration` and a `fastly_alert` on the `ddos_protection_requests_detect_count` stats metric that notifies the channel behind the webhook. Intended to be paired with `ddos_protection` being enabled. Set to `null` (the default) to create no alerting resources. | <pre>object({<br/>    enabled              = optional(bool, true)<br/>    slack_webhook_secret = string<br/>    threshold            = optional(number, 1)<br/>    period               = optional(string, "5m")<br/>    description          = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_domains"></a> [domains](#input\_domains) | A list of domains | `list(any)` | `[]` | no |
+| <a name="input_extra_log_fields"></a> [extra\_log\_fields](#input\_extra\_log\_fields) | Extra columns to add to the BigQuery logs table, on top of the base schema in logging/bq\_schema.json. Each entry adds both the log-format field and the matching table column, so the two cannot drift. `expression` is a bare Fastly VCL expression -- no `%{}V` wrapper and no `%%` escaping. The module always wraps it in `json.escape()` and always emits a quoted `STRING` / `NULLABLE` column, so a value should never break the JSON log line. Nesting works, e.g. `if(req.http.X-Foo, req.http.X-Foo, "none")`. There is no type knob: cast in SQL if you need a number (the base schema already stores `response\_status` as `STRING`). Append-only. BigQuery cannot reorder or drop columns, so add new entries at the end of the list and never remove one -- to retire a field, stop populating it and leave the column. This writes into the shared WAF log dataset, which is retained for 90 days and broadly readable. Never log credentials, cookies, authorization headers, or request bodies. | <pre>list(object({<br/>    name        = string<br/>    expression  = string<br/>    description = optional(string, "")<br/>  }))</pre> | `[]` | no |
 | <a name="input_https_redirect_enabled"></a> [https\_redirect\_enabled](#input\_https\_redirect\_enabled) | n/a | `bool` | `true` | no |
 | <a name="input_legacy_edge_deployment"></a> [legacy\_edge\_deployment](#input\_legacy\_edge\_deployment) | If true (default), deploy NGWAF via the legacy sigsci EdgeDeployment APIs and Fastly dynamic snippets. If false, deploy via Fastly's product\_enablement ngwaf block. Default preserves behavior for services still on the legacy method. | `bool` | `true` | no |
-| <a name="input_log_response_content_encoding"></a> [log\_response\_content\_encoding](#input\_log\_response\_content\_encoding) | When true, adds a `response_content_encoding` column to the BigQuery logs table, populated from the response `Content-Encoding` header. Useful for measuring compression negotiation (`gzip`, `br`, and Compression Dictionary Transport's `dcb`/`dcz`). Off by default so the shared log schema only grows for services that need it. | `bool` | `false` | no |
 | <a name="input_log_sampling_enabled"></a> [log\_sampling\_enabled](#input\_log\_sampling\_enabled) | n/a | `bool` | `false` | no |
 | <a name="input_log_sampling_percent"></a> [log\_sampling\_percent](#input\_log\_sampling\_percent) | n/a | `string` | `"10"` | no |
 | <a name="input_ngwaf_agent_level"></a> [ngwaf\_agent\_level](#input\_ngwaf\_agent\_level) | This is the site wide blocking level | `string` | `"log"` | no |

@@ -112,15 +112,44 @@ variable "log_sampling_enabled" {
   default = false
 }
 
-variable "log_response_content_encoding" {
-  type        = bool
-  default     = false
+variable "extra_log_fields" {
+  type = list(object({
+    name        = string
+    expression  = string
+    description = optional(string, "")
+  }))
+  default     = []
   description = <<-EOT
-    When true, adds a `response_content_encoding` column to the BigQuery logs table, populated
-    from the response `Content-Encoding` header. Useful for measuring compression negotiation
-    (`gzip`, `br`, and Compression Dictionary Transport's `dcb`/`dcz`). Off by default so the
-    shared log schema only grows for services that need it.
+    Extra columns to add to the BigQuery logs table, on top of the base schema in
+    logging/bq_schema.json. Each entry adds both the log-format field and the matching table
+    column, so the two cannot drift.
+
+    `expression` is a bare Fastly VCL expression -- no `%%{}V` wrapper and no `%%` escaping. The
+    module always wraps it in `json.escape()` and always emits a quoted `STRING` / `NULLABLE`
+    column, so a value can never break the JSON log line. Nesting works, e.g.
+    `if(req.http.X-Foo, req.http.X-Foo, "none")`. There is no type knob: cast in SQL if you need
+    a number (the base schema already stores `response_status` as `STRING`).
+
+    Append-only. BigQuery cannot reorder or drop columns, so add new entries at the end of the
+    list and never remove one -- to retire a field, stop populating it and leave the column.
+
+    Never log credentials, cookies, authorization headers, or request bodies.
   EOT
+
+  validation {
+    condition     = alltrue([for f in var.extra_log_fields : can(regex("^[a-z_][a-z0-9_]*$", f.name))])
+    error_message = "Each extra_log_fields name must be a valid BigQuery column name matching ^[a-z_][a-z0-9_]*$."
+  }
+
+  validation {
+    condition     = length(distinct([for f in var.extra_log_fields : f.name])) == length(var.extra_log_fields)
+    error_message = "Each extra_log_fields name must be unique."
+  }
+
+  validation {
+    condition     = alltrue([for f in var.extra_log_fields : trimspace(f.expression) != ""])
+    error_message = "Each extra_log_fields expression must be a non-empty Fastly VCL expression."
+  }
 }
 
 variable "https_redirect_enabled" {
