@@ -23,9 +23,10 @@ locals {
     "\"${f.name}\":\"%%{json.escape(${f.expression})}V\""
   ]
 
-  # Services that set no extra fields get the file byte-for-byte.
+  # Services that set no extra fields get the file byte-for-byte. The extended form keeps the
+  # file's trailing newline too.
   bq_log_format = length(var.extra_log_fields) == 0 ? local.bq_log_format_file : "${join(", ", concat(
     [trimspace(trimsuffix(trimspace(local.bq_log_format_file), "}"))],
     local.extra_bq_log_fields,
-  ))} }"
+  ))} }\n"
 }
