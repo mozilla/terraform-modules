@@ -49,143 +49,27 @@ resource "google_bigquery_table" "fastly" {
     component_code = "fastly-logs"
   }
 
-  schema = <<EOF
-[
-  {
-    "name": "timestamp",
-    "type": "TIMESTAMP",
-    "mode": "NULLABLE",
-    "description": "The timestamp"
-  },
-  {
-    "name": "response_state",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "State of Response"
-  },
-  {
-    "name": "response_status",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Status of Response"
-  },
-  {
-    "name": "response_reason",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Response reason"
-  },
-  {
-    "name": "request_referer",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Referrer Information"
-  },
-  {
-    "name": "request_method",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "request_protocol",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "request_user_agent",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "url",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "URL"
-  },
-  {
-    "name": "waf_executed",
-    "type": "BOOLEAN",
-    "mode": "NULLABLE",
-    "description": "Waf Executed"
-  },
-  {
-    "name": "ngwaf_agentresponse",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Response of Agent"
-  },
-  {
-    "name": "ngwaf_decision_ms",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Decision in MS"
-  },
-  {
-    "name": "ngwaf_signals",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Signals"
-  },
-  {
-    "name": "response_bytes_written",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Size of body written to request"
-  },
-  {
-    "name": "ja3",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "ja3 of client"
-  },
-  {
-    "name": "ja4",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "ja4 of client"
-  },
-  {
-    "name": "request_client_ip",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "client IP"
-  },
-  {
-    "name": "h2fp",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "HTTP/2 implementation details"
-  },
-  {
-    "name": "asn",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Autonomous System Number"
-  },
-  {
-    "name": "ohfp",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "order and structure of HTTP headers"
-  },
-  {
-    "name": "proxy_type",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "proxy type"
-  },
-  {
-    "name": "proxy_desc",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "proxy description"
-  },
-  {
-    "name": "fastly_request_id",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Fastly Request ID"
+  # The base schema lives in logging/bq_schema.json alongside the log formats it mirrors.
+  # Extra columns come from var.extra_log_fields, which also drives the matching log-format
+  # fields in locals.tf, so the two cannot drift: a field present in the format but missing from
+  # the schema would make BigQuery reject the insert and drop the whole log line.
+  schema = jsonencode(concat(
+    local.base_bq_schema,
+    [for f in var.extra_log_fields : {
+      name        = f.name
+      type        = "STRING"
+      mode        = "NULLABLE"
+      description = f.description
+    }],
+  ))
+
+  lifecycle {
+    precondition {
+      condition = length(setintersection(
+        toset([for c in local.base_bq_schema : c.name]),
+        toset([for f in var.extra_log_fields : f.name]),
+      )) == 0
+      error_message = "extra_log_fields names must not duplicate a base column in logging/bq_schema.json."
+    }
   }
-]
-EOF
 }
