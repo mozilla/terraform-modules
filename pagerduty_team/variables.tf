@@ -25,7 +25,7 @@ variable "schedules" {
   description = "Schedules to create for this team."
   type = list(object({
     name                         = string
-    time_zone                    = optional(string, "UTC")
+    time_zone                    = optional(string, "Etc/UTC")
     start                        = string
     rotation_virtual_start       = string
     rotation_turn_length_seconds = number
