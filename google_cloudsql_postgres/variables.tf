@@ -32,6 +32,12 @@ variable "backup_configuration_location" {
   type        = string
 }
 
+variable "backup_start_time" {
+  default     = null
+  description = "HH:MM format time (UTC) indicating when the daily backup window should start. If null, Google Cloud selects a random start time."
+  type        = string
+}
+
 variable "component" {
   default     = "db"
   description = "A logical component of an application"

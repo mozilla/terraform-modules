@@ -104,6 +104,7 @@ module "postgres_database" {
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | high availability (REGIONAL) or single zone (ZONAL) | `string` | `"REGIONAL"` | no |
 | <a name="input_backup_configuration_enabled"></a> [backup\_configuration\_enabled](#input\_backup\_configuration\_enabled) | n/a | `bool` | `true` | no |
 | <a name="input_backup_configuration_location"></a> [backup\_configuration\_location](#input\_backup\_configuration\_location) | n/a | `string` | `"us"` | no |
+| <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | HH:MM format time (UTC) indicating when the daily backup window should start. If null, Google Cloud selects a random start time. | `string` | `null` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
 | <a name="input_connector_enforcement"></a> [connector\_enforcement](#input\_connector\_enforcement) | Enables the enforcement of Cloud SQL Auth Proxy or Cloud SQL connectors for all the connections. If enabled, all the direct connections are rejected. | `string` | `null` | no |
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |

@@ -58,6 +58,7 @@ resource "google_sql_database_instance" "primary" {
       enabled                        = var.backup_configuration_enabled
       point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
       location                       = var.backup_configuration_location
+      start_time                     = var.backup_start_time
 
       backup_retention_settings {
         retained_backups = 30
