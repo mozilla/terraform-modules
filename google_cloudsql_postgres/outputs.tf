@@ -50,7 +50,3 @@ output "replica_public_ip_address" {
 output "tier" {
   value = local.tier
 }
-
-output "automated_backup_log_metric_type" {
-  value = var.automated_backup_log_metric_enabled ? "logging.googleapis.com/user/${google_logging_metric.automated_backup[0].name}" : null
-}
