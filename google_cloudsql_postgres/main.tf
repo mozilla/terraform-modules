@@ -230,3 +230,31 @@ resource "google_sql_database_instance" "replica" {
 
   deletion_protection = var.deletion_protection
 }
+
+# Counts automated backup outcomes by window status (STATUS_SUCCEEDED, STATUS_FAILED, ...).
+# See https://cloud.google.com/sql/docs/postgres/backup-recovery/view-audit-logs-for-automated-backups
+resource "google_logging_metric" "automated_backup" {
+  count   = var.automated_backup_log_metric_enabled ? 1 : 0
+  project = google_sql_database_instance.primary.project
+  name    = "${local.database_name}-automated-backup"
+  filter  = <<-EOT
+    logName="projects/${google_sql_database_instance.primary.project}/logs/cloudaudit.googleapis.com%2Fsystem_event"
+    protoPayload.methodName="cloudsql.instances.automatedBackup"
+    resource.type="cloudsql_database"
+    resource.labels.database_id="${google_sql_database_instance.primary.project}:${google_sql_database_instance.primary.name}"
+  EOT
+
+  metric_descriptor {
+    metric_kind = "DELTA"
+    value_type  = "INT64"
+    labels {
+      key         = "window_status"
+      value_type  = "STRING"
+      description = "Automated backup window status"
+    }
+  }
+
+  label_extractors = {
+    "window_status" = "EXTRACT(protoPayload.metadata.windowStatus)"
+  }
+}

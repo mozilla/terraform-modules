@@ -32,6 +32,8 @@ module "postgres_database" {
 
   db_cpu    = 4
   db_mem_gb = 20
+
+  automated_backup_log_metric_enabled = true
 }
 
 output "postgres_database" {
