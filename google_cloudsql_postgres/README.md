@@ -163,7 +163,6 @@ module "postgres_database" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_automated_backup_log_metric_type"></a> [automated\_backup\_log\_metric\_type](#output\_automated\_backup\_log\_metric\_type) | n/a |
 | <a name="output_connection_name"></a> [connection\_name](#output\_connection\_name) | n/a |
 | <a name="output_database_instance"></a> [database\_instance](#output\_database\_instance) | n/a |
 | <a name="output_db_instance_ip"></a> [db\_instance\_ip](#output\_db\_instance\_ip) | n/a |
