@@ -30,6 +30,35 @@ resource "google_project_service" "project" {
   ]
 }
 
+# "Grant access" step for Gemini Cloud Assist proactive agents. We may want to
+# move these permissions grants to elsewhere e.g. the permissions module
+# eventually.
+# NOTE: currently Proactive Mode must be toggled on in the console (Gemini
+# Cloud Assist chat > Settings > Proactive Agents) per project
+resource "google_project_iam_binding" "cloud_assist_agent" {
+  for_each = var.cloud_assist ? toset(local.cloud_assist_agent_binding_roles) : toset([])
+
+  project = local.project_id
+  role    = each.value
+  members = [local.cloud_assist_agent_principal]
+
+  depends_on = [
+    time_sleep.wait_60_seconds
+  ]
+}
+
+resource "google_project_iam_member" "cloud_assist_agent" {
+  for_each = var.cloud_assist ? toset(local.cloud_assist_agent_member_roles) : toset([])
+
+  project = local.project_id
+  role    = each.value
+  member  = local.cloud_assist_agent_principal
+
+  depends_on = [
+    time_sleep.wait_60_seconds
+  ]
+}
+
 // The project feed requires that cloudasset API is not only set up but also that the service account is created
 // Create a service account for the cloudasset API
 // ref: https://stackoverflow.com/questions/63785247/gcp-managed-service-account-is-not-created-for-cloud-asset-api
