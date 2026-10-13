@@ -31,7 +31,7 @@ No modules.
 | <a name="input_manager_members"></a> [manager\_members](#input\_manager\_members) | PagerDuty user IDs to add as managers/admins. | `list(string)` | `[]` | no |
 | <a name="input_observer_members"></a> [observer\_members](#input\_observer\_members) | PagerDuty user IDs to add as observers. | `list(string)` | `[]` | no |
 | <a name="input_responder_members"></a> [responder\_members](#input\_responder\_members) | PagerDuty user IDs to add as responders. | `list(string)` | `[]` | no |
-| <a name="input_schedules"></a> [schedules](#input\_schedules) | Schedules to create for this team. | <pre>list(object({<br/>    name                         = string<br/>    time_zone                    = optional(string, "UTC")<br/>    start                        = string<br/>    rotation_virtual_start       = string<br/>    rotation_turn_length_seconds = number<br/>    users                        = list(string) # PD user IDs<br/>  }))</pre> | `[]` | no |
+| <a name="input_schedules"></a> [schedules](#input\_schedules) | Schedules to create for this team. | <pre>list(object({<br/>    name                         = string<br/>    time_zone                    = optional(string, "Etc/UTC")<br/>    start                        = string<br/>    rotation_virtual_start       = string<br/>    rotation_turn_length_seconds = number<br/>    users                        = list(string) # PD user IDs<br/>  }))</pre> | `[]` | no |
 | <a name="input_team_name"></a> [team\_name](#input\_team\_name) | PagerDuty team name. | `string` | n/a | yes |
 
 ## Outputs
