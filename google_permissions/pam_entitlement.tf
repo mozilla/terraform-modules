@@ -87,7 +87,7 @@ locals {
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_prod_entitlement" {
-  count                = var.entitlement_enabled && (var.google_prod_project_id != "") ? 1 : 0
+  count                = var.entitlement_enabled && var.default_entitlement_enabled && (var.google_prod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
@@ -139,7 +139,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_nonprod_entitlement" {
-  count                = var.entitlement_enabled && (var.google_nonprod_project_id != "") ? 1 : 0
+  count                = var.entitlement_enabled && var.default_entitlement_enabled && (var.google_nonprod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
