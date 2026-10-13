@@ -134,6 +134,23 @@ variable "github_require_build_env" {
   EOT
 }
 
+variable "github_subject_prefixes" {
+  type        = map(string)
+  default     = {}
+  description = <<-EOT
+    OIDC subject prefix per build repository, for repositories with GitHub's immutable subject
+    claims enabled. Copy sub_claim_prefix from the repository's actions/oidc/customization/sub API.
+    Repositories not listed use repo:<org>/<repository>.
+  EOT
+  validation {
+    condition = alltrue([
+      for prefix in values(var.github_subject_prefixes) :
+      can(regex("^repo:\\S+@\\d+/\\S+@\\d+$", prefix))
+    ])
+    error_message = "Valid values are in the following format: repo:org@org_id/repository@repository_id."
+  }
+}
+
 variable "log_retention_days" {
   type        = number
   description = "Log retention in days"

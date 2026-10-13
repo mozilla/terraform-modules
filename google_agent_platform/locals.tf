@@ -3,7 +3,7 @@ locals {
 
   deploy_principals = [
     for repo in var.deploy_repositories : var.deploy_github_environment != null ?
-    "principal://iam.googleapis.com/${local.wip_id}/subject/repo:${repo}:environment:${var.deploy_github_environment}" :
+    "principal://iam.googleapis.com/${local.wip_id}/subject/${lookup(var.github_subject_prefixes, repo, "repo:${repo}")}:environment:${var.deploy_github_environment}" :
     "principalSet://iam.googleapis.com/${local.wip_id}/attribute.repository/${repo}"
   ]
 

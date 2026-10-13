@@ -75,6 +75,21 @@ run "prod_requires_github_environment" {
   }
 }
 
+run "prod_immutable_subject_prefix" {
+  command = plan
+
+  variables {
+    environment               = "prod"
+    deploy_github_environment = "prod"
+    github_subject_prefixes   = { "example-org/agents" = "repo:example-org@444/agents@555" }
+  }
+
+  assert {
+    condition     = one(google_service_account_iam_binding.deployer_wif[0].members) == "principal://iam.googleapis.com/projects/333333333333/locations/global/workloadIdentityPools/github-actions/subject/repo:example-org@444/agents@555:environment:prod"
+    error_message = "Prod deploys must use the repository's immutable subject prefix when one is set."
+  }
+}
+
 run "optional_resources" {
   command = plan
 

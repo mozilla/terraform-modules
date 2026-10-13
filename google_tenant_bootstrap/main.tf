@@ -1,3 +1,29 @@
+/**
+ * # google_tenant_bootstrap
+ *
+ * ## GitHub immutable OIDC subjects
+ *
+ * GitHub repositories created after July 15, 2026, and repositories renamed or transferred after that date, use immutable OIDC subject claims.
+ * Their `sub` starts with `repo:<owner>@<owner_id>/<repo>@<repo_id>` instead of `repo:<owner>/<repo>`, so an environment-scoped binding in the old form never matches.
+ * This affects the artifact-writer service account trust when a GitHub environment is required.
+ *
+ * To check a repository and get its prefix, run:
+ *
+ * ```sh
+ * gh api repos/<owner>/<repo>/actions/oidc/customization/sub
+ * ```
+ *
+ * When `use_immutable_subject` is `true`, add the `sub_claim_prefix` value to `github_subject_prefixes`:
+ *
+ * ```hcl
+ * github_subject_prefixes = {
+ *   "example-org/example-repo" = "repo:example-org@123456/example-repo@456789"
+ * }
+ * ```
+ *
+ * See [Immutable subject claims](https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims) in the GitHub docs.
+ */
+
 module "google_gke_tenant" {
   count              = var.disable_shared_integrations ? 0 : 1
   source             = "../google_gke_tenant"

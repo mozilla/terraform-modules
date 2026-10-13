@@ -24,7 +24,7 @@ locals {
   github_build_repositories = length(var.github_build_repositories) > 0 ? var.github_build_repositories : compact([var.github_repository])
   github_build_principals = [
     for repo in local.github_build_repositories : var.github_require_build_env ?
-    "principal://iam.googleapis.com/${local.wip_id}/subject/repo:${repo}:environment:build" :
+    "principal://iam.googleapis.com/${local.wip_id}/subject/${lookup(var.github_subject_prefixes, repo, "repo:${repo}")}:environment:build" :
     "principalSet://iam.googleapis.com/${local.wip_id}/attribute.repository/${repo}"
     if local.writer_service_account_name != null
   ]
