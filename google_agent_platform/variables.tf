@@ -33,6 +33,21 @@ variable "deploy_github_environment" {
   default     = null
 }
 
+variable "github_subject_prefixes" {
+  description = <<-EOT
+    OIDC subject prefix per deploy repository, for repositories with GitHub's immutable subject
+    claims enabled. Copy sub_claim_prefix from the repository's actions/oidc/customization/sub API.
+    Repositories not listed use repo:<org>/<repository>.
+  EOT
+  type        = map(string)
+  default     = {}
+
+  validation {
+    condition     = alltrue([for prefix in values(var.github_subject_prefixes) : can(regex("^repo:\\S+@\\d+/\\S+@\\d+$", prefix))])
+    error_message = "Valid values are in the following format: repo:org@org_id/repository@repository_id."
+  }
+}
+
 variable "caller_repositories" {
   description = "GitHub repositories, in org/repository format, that invoke agents from CI without deploying them."
   type        = list(string)

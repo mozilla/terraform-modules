@@ -83,6 +83,28 @@ run "lightweight_prod" {
   }
 }
 
+run "immutable_subject_prefix" {
+  command = plan
+
+  variables {
+    function                    = "aiservices"
+    realm                       = "prod"
+    environment                 = "prod"
+    project_id                  = "app-prod"
+    disable_shared_integrations = true
+    github_build_repositories   = ["example-org/app", "example-org/legacy"]
+    github_subject_prefixes     = { "example-org/app" = "repo:example-org@111/app@222" }
+  }
+
+  assert {
+    condition = google_service_account_iam_binding.artifact_writer_access[0].members == toset([
+      "principal://iam.googleapis.com/projects/123456789012/locations/global/workloadIdentityPools/github-actions/subject/repo:example-org@111/app@222:environment:build",
+      "principal://iam.googleapis.com/projects/123456789012/locations/global/workloadIdentityPools/github-actions/subject/repo:example-org/legacy:environment:build",
+    ])
+    error_message = "Listed repositories must use their immutable subject prefix, others the legacy form."
+  }
+}
+
 run "lightweight_nonprod_without_writer" {
   command = plan
 

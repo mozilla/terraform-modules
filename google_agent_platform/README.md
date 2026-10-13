@@ -28,7 +28,29 @@
 | <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | n/a |
 
 <!-- BEGIN_TF_DOCS -->
+# google\_agent\_platform
 
+## GitHub immutable OIDC subjects
+
+GitHub repositories created after July 15, 2026, and repositories renamed or transferred after that date, use immutable OIDC subject claims.
+Their `sub` starts with `repo:<owner>@<owner_id>/<repo>@<repo_id>` instead of `repo:<owner>/<repo>`, so an environment-scoped binding in the old form never matches.
+This affects the deployer service account trust when a GitHub environment is required.
+
+To check a repository and get its prefix, run:
+
+```sh
+gh api repos/<owner>/<repo>/actions/oidc/customization/sub
+```
+
+When `use_immutable_subject` is `true`, add the `sub_claim_prefix` value to `github_subject_prefixes`:
+
+```hcl
+github_subject_prefixes = {
+  "example-org/example-repo" = "repo:example-org@123456/example-repo@456789"
+}
+```
+
+See [Immutable subject claims](https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims) in the GitHub docs.
 
 ## Inputs
 
@@ -41,6 +63,7 @@
 | <a name="input_deploy_repositories"></a> [deploy\_repositories](#input\_deploy\_repositories) | GitHub repositories, in org/repository format, that can deploy agents to this environment. | `list(string)` | `[]` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment to create (like, 'dev', 'stage', or 'prod'). | `string` | n/a | yes |
 | <a name="input_gcp_organization_id"></a> [gcp\_organization\_id](#input\_gcp\_organization\_id) | GCP organization ID, used in the Agent Identity principal. | `number` | `442341870013` | no |
+| <a name="input_github_subject_prefixes"></a> [github\_subject\_prefixes](#input\_github\_subject\_prefixes) | OIDC subject prefix per deploy repository, for repositories with GitHub's immutable subject<br/>claims enabled. Copy sub\_claim\_prefix from the repository's actions/oidc/customization/sub API.<br/>Repositories not listed use repo:<org>/<repository>. | `map(string)` | `{}` | no |
 | <a name="input_image_repository"></a> [image\_repository](#input\_image\_repository) | Artifact Registry repository the Reasoning Engine service agent pulls BYOC images from. Null skips the grant. | <pre>object({<br/>    project  = string<br/>    location = string<br/>    name     = string<br/>  })</pre> | `null` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project the agents run in. | `string` | n/a | yes |
 | <a name="input_secret_readers"></a> [secret\_readers](#input\_secret\_readers) | Extra members that can read the secrets bag, for example a workgroup in nonprod. | `list(string)` | `[]` | no |

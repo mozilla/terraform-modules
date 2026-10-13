@@ -60,7 +60,29 @@ module "lightweight_tenant" {
 | <a name="output_public_ips"></a> [public\_ips](#output\_public\_ips) | n/a |
 
 <!-- BEGIN_TF_DOCS -->
+# google\_tenant\_bootstrap
 
+## GitHub immutable OIDC subjects
+
+GitHub repositories created after July 15, 2026, and repositories renamed or transferred after that date, use immutable OIDC subject claims.
+Their `sub` starts with `repo:<owner>@<owner_id>/<repo>@<repo_id>` instead of `repo:<owner>/<repo>`, so an environment-scoped binding in the old form never matches.
+This affects the artifact-writer service account trust when a GitHub environment is required.
+
+To check a repository and get its prefix, run:
+
+```sh
+gh api repos/<owner>/<repo>/actions/oidc/customization/sub
+```
+
+When `use_immutable_subject` is `true`, add the `sub_claim_prefix` value to `github_subject_prefixes`:
+
+```hcl
+github_subject_prefixes = {
+  "example-org/example-repo" = "repo:example-org@123456/example-repo@456789"
+}
+```
+
+See [Immutable subject claims](https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims) in the GitHub docs.
 ## Example
 ```hcl
 module "tenant" {
@@ -99,6 +121,7 @@ module "lightweight_tenant" {
 | <a name="input_github_deploy_repositories"></a> [github\_deploy\_repositories](#input\_github\_deploy\_repositories) | GitHub repositories (org/repository) that deploy. Overrides `github_repository` for the<br/>deploy service account. | `list(string)` | `[]` | no |
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | GitHub repository (org/repository) that builds and deploys. `github_build_repositories`<br/>and `github_deploy_repositories` override it. | `string` | `null` | no |
 | <a name="input_github_require_build_env"></a> [github\_require\_build\_env](#input\_github\_require\_build\_env) | Require the GitHub Actions environment "build" to use the artifact-writer service account. | `bool` | `true` | no |
+| <a name="input_github_subject_prefixes"></a> [github\_subject\_prefixes](#input\_github\_subject\_prefixes) | OIDC subject prefix per build repository, for repositories with GitHub's immutable subject<br/>claims enabled. Copy sub\_claim\_prefix from the repository's actions/oidc/customization/sub API.<br/>Repositories not listed use repo:<org>/<repository>. | `map(string)` | `{}` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | Log retention in days | `number` | `90` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Tenant project ID | `string` | `null` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | Realm: nonprod, prod, mgmt, or global | `string` | n/a | yes |
