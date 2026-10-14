@@ -30,6 +30,13 @@ if (fastly.ff.visits_this_service == 0 && req.restarts == 0) {
   set req.http.ohfp = fastly_info.oh_fingerprint;
 }
 
+# Only cache GET and HEAD (like Fastly's boilerplate VCL). `lookup` turns other methods
+# into a GET on miss, and the cache key ignores the method: CORS preflights (OPTIONS)
+# would receive the cached GET response, without `Access-Control-Allow-Headers/Methods`.
+# ref: https://www.fastly.com/documentation/guides/vcl/using/#custom-vcl
+if (req.method != "GET" && req.method != "HEAD" && req.method != "FASTLYPURGE") {
+  return(pass);
+}
 
 %{ if length(cache_header) > 0 }
 # If a header is set return caching
