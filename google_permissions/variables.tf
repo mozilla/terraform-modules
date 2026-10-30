@@ -4,21 +4,12 @@ variable "app_code" {
   default     = ""
 }
 
-variable "entitlement_enabled" {
-  description = "Whether or not to enable entitlements."
-  type        = bool
-  default     = false
-}
-
 variable "legacy_admin_entitlement_01" {
   description = <<-EOT
     Whether this module keeps the tenant's legacy default admin entitlement
     (admin-entitlement-01).
     Set to true only in stacks that already have the legacy admin-entitlement-01, to keep it.
     New tenants should leave it false.
-
-    Separate from entitlement_enabled, which also controls additional_entitlements
-    and the JITAccessUser bindings.
   EOT
   type        = bool
   default     = false
