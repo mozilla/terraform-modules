@@ -10,7 +10,7 @@ variable "entitlement_enabled" {
   default     = false
 }
 
-variable "default_entitlement_enabled" {
+variable "legacy_admin_entitlement_01" {
   description = <<-EOT
     Whether this module creates the tenant's default admin entitlement
     (admin-entitlement-01).
