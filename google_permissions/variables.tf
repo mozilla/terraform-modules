@@ -12,18 +12,13 @@ variable "entitlement_enabled" {
 
 variable "legacy_admin_entitlement_01" {
   description = <<-EOT
-    Whether this module creates the tenant's default admin entitlement
+    Whether this module keeps the tenant's legacy default admin entitlement
     (admin-entitlement-01).
+    Set to true only in stacks that already have the legacy admin-entitlement-01, to keep it.
+    New tenants should leave it false.
 
-    Set to false once the tenant's default entitlement is created centrally in
-    global-platform-admin (projects/tf/<realm>/pam_global.tf). Leaving it true in
-    both places collides: entitlement IDs are unique per parent and both are
-    parented at the same project.
-
-    This gate is deliberately separate from entitlement_enabled, which also controls
-    additional_entitlements, the Cloud Asset feed used for Slack notifications, and
-    the JITAccessUser bindings. Turning entitlement_enabled off to retire the default
-    would take all of those with it. See MZCLD-4250.
+    Separate from entitlement_enabled, which also controls additional_entitlements
+    and the JITAccessUser bindings.
   EOT
   type        = bool
   default     = false

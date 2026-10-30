@@ -83,7 +83,14 @@ locals {
   }
 }
 
-
+# legacy_admin_entitlement_01 only keeps an existing admin-entitlement-01; it must never create one.
+# This read fails the plan with "... not found" for a tenant that doesn't already have it.
+data "google_privileged_access_manager_entitlement" "legacy_admin_entitlement_01_must_exist" {
+  for_each       = var.entitlement_enabled && var.legacy_admin_entitlement_01 ? toset(local.environments) : toset([])
+  parent         = "projects/${each.value == "prod" ? var.google_prod_project_id : var.google_nonprod_project_id}"
+  location       = "global"
+  entitlement_id = local.default_admin_entitlement_name
+}
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_prod_entitlement" {
