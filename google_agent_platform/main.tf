@@ -44,27 +44,9 @@ resource "google_service_account_iam_binding" "deployer_wif" {
   members            = local.deploy_principals
 }
 
-resource "google_project_iam_custom_role" "engine_deployer" {
-  role_id     = "agentEngineDeployer"
-  project     = var.project_id
-  title       = "Agent Engine Deployer"
-  description = "Create, update and smoke-test Agent Platform reasoningEngines and their sandbox templates."
-  permissions = [
-    "aiplatform.reasoningEngines.create",
-    "aiplatform.reasoningEngines.delete",
-    "aiplatform.reasoningEngines.get",
-    "aiplatform.reasoningEngines.list",
-    "aiplatform.reasoningEngines.query",
-    "aiplatform.reasoningEngines.update",
-    "aiplatform.sandboxEnvironmentTemplates.create",
-    "aiplatform.sandboxEnvironmentTemplates.get",
-    "aiplatform.sandboxEnvironmentTemplates.list",
-  ]
-}
-
 resource "google_project_iam_member" "deployer_engine_deployer" {
   project = var.project_id
-  role    = google_project_iam_custom_role.engine_deployer.id
+  role    = local.engine_deployer_role
   member  = google_service_account.deployer.member
 }
 
@@ -152,21 +134,9 @@ resource "google_service_account_iam_binding" "caller_wif" {
   members            = local.caller_principals
 }
 
-resource "google_project_iam_custom_role" "engine_caller" {
-  count       = length(local.caller_principals) > 0 ? 1 : 0
-  role_id     = "agentEngineCaller"
-  project     = var.project_id
-  title       = "Agent Engine Caller"
-  description = "Invoke Agent Platform reasoningEngines."
-  permissions = [
-    "aiplatform.reasoningEngines.get",
-    "aiplatform.reasoningEngines.query",
-  ]
-}
-
 resource "google_project_iam_member" "caller_engine_caller" {
   count   = length(local.caller_principals) > 0 ? 1 : 0
   project = var.project_id
-  role    = google_project_iam_custom_role.engine_caller[0].id
+  role    = local.engine_caller_role
   member  = google_service_account.caller[0].member
 }
