@@ -360,6 +360,14 @@ resource "google_container_node_pool" "pools" {
   lifecycle {
     create_before_destroy = true
 
+    precondition {
+      condition = contains(
+        lookup(local.node_pool_disk_types_by_family, split("-", each.value.machine_type)[0], [each.value.disk_type]),
+        each.value.disk_type
+      )
+      error_message = "Node pool '${each.key}': disk_type '${each.value.disk_type}' is not supported for machine_type '${each.value.machine_type}'. See https://docs.cloud.google.com/compute/docs/general-purpose-machines (or compute-optimized-machines for C2/C2D) for the machine family's supported disk types."
+    }
+
     ignore_changes = [
       initial_node_count,
       node_config[0].oauth_scopes,
