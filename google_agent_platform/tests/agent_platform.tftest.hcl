@@ -36,6 +36,11 @@ run "nonprod_defaults" {
   }
 
   assert {
+    condition     = google_service_account.deployer.account_id == "agent-deployer-dev"
+    error_message = "Deployer service account must be named agent-deployer-<environment>."
+  }
+
+  assert {
     condition     = google_project_iam_member.deployer_engine_deployer.role == "organizations/222222222222/roles/AgentEngineDeployer"
     error_message = "Deployer must be granted the org AgentEngineDeployer role."
   }
@@ -112,6 +117,11 @@ run "optional_resources" {
   assert {
     condition     = length(google_service_account.runtime) == 1 && length(google_service_account_iam_member.deployer_acts_as_runtime) == 1
     error_message = "Runtime service account and deployer actAs must be created."
+  }
+
+  assert {
+    condition     = google_service_account.runtime[0].account_id == "agent-runtime-dev" && google_service_account.caller[0].account_id == "agent-caller-dev"
+    error_message = "Runtime and caller service accounts must be suffixed with the environment."
   }
 
   assert {

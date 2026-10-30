@@ -31,7 +31,7 @@ data "google_project" "this" {
 # Deployer
 
 resource "google_service_account" "deployer" {
-  account_id   = "agent-deployer"
+  account_id   = "agent-deployer-${var.environment}"
   project      = var.project_id
   display_name = "Agent Platform deployer"
   description  = "Assumed by CI to create and update Agent Platform reasoningEngines."
@@ -54,7 +54,7 @@ resource "google_project_iam_member" "deployer_engine_deployer" {
 
 resource "google_service_account" "runtime" {
   count        = var.create_runtime_service_account ? 1 : 0
-  account_id   = "agent-runtime"
+  account_id   = "agent-runtime-${var.environment}"
   project      = var.project_id
   display_name = "Agent Platform runtime"
   description  = "Shared runtime identity for agents deployed with service_account instead of Agent Identity."
@@ -121,7 +121,7 @@ resource "google_secret_manager_secret_iam_binding" "agents_accessor" {
 
 resource "google_service_account" "caller" {
   count        = length(local.caller_principals) > 0 ? 1 : 0
-  account_id   = "agent-caller"
+  account_id   = "agent-caller-${var.environment}"
   project      = var.project_id
   display_name = "Agent Platform caller"
   description  = "Assumed by CI to invoke Agent Platform reasoningEngines."
