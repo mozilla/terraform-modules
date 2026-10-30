@@ -26,7 +26,7 @@ variable "default_entitlement_enabled" {
     would take all of those with it. See MZCLD-4250.
   EOT
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "entitlement_data" {

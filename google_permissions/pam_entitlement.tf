@@ -188,6 +188,8 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
   #  }
 }
 
+# Not gated on entitlement_enabled, so tenants can add these without the legacy default
+# entitlement.
 resource "google_privileged_access_manager_entitlement" "additional_entitlements" {
   for_each = var.entitlement_enabled ? {
     for entitlement in local.additional_entitlements : entitlement.key => entitlement
