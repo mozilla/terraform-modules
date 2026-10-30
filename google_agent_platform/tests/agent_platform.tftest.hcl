@@ -36,6 +36,11 @@ run "nonprod_defaults" {
   }
 
   assert {
+    condition     = google_project_iam_member.deployer_engine_deployer.role == "organizations/222222222222/roles/AgentEngineDeployer"
+    error_message = "Deployer must be granted the org AgentEngineDeployer role."
+  }
+
+  assert {
     condition     = keys(google_project_iam_member.runtime_aiplatform_user) == ["agent_identity"]
     error_message = "Only the Agent Identity set gets runtime roles by default."
   }
@@ -115,8 +120,8 @@ run "optional_resources" {
   }
 
   assert {
-    condition     = length(google_service_account.caller) == 1 && length(google_project_iam_custom_role.engine_caller) == 1
-    error_message = "Caller resources must be created when caller_repositories is set."
+    condition     = length(google_service_account.caller) == 1 && google_project_iam_member.caller_engine_caller[0].role == "organizations/222222222222/roles/AgentEngineCaller"
+    error_message = "Caller must be created and granted the org AgentEngineCaller role when caller_repositories is set."
   }
 
   assert {

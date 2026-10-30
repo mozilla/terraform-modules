@@ -82,7 +82,7 @@ variable "image_repository" {
 }
 
 variable "gcp_organization_id" {
-  description = "GCP organization ID, used in the Agent Identity principal."
+  description = "GCP organization ID, used in the Agent Identity principal and the org custom role IDs."
   type        = number
   default     = 442341870013
 }
