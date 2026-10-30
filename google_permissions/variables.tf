@@ -4,8 +4,13 @@ variable "app_code" {
   default     = ""
 }
 
-variable "entitlement_enabled" {
-  description = "Whether or not to enable entitlements."
+variable "legacy_admin_entitlement_01" {
+  description = <<-EOT
+    Whether this module keeps the tenant's legacy default admin entitlement
+    (admin-entitlement-01).
+    Set to true only in stacks that already have the legacy admin-entitlement-01, to keep it.
+    New tenants should leave it false.
+  EOT
   type        = bool
   default     = false
 }

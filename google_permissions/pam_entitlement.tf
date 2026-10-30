@@ -83,11 +83,18 @@ locals {
   }
 }
 
-
+# legacy_admin_entitlement_01 only keeps an existing admin-entitlement-01; it must never create one.
+# This read fails the plan with "... not found" for a tenant that doesn't already have it.
+data "google_privileged_access_manager_entitlement" "legacy_admin_entitlement_01_must_exist" {
+  for_each       = var.legacy_admin_entitlement_01 ? toset(local.environments) : toset([])
+  parent         = "projects/${each.value == "prod" ? var.google_prod_project_id : var.google_nonprod_project_id}"
+  location       = "global"
+  entitlement_id = local.default_admin_entitlement_name
+}
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_prod_entitlement" {
-  count                = var.entitlement_enabled && (var.google_prod_project_id != "") ? 1 : 0
+  count                = var.legacy_admin_entitlement_01 && (var.google_prod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
@@ -139,7 +146,7 @@ resource "google_privileged_access_manager_entitlement" "default_prod_entitlemen
 
 # now we handle the additional entitlements - these need to be created for BOTH environments
 resource "google_privileged_access_manager_entitlement" "default_nonprod_entitlement" {
-  count                = var.entitlement_enabled && (var.google_nonprod_project_id != "") ? 1 : 0
+  count                = var.legacy_admin_entitlement_01 && (var.google_nonprod_project_id != "") ? 1 : 0
   entitlement_id       = local.default_admin_entitlement_name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
@@ -188,10 +195,12 @@ resource "google_privileged_access_manager_entitlement" "default_nonprod_entitle
   #  }
 }
 
+# Not gated on entitlement_enabled, so tenants can add these without the legacy default
+# entitlement.
 resource "google_privileged_access_manager_entitlement" "additional_entitlements" {
-  for_each = var.entitlement_enabled ? {
+  for_each = {
     for entitlement in local.additional_entitlements : entitlement.key => entitlement
-  } : {}
+  }
   entitlement_id       = each.value.entitlement.name
   location             = "global"
   max_request_duration = "${local.max_allowed_request_duration}s"
@@ -241,7 +250,7 @@ resource "google_privileged_access_manager_entitlement" "additional_entitlements
 // ref: https://stackoverflow.com/questions/63785247/gcp-managed-service-account-is-not-created-for-cloud-asset-api
 //
 resource "google_project_service_identity" "cloud_asset_sa" {
-  for_each = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  for_each = var.entitlement_slack_topic != "" ? toset(local.environments) : []
   provider = google-beta
   project  = each.value == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
   service  = "cloudasset.googleapis.com"
@@ -249,7 +258,7 @@ resource "google_project_service_identity" "cloud_asset_sa" {
 
 // Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
-  for_each     = var.entitlement_enabled && var.entitlement_slack_topic != "" ? toset(local.environments) : []
+  for_each     = var.entitlement_slack_topic != "" ? toset(local.environments) : []
   project      = each.value == "nonprod" ? var.google_nonprod_project_id : var.google_prod_project_id
   feed_id      = var.feed_id
   content_type = "RESOURCE"
@@ -267,14 +276,14 @@ resource "google_cloud_asset_project_feed" "project_feed" {
 
 # custom role for JIT access - created at the org level
 resource "google_project_iam_member" "developers_jitaccess_nonprod" {
-  for_each = var.entitlement_enabled && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  for_each = var.legacy_admin_entitlement_01 && var.google_nonprod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_nonprod_project_id
   role     = local.jit_access_user_role
   member   = each.value
 }
 
 resource "google_project_iam_member" "developers_jitaccess_prod" {
-  for_each = var.entitlement_enabled && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
+  for_each = var.legacy_admin_entitlement_01 && var.google_prod_project_id != "" ? toset(module.developers_workgroup.members) : toset([])
   project  = var.google_prod_project_id
   role     = local.jit_access_user_role
   member   = each.value
