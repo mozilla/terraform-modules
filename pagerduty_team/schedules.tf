@@ -2,7 +2,7 @@ resource "pagerduty_schedule" "schedule" {
   for_each = local.schedules_by_name
 
   name      = each.key
-  time_zone = try(each.value.time_zone, "UTC")
+  time_zone = try(each.value.time_zone, "Etc/UTC")
   teams     = [pagerduty_team.team.id]
 
 
