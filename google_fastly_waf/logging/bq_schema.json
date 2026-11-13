@@ -1,0 +1,137 @@
+[
+  {
+    "name": "timestamp",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "The timestamp"
+  },
+  {
+    "name": "response_state",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "State of Response"
+  },
+  {
+    "name": "response_status",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Status of Response"
+  },
+  {
+    "name": "response_reason",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Response reason"
+  },
+  {
+    "name": "request_referer",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Referrer Information"
+  },
+  {
+    "name": "request_method",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "request_protocol",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "request_user_agent",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "url",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "URL"
+  },
+  {
+    "name": "waf_executed",
+    "type": "BOOLEAN",
+    "mode": "NULLABLE",
+    "description": "Waf Executed"
+  },
+  {
+    "name": "ngwaf_agentresponse",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Response of Agent"
+  },
+  {
+    "name": "ngwaf_decision_ms",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Decision in MS"
+  },
+  {
+    "name": "ngwaf_signals",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Signals"
+  },
+  {
+    "name": "response_bytes_written",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Size of body written to request"
+  },
+  {
+    "name": "ja3",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "ja3 of client"
+  },
+  {
+    "name": "ja4",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "ja4 of client"
+  },
+  {
+    "name": "request_client_ip",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "client IP"
+  },
+  {
+    "name": "h2fp",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "HTTP/2 implementation details"
+  },
+  {
+    "name": "asn",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Autonomous System Number"
+  },
+  {
+    "name": "ohfp",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "order and structure of HTTP headers"
+  },
+  {
+    "name": "proxy_type",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "proxy type"
+  },
+  {
+    "name": "proxy_desc",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "proxy description"
+  },
+  {
+    "name": "fastly_request_id",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Fastly Request ID"
+  }
+]

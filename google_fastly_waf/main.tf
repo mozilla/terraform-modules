@@ -243,6 +243,7 @@ resource "fastly_service_vcl" "default" {
         environment            = var.environment,
         https_redirect_enabled = var.https_redirect_enabled,
         cache_header           = var.cache_header,
+        default_object_ttl     = var.default_object_ttl,
         legacy_edge_deployment = var.legacy_edge_deployment
       }
     )
@@ -257,7 +258,7 @@ resource "fastly_service_vcl" "default" {
     project_id         = var.project_id
     table              = google_bigquery_table.fastly.table_id
     account_name       = google_service_account.log_uploader.account_id
-    format             = file("${path.module}/logging/${var.legacy_edge_deployment ? "bq_format.txt" : "bq_format_v2.txt"}")
+    format             = local.bq_log_format
     response_condition = var.log_sampling_enabled ? local.log_sample_name : ""
   }
 

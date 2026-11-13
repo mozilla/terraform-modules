@@ -7,6 +7,17 @@ module "fastly" {
 
   ngwaf_agent_level = "block"
 
+  # Extra BigQuery log columns, on top of the module's base schema. `expression` is a bare
+  # Fastly VCL expression; the module json.escape()s it and adds a STRING column of the same
+  # name. Append-only -- BigQuery cannot reorder or drop columns.
+  extra_log_fields = [
+    {
+      name        = "response_content_encoding"
+      expression  = "resp.http.Content-Encoding"
+      description = "Content-Encoding negotiated for the response (e.g. gzip, br, dcb, dcz)"
+    },
+  ]
+
   subscription_domains = [
     { name = "my-app.mozilla.org" }
   ]
