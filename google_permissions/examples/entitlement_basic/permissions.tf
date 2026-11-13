@@ -5,8 +5,7 @@ module "permissions" {
   // the appcode (aka application or tenant name) is used to create the workgroups and entitlements if used
   app_code = local.application
 
-  entitlement_enabled = local.entitlement_enabled
-  entitlement_data    = local.entitlement_data
+  entitlement_data = local.entitlement_data
 
   google_folder_id = local.project.folder.id
 

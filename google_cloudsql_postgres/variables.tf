@@ -32,6 +32,12 @@ variable "backup_configuration_location" {
   type        = string
 }
 
+variable "backup_start_time" {
+  default     = null
+  description = "HH:MM format time (UTC) indicating when the daily backup window should start. If null, Google Cloud selects a random start time."
+  type        = string
+}
+
 variable "component" {
   default     = "db"
   description = "A logical component of an application"
@@ -339,4 +345,10 @@ variable "final_backup_retention_days" {
   default     = 30
   description = "Retention days for final backup. See: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#retention_days-1"
   type        = number
+}
+
+variable "automated_backup_log_metric_enabled" {
+  default     = false
+  description = "Create a log-based metric counting automated backup outcomes by window status. See: https://cloud.google.com/sql/docs/postgres/backup-recovery/view-audit-logs-for-automated-backups"
+  type        = bool
 }

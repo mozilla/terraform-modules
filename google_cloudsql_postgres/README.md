@@ -39,6 +39,8 @@ module "postgres_database" {
 
   db_cpu    = 4
   db_mem_gb = 20
+
+  automated_backup_log_metric_enabled = true
 }
 
 output "postgres_database" {
@@ -101,9 +103,11 @@ module "postgres_database" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Application e.g., bouncer. | `string` | n/a | yes |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | A list of authorized\_network maps: https://www.terraform.io/docs/providers/google/r/sql_database_instance.html | `list(any)` | `[]` | no |
+| <a name="input_automated_backup_log_metric_enabled"></a> [automated\_backup\_log\_metric\_enabled](#input\_automated\_backup\_log\_metric\_enabled) | Create a log-based metric counting automated backup outcomes by window status. See: https://cloud.google.com/sql/docs/postgres/backup-recovery/view-audit-logs-for-automated-backups | `bool` | `false` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | high availability (REGIONAL) or single zone (ZONAL) | `string` | `"REGIONAL"` | no |
 | <a name="input_backup_configuration_enabled"></a> [backup\_configuration\_enabled](#input\_backup\_configuration\_enabled) | n/a | `bool` | `true` | no |
 | <a name="input_backup_configuration_location"></a> [backup\_configuration\_location](#input\_backup\_configuration\_location) | n/a | `string` | `"us"` | no |
+| <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | HH:MM format time (UTC) indicating when the daily backup window should start. If null, Google Cloud selects a random start time. | `string` | `null` | no |
 | <a name="input_component"></a> [component](#input\_component) | A logical component of an application | `string` | `"db"` | no |
 | <a name="input_connector_enforcement"></a> [connector\_enforcement](#input\_connector\_enforcement) | Enables the enforcement of Cloud SQL Auth Proxy or Cloud SQL connectors for all the connections. If enabled, all the direct connections are rejected. | `string` | `null` | no |
 | <a name="input_custom_database_name"></a> [custom\_database\_name](#input\_custom\_database\_name) | Use this field for custom database name. | `string` | `""` | no |

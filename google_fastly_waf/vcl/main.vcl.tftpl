@@ -30,6 +30,13 @@ if (fastly.ff.visits_this_service == 0 && req.restarts == 0) {
   set req.http.ohfp = fastly_info.oh_fingerprint;
 }
 
+# Only cache GET and HEAD (like Fastly's boilerplate VCL). `lookup` turns other methods
+# into a GET on miss, and the cache key ignores the method: CORS preflights (OPTIONS)
+# would receive the cached GET response, without `Access-Control-Allow-Headers/Methods`.
+# ref: https://www.fastly.com/documentation/guides/vcl/using/#custom-vcl
+if (req.method != "GET" && req.method != "HEAD" && req.method != "FASTLYPURGE") {
+  return(pass);
+}
 
 %{ if length(cache_header) > 0 }
 # If a header is set return caching
@@ -91,7 +98,7 @@ sub vcl_fetch {
 
   # If no TTL has been provided in the response headers, set a default
   if (!beresp.http.Expires && !beresp.http.Surrogate-Control ~ "max-age" && !beresp.http.Cache-Control ~ "(?:s-maxage|max-age)") {
-    set beresp.ttl = 3600s;
+    set beresp.ttl = ${default_object_ttl}s;
 
     # Apply a longer default TTL for images processed using Image Optimizer
     if (req.http.X-Fastly-Imageopto-Api) {
