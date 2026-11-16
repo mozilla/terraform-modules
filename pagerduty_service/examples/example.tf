@@ -1,6 +1,6 @@
 
 module "pagerduty_service" {
-  source                  = "github.com/mozilla/terraform-modules//pagerduty_service?ref=pagerduty_service-0.2.0"
+  source                  = "github.com/mozilla/terraform-modules//pagerduty_service?ref=pagerduty_service-0.3.0"
   name                    = "foo"
   application_name        = "bar"
   description             = "glab"
