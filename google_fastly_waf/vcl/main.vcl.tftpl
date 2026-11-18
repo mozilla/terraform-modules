@@ -1,17 +1,17 @@
 sub vcl_recv {
-#FASTLY recv
-%{ if https_redirect_enabled }
-if (req.protocol != "https") {
-  error 601 "Moved permanently";
-}
-%{ endif }
-
 # Require authentication for URL purging
 # See https://docs.fastly.com/en/guides/authenticating-api-purge-requests and
 # https://www.fastly.com/documentation/guides/concepts/edge-state/cache/purging/#url-purge
 if (req.method == "FASTLYPURGE") {
   set req.http.Fastly-Purge-Requires-Auth = "1";
 }
+
+#FASTLY recv
+%{ if https_redirect_enabled }
+if (req.protocol != "https") {
+  error 601 "Moved permanently";
+}
+%{ endif }
 
 # Prevent cache poisoning via X-Http-Method-Override header
 # ref: https://docs.fastly.com/en/guides/google-cloud-storage#x-http-method-override-header-behavior
