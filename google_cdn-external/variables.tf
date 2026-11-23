@@ -150,10 +150,10 @@ variable "backend_bucket_name_override" {
 variable "load_balancing_scheme" {
   type        = string
   default     = "EXTERNAL"
-  description = "Load balancing scheme for the backend service and global forwarding rules. One of `EXTERNAL` or `EXTERNAL_MANAGED`. Defaults to `EXTERNAL`, which was the Google provider's default before v8.0 changed it. Changing this on an existing load balancer forces the affected resources to be replaced."
+  description = "Load balancing scheme for the backend service and global forwarding rules. One of `EXTERNAL`, `EXTERNAL_MANAGED`, `EXTERNAL_PASSTHROUGH`, `INTERNAL_MANAGED` or `INTERNAL_SELF_MANAGED`. Defaults to `EXTERNAL`, which was the Google provider's default before v8.0."
 
   validation {
-    condition     = contains(["EXTERNAL", "EXTERNAL_MANAGED"], var.load_balancing_scheme)
-    error_message = "load_balancing_scheme must be one of: EXTERNAL, EXTERNAL_MANAGED."
+    condition     = contains(["EXTERNAL", "EXTERNAL_MANAGED", "EXTERNAL_PASSTHROUGH", "INTERNAL_MANAGED", "INTERNAL_SELF_MANAGED"], var.load_balancing_scheme)
+    error_message = "load_balancing_scheme must be one of: EXTERNAL, EXTERNAL_MANAGED, EXTERNAL_PASSTHROUGH, INTERNAL_MANAGED, INTERNAL_SELF_MANAGED."
   }
 }
