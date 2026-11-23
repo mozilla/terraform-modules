@@ -55,6 +55,8 @@ resource "google_compute_global_forwarding_rule" "http" {
   port_range = "80"
   target     = google_compute_target_http_proxy.default.id
   ip_address = each.value
+
+  load_balancing_scheme = var.load_balancing_scheme
 }
 
 resource "google_compute_global_forwarding_rule" "https" {
@@ -64,4 +66,6 @@ resource "google_compute_global_forwarding_rule" "https" {
   port_range = "443"
   target     = google_compute_target_https_proxy.default.id
   ip_address = each.value
+
+  load_balancing_scheme = var.load_balancing_scheme
 }

@@ -14,6 +14,7 @@ this module builds a GCP Load Balancer with a backend bucket
 | <a name="input_certificates"></a> [certificates](#input\_certificates) | list of certificate ids to use on the https target proxy | `list(string)` | n/a | yes |
 | <a name="input_compression_mode"></a> [compression\_mode](#input\_compression\_mode) | n/a | `string` | `"DISABLED"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | n/a | yes |
+| <a name="input_load_balancing_scheme"></a> [load\_balancing\_scheme](#input\_load\_balancing\_scheme) | Load balancing scheme for the global forwarding rules. One of `EXTERNAL` or `EXTERNAL_MANAGED`. Defaults to `EXTERNAL`, which was the Google provider's default before v8.0 changed it. Changing this on an existing load balancer forces the affected resources to be replaced. | `string` | `"EXTERNAL"` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | prefix for resource names | `string` | `""` | no |
 | <a name="input_realm"></a> [realm](#input\_realm) | n/a | `string` | n/a | yes |
 

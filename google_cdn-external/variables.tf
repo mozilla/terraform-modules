@@ -146,3 +146,14 @@ variable "backend_bucket_name_override" {
   default     = ""
   description = "Force a particular name for CDN backend bucket. Should only be used for legacy infra."
 }
+
+variable "load_balancing_scheme" {
+  type        = string
+  default     = "EXTERNAL"
+  description = "Load balancing scheme for the backend service and global forwarding rules. One of `EXTERNAL` or `EXTERNAL_MANAGED`. Defaults to `EXTERNAL`, which was the Google provider's default before v8.0 changed it. Changing this on an existing load balancer forces the affected resources to be replaced."
+
+  validation {
+    condition     = contains(["EXTERNAL", "EXTERNAL_MANAGED"], var.load_balancing_scheme)
+    error_message = "load_balancing_scheme must be one of: EXTERNAL, EXTERNAL_MANAGED."
+  }
+}
