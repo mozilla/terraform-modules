@@ -41,6 +41,9 @@ resource "google_compute_backend_service" "default" {
   compression_mode                = var.compression_mode
   load_balancing_scheme           = var.load_balancing_scheme
 
+  external_managed_migration_state              = var.external_managed_migration_state
+  external_managed_migration_testing_percentage = var.external_managed_migration_testing_percentage
+
   security_policy = var.security_policy
 
   protocol = var.origin_protocol
@@ -203,6 +206,9 @@ resource "google_compute_global_forwarding_rule" "http" {
 
   ip_address            = each.value.address
   load_balancing_scheme = var.load_balancing_scheme
+
+  external_managed_backend_bucket_migration_state              = var.external_managed_backend_bucket_migration_state
+  external_managed_backend_bucket_migration_testing_percentage = var.external_managed_backend_bucket_migration_testing_percentage
 }
 
 resource "google_compute_global_forwarding_rule" "https" {
@@ -221,4 +227,7 @@ resource "google_compute_global_forwarding_rule" "https" {
 
   ip_address            = each.value.address
   load_balancing_scheme = var.load_balancing_scheme
+
+  external_managed_backend_bucket_migration_state              = var.external_managed_backend_bucket_migration_state
+  external_managed_backend_bucket_migration_testing_percentage = var.external_managed_backend_bucket_migration_testing_percentage
 }

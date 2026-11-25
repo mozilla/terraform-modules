@@ -57,6 +57,9 @@ resource "google_compute_global_forwarding_rule" "http" {
   ip_address = each.value
 
   load_balancing_scheme = var.load_balancing_scheme
+
+  external_managed_backend_bucket_migration_state              = var.external_managed_backend_bucket_migration_state
+  external_managed_backend_bucket_migration_testing_percentage = var.external_managed_backend_bucket_migration_testing_percentage
 }
 
 resource "google_compute_global_forwarding_rule" "https" {
@@ -68,4 +71,7 @@ resource "google_compute_global_forwarding_rule" "https" {
   ip_address = each.value
 
   load_balancing_scheme = var.load_balancing_scheme
+
+  external_managed_backend_bucket_migration_state              = var.external_managed_backend_bucket_migration_state
+  external_managed_backend_bucket_migration_testing_percentage = var.external_managed_backend_bucket_migration_testing_percentage
 }
