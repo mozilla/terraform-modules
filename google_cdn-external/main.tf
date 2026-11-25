@@ -39,6 +39,10 @@ resource "google_compute_backend_service" "default" {
   timeout_sec                     = var.backend_timeout_sec
   connection_draining_timeout_sec = 10
   compression_mode                = var.compression_mode
+  load_balancing_scheme           = var.load_balancing_scheme
+
+  external_managed_migration_state              = var.external_managed_migration_state
+  external_managed_migration_testing_percentage = var.external_managed_migration_testing_percentage
 
   security_policy = var.security_policy
 
@@ -200,7 +204,11 @@ resource "google_compute_global_forwarding_rule" "http" {
   target     = google_compute_target_http_proxy.default.id
   port_range = "80"
 
-  ip_address = each.value.address
+  ip_address            = each.value.address
+  load_balancing_scheme = var.load_balancing_scheme
+
+  external_managed_backend_bucket_migration_state              = var.external_managed_backend_bucket_migration_state
+  external_managed_backend_bucket_migration_testing_percentage = var.external_managed_backend_bucket_migration_testing_percentage
 }
 
 resource "google_compute_global_forwarding_rule" "https" {
@@ -217,5 +225,9 @@ resource "google_compute_global_forwarding_rule" "https" {
   target     = google_compute_target_https_proxy.default.id
   port_range = "443"
 
-  ip_address = each.value.address
+  ip_address            = each.value.address
+  load_balancing_scheme = var.load_balancing_scheme
+
+  external_managed_backend_bucket_migration_state              = var.external_managed_backend_bucket_migration_state
+  external_managed_backend_bucket_migration_testing_percentage = var.external_managed_backend_bucket_migration_testing_percentage
 }
