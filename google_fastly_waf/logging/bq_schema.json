@@ -133,5 +133,11 @@
     "type": "STRING",
     "mode": "NULLABLE",
     "description": "Fastly Request ID"
+  },
+  {
+    "name": "elapsed_time_usec",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Request elapsed time in microseconds"
   }
 ]
